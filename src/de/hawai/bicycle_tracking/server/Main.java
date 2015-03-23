@@ -1,4 +1,4 @@
-package de.hawai.bycicle-tracking.server;
+package de.hawai.bicycle_tracking.server;
 
 public class Main
 {
