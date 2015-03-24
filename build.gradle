@@ -1,0 +1,62 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+eclipse {
+      jdt {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+      }
+    }
+
+buildscript {
+    repositories {
+        maven { url "http://repo.spring.io/libs-snapshot" }
+        mavenLocal()
+		flatDir {
+			dirs 'lib'
+		}
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.9.RELEASE")
+        classpath("org.springframework:spring-test:4.1.2.RELEASE")
+        classpath("org.springframework:spring-beans:4.1.2.RELEASE")
+    }
+}
+
+sourceSets.main.java.srcDirs = ["src/"]
+
+springBoot {
+	mainClass = "de.hawai.bicycle_tracking.server"
+}
+
+jar {
+    baseName = 'ast_backend'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "http://repo.spring.io/libs-snapshot" }
+
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter")
+    compile("org.springframework:spring-jdbc")
+    compile("org.springframework.boot:spring-boot-starter-jdbc")
+    
+    runtime fileTree(dir: 'lib', include: '*.jar')
+    testCompile("org.springframework.boot:spring-boot-starter-test:1.1.9.RELEASE")
+    testCompile("junit:junit")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+    }
