@@ -32,7 +32,7 @@ buildscript {
 sourceSets.main.java.srcDirs = ["src/"]
 
 springBoot {
-	mainClass = "de.hawai.bicycle_tracking.server"
+	mainClass = "de.hawai.bicycle_tracking.server.Main"
 }
 
 jar {
@@ -51,7 +51,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter")
     compile("org.springframework:spring-jdbc")
     compile("org.springframework.boot:spring-boot-starter-jdbc")
-    
+
     runtime fileTree(dir: 'lib', include: '*.jar')
     testCompile("org.springframework.boot:spring-boot-starter-test:1.1.9.RELEASE")
     testCompile("junit:junit")
