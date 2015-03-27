@@ -1,0 +1,8 @@
+package de.hawai.bicycle_tracking.server.utility;
+
+public interface Entity {
+
+	public Long getId();
+	public void setId(Long id);
+
+}
