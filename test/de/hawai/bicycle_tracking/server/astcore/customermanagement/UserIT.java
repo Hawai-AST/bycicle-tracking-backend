@@ -31,6 +31,12 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 @IntegrationTest
 public class UserIT {
 
+	private static final String NAME = "Name";
+	private static final String FIRST_NAME = "FirstName";
+	private static final EMail E_MAIL_ADDRESS = new EMail("foo@bar.com");
+	private static final Address ADDRESS = new Address("Foostreet 1a", "Barheim", "DC", "1337");
+	private static final Date BIRTHDATE = new Date(0);
+
 	@Autowired
 	private UserDao userDao;
 
@@ -38,24 +44,36 @@ public class UserIT {
 
 	@Before
 	public void setup() {
-		user = new User("Name", "FirstName", new EMail("foo@bar.com"), new Address("Foostreet 1a", "Barheim", "DC", "1337"), new Date(0));
+		user = new User(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE);
 		user = userDao.save(user);
 	}
 
 
 	@Test
 	public void createdUserCanBeFoundByName() throws Exception {
-		assertThat(user).isEqualTo(userDao.getByName("Name"));
+		assertThat(user).isEqualTo(userDao.getByName(NAME));
 	}
 
 	@Test
 	public void createdUserCanBeFoundByID() throws Exception {
 		User userFromDB = userDao.getOne(user.getId());
 		assertThat(user).isEqualTo(userFromDB);
-		assertThat(user.geteMailAddress()).isEqualTo(userFromDB.geteMailAddress());
+	}
+
+	@Test
+	public void userGetsSerializedCorrectly() throws Exception {
+		User userFromDB = userDao.getOne(user.getId());
+		assertThat(user).isEqualTo(userFromDB);
 		assertThat(user.getName()).isEqualTo(userFromDB.getName());
 		assertThat(user.getFirstName()).isEqualTo(userFromDB.getFirstName());
+		assertThat(user.geteMailAddress()).isEqualTo(userFromDB.geteMailAddress());
+		assertThat(user.getAddress()).isEqualTo(userFromDB.getAddress());
 		assertThat(user.getBirthdate()).isEqualTo(userFromDB.getBirthdate());
+		assertThat(NAME).isEqualTo(userFromDB.getName());
+		assertThat(FIRST_NAME).isEqualTo(userFromDB.getFirstName());
+		assertThat(E_MAIL_ADDRESS).isEqualTo(userFromDB.geteMailAddress());
+		assertThat(ADDRESS).isEqualTo(userFromDB.getAddress());
+		assertThat(BIRTHDATE).isEqualTo(userFromDB.getBirthdate());
 	}
 
 	@Test
