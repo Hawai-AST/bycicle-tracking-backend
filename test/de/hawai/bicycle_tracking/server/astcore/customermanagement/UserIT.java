@@ -20,8 +20,8 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import de.hawai.bicycle_tracking.server.AppConfig;
-import de.hawai.bicycle_tracking.server.utility.Address;
-import de.hawai.bicycle_tracking.server.utility.EMail;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = AppConfig.class)

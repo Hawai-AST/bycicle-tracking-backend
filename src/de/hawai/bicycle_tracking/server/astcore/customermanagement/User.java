@@ -10,8 +10,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
-import de.hawai.bicycle_tracking.server.utility.Address;
-import de.hawai.bicycle_tracking.server.utility.EMail;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @Entity
 @Table(name="user")

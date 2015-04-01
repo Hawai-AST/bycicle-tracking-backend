@@ -1,4 +1,4 @@
-package de.hawai.bicycle_tracking.server.utility;
+package de.hawai.bicycle_tracking.server.utility.value;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,4 +1,4 @@
-package de.hawai.bicycle_tracking.server.utility;
+package de.hawai.bicycle_tracking.server.utility.value;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
