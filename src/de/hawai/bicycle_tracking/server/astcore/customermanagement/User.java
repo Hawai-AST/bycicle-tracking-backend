@@ -8,7 +8,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Type;
+
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
+import de.hawai.bicycle_tracking.server.utility.EMail;
 
 @Entity
 @Table(name="user")
@@ -22,14 +25,14 @@ public class User extends AbstractEntity implements IUser {
 	private String firstName;
 	private Date birthdate;
 	//	private AdressType address;
-	//	private EMailType eMailAddress;
+	private EMail eMailAddress;
 
-	public User(String name, String firstName, Date birthdate) {
+	public User(String name, String firstName, EMail eMailAddress, Date birthdate) {
 		this.name = name;
 		this.firstName = firstName;
 		this.birthdate = birthdate;
 		//		this.address = address;
-		//		this.eMailAddress = eMailAddress;
+		this.eMailAddress = eMailAddress;
 	}
 
 	@Column(name="name", length=30, nullable=false)
@@ -69,11 +72,16 @@ public class User extends AbstractEntity implements IUser {
 	//		// TODO Auto-generated method stub
 	//		return null;
 	//	}
-	//
-	//	@Override
-	//	public EMailType getEMailAddress() {
-	//		// TODO Auto-generated method stub
-	//		return null;
-	//	}
+
+	@Column(name="email", nullable=false)
+	@Type(type="de.hawai.bicycle_tracking.server.utility.types.EMailType")
+	@Override
+	public EMail geteMailAddress() {
+		return eMailAddress;
+	}
+
+	public void seteMailAddress(EMail eMailAddress) {
+		this.eMailAddress = eMailAddress;
+	}
 
 }

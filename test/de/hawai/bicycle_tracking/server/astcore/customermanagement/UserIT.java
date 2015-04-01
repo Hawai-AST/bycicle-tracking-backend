@@ -20,6 +20,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.utility.EMail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = AppConfig.class)
@@ -36,7 +37,7 @@ public class UserIT {
 
 	@Before
 	public void setup() {
-		user = new User("Name", "FirstName", new Date(0));
+		user = new User("Name", "FirstName", new EMail("foo@bar.com"), new Date(0));
 		user = userDao.save(user);
 	}
 
@@ -48,7 +49,12 @@ public class UserIT {
 
 	@Test
 	public void createdUserCanBeFoundByID() throws Exception {
-		assertThat(user).isEqualTo(userDao.getOne(user.getId()));
+		User userFromDB = userDao.getOne(user.getId());
+		assertThat(user).isEqualTo(userFromDB);
+		assertThat(user.geteMailAddress()).isEqualTo(userFromDB.geteMailAddress());
+		assertThat(user.getName()).isEqualTo(userFromDB.getName());
+		assertThat(user.getFirstName()).isEqualTo(userFromDB.getFirstName());
+		assertThat(user.getBirthdate()).isEqualTo(userFromDB.getBirthdate());
 	}
 
 	@Test
