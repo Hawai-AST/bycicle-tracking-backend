@@ -20,6 +20,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.utility.Address;
 import de.hawai.bicycle_tracking.server.utility.EMail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,7 +38,7 @@ public class UserIT {
 
 	@Before
 	public void setup() {
-		user = new User("Name", "FirstName", new EMail("foo@bar.com"), new Date(0));
+		user = new User("Name", "FirstName", new EMail("foo@bar.com"), new Address("Foostreet 1a", "Barheim", "DC", "1337"), new Date(0));
 		user = userDao.save(user);
 	}
 

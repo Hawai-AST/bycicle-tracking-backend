@@ -3,14 +3,14 @@ package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Type;
-
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
+import de.hawai.bicycle_tracking.server.utility.Address;
 import de.hawai.bicycle_tracking.server.utility.EMail;
 
 @Entity
@@ -24,14 +24,14 @@ public class User extends AbstractEntity implements IUser {
 	private String name;
 	private String firstName;
 	private Date birthdate;
-	//	private AdressType address;
+	private Address address;
 	private EMail eMailAddress;
 
-	public User(String name, String firstName, EMail eMailAddress, Date birthdate) {
+	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate) {
 		this.name = name;
 		this.firstName = firstName;
 		this.birthdate = birthdate;
-		//		this.address = address;
+		this.address = address;
 		this.eMailAddress = eMailAddress;
 	}
 
@@ -51,8 +51,19 @@ public class User extends AbstractEntity implements IUser {
 	@Column(name="birthdate", nullable=false)
 	@Override
 	public Date getBirthdate() {
-		// TODO Auto-generated method stub
 		return birthdate;
+	}
+
+	@Embedded
+	@Override
+	public Address getAddress() {
+		return address;
+	}
+
+	@Embedded
+	@Override
+	public EMail geteMailAddress() {
+		return eMailAddress;
 	}
 
 	public void setName(String name) {
@@ -67,21 +78,12 @@ public class User extends AbstractEntity implements IUser {
 		this.birthdate = birthdate;
 	}
 
-	//	@Override
-	//	public AdressType getAddress() {
-	//		// TODO Auto-generated method stub
-	//		return null;
-	//	}
-
-	@Column(name="email", nullable=false)
-	@Type(type="de.hawai.bicycle_tracking.server.utility.types.EMailType")
-	@Override
-	public EMail geteMailAddress() {
-		return eMailAddress;
-	}
-
 	public void seteMailAddress(EMail eMailAddress) {
 		this.eMailAddress = eMailAddress;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 }

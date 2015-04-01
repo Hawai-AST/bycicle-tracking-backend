@@ -2,6 +2,7 @@ package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
 import java.util.Date;
 
+import de.hawai.bicycle_tracking.server.utility.Address;
 import de.hawai.bicycle_tracking.server.utility.EMail;
 
 public interface IUser {
@@ -12,8 +13,8 @@ public interface IUser {
 
 	public Date getBirthdate();
 
-	//	public AdressType getAddress();
-	//	
+	public Address getAddress();
+
 	public EMail geteMailAddress();
 
 }
