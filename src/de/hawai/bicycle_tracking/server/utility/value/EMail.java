@@ -39,4 +39,30 @@ public class EMail {
 		this.eMailAddress = eMailAddress;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((eMailAddress == null) ? 0 : eMailAddress.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EMail other = (EMail) obj;
+		if (eMailAddress == null) {
+			if (other.eMailAddress != null)
+				return false;
+		} else if (!eMailAddress.equals(other.eMailAddress))
+			return false;
+		return true;
+	}
+
 }
