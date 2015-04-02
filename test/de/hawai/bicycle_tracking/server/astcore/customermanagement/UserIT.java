@@ -1,6 +1,7 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -79,6 +81,16 @@ public class UserIT {
 	@Test
 	public void nonExistentUsersCantBeFound() throws Exception {
 		assertThat(userDao.getByName("Foobar")).isNull();
+	}
+
+	@Test
+	public void eMailAddressMustBeUniqueForUser() throws Exception {
+		try {
+			userDao.save(new User(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE));
+			fail("DataIntegrityViolationException expected because test tries to save a user with an already existent email address.");
+		} catch (DataIntegrityViolationException e) {
+			// do nothing
+		}
 	}
 
 }

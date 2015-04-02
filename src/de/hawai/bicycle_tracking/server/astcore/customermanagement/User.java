@@ -8,13 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @Entity
-@Table(name="user")
+@Table(name="user", uniqueConstraints = { @UniqueConstraint(columnNames = {"email_address"})})
 public class User extends AbstractEntity implements IUser {
 
 	/**
@@ -60,7 +61,7 @@ public class User extends AbstractEntity implements IUser {
 		return address;
 	}
 
-	@Embedded
+	@Embedded()
 	@Override
 	public EMail geteMailAddress() {
 		return eMailAddress;
@@ -84,6 +85,32 @@ public class User extends AbstractEntity implements IUser {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((eMailAddress == null) ? 0 : eMailAddress.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (eMailAddress == null) {
+			if (other.eMailAddress != null)
+				return false;
+		} else if (!eMailAddress.equals(other.eMailAddress))
+			return false;
+		return true;
 	}
 
 }
