@@ -7,18 +7,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
 @MappedSuperclass
 public abstract class AbstractEntity implements Entity, Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	private Integer version;
 
 	public AbstractEntity() {
 		super();
 	}
 
-	public AbstractEntity(Long id) {
+	public AbstractEntity(Long id, Integer version) {
 		this.id = id;
+		this.version = version;
 	}
 
 	@Id
@@ -32,6 +35,18 @@ public abstract class AbstractEntity implements Entity, Serializable {
 	@Override
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Version
+	@Column(name = "version", nullable = false)
+	@Override
+	public Integer getVersion() {
+		return version;
+	}
+
+	@Override
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 
 }
