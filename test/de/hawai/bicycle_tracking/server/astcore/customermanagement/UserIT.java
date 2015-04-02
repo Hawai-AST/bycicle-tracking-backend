@@ -86,7 +86,7 @@ public class UserIT {
 	@Test
 	public void eMailAddressMustBeUniqueForUser() throws Exception {
 		try {
-			userDao.save(new User(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE));
+			userDao.save(new User("other name", "other first name", E_MAIL_ADDRESS, new Address("A", "B", "C", "D"), new Date(42)));
 			fail("DataIntegrityViolationException expected because test tries to save a user with an already existent email address.");
 		} catch (DataIntegrityViolationException e) {
 			// do nothing
