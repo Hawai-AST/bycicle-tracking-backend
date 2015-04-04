@@ -38,6 +38,7 @@ public class UserIT {
 	private static final EMail E_MAIL_ADDRESS = new EMail("foo@bar.com");
 	private static final Address ADDRESS = new Address("Foostreet 1a", "Barheim", "DC", "1337");
 	private static final Date BIRTHDATE = new Date(0);
+	private static final String PASSWORD = "TestingPassword";
 
 	@Autowired
 	private UserDao userDao;
@@ -46,7 +47,7 @@ public class UserIT {
 
 	@Before
 	public void setup() {
-		user = new User(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE);
+		user = new User(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE, PASSWORD);
 		user = userDao.save(user);
 	}
 
@@ -76,6 +77,7 @@ public class UserIT {
 		assertThat(E_MAIL_ADDRESS).isEqualTo(userFromDB.geteMailAddress());
 		assertThat(ADDRESS).isEqualTo(userFromDB.getAddress());
 		assertThat(BIRTHDATE).isEqualTo(userFromDB.getBirthdate());
+		assertThat(PASSWORD).isEqualTo(userFromDB.getPassword());
 	}
 
 	@Test
@@ -86,7 +88,7 @@ public class UserIT {
 	@Test
 	public void eMailAddressMustBeUniqueForUser() throws Exception {
 		try {
-			userDao.save(new User("other name", "other first name", E_MAIL_ADDRESS, new Address("A", "B", "C", "D"), new Date(42)));
+			userDao.save(new User("other name", "other first name", E_MAIL_ADDRESS, new Address("A", "B", "C", "D"), new Date(42), "Other Password"));
 			fail("DataIntegrityViolationException expected because test tries to save a user with an already existent email address.");
 		} catch (DataIntegrityViolationException e) {
 			// do nothing
