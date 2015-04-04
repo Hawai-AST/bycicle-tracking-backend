@@ -1,15 +1,8 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
-
+import java.util.*;
+import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -27,13 +20,21 @@ public class User extends AbstractEntity implements IUser {
 	private Date birthdate;
 	private Address address;
 	private EMail eMailAddress;
+	@JsonIgnore
+	private String password;
+	@JsonIgnore
+	private List<LoginSession> loginSessions = new ArrayList<LoginSession>();
 
-	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate) {
+	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password) {
 		this.name = name;
 		this.firstName = firstName;
 		this.birthdate = birthdate;
 		this.address = address;
 		this.eMailAddress = eMailAddress;
+		this.password = password;
+	}
+
+	public User(){
 	}
 
 	@Column(name="name", length=30, nullable=false)
@@ -85,6 +86,27 @@ public class User extends AbstractEntity implements IUser {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public String getPassword()
+	{
+		return password;
+	}
+
+	public void setPassword(final String inPassword)
+	{
+		password = inPassword;
+	}
+
+	@OneToMany(mappedBy = "user")
+	public List<LoginSession> getLoginSessions()
+	{
+		return loginSessions;
+	}
+
+	public void setLoginSessions(final List<LoginSession> inLoginSessions)
+	{
+		loginSessions = inLoginSessions;
 	}
 
 	@Override
