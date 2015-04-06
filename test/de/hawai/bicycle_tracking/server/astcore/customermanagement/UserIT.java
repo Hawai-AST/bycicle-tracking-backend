@@ -36,7 +36,7 @@ public class UserIT {
 	private static final String NAME = "Name";
 	private static final String FIRST_NAME = "FirstName";
 	private static final EMail E_MAIL_ADDRESS = new EMail("foo@bar.com");
-	private static final Address ADDRESS = new Address("Foostreet 1a", "Barheim", "DC", "1337");
+	private static final Address ADDRESS = new Address("Foostreet", "1a", "Barheim", "DC", "1337", "Germany");
 	private static final Date BIRTHDATE = new Date(0);
 	private static final String PASSWORD = "TestingPassword";
 
@@ -88,7 +88,7 @@ public class UserIT {
 	@Test
 	public void eMailAddressMustBeUniqueForUser() throws Exception {
 		try {
-			userDao.save(new User("other name", "other first name", E_MAIL_ADDRESS, new Address("A", "B", "C", "D"), new Date(42), "Other Password"));
+			userDao.save(new User("other name", "other first name", E_MAIL_ADDRESS, new Address("A", "B", "C", "D", "E", "F"), new Date(42), "Other Password"));
 			fail("DataIntegrityViolationException expected because test tries to save a user with an already existent email address.");
 		} catch (DataIntegrityViolationException e) {
 			// do nothing

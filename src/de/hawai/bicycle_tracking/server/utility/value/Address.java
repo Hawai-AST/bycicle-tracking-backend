@@ -9,8 +9,8 @@ public class Address {
 	private String street;
 	private String houseNumber;
 	private String city;
-	private String postcode;
 	private String state;
+	private String postcode;
 	private String country;
 
 	@SuppressWarnings("unused")
@@ -18,11 +18,13 @@ public class Address {
 		super();
 	}
 
-	public Address(String street, String city, String state, String postcode) {
+	public Address(String street, String houseNumber, String city, String state, String postcode, String country) {
 		this.street = street;
+		this.houseNumber = houseNumber;
 		this.city = city;
 		this.state = state;
 		this.postcode = postcode;
+		this.country = country;
 
 	}
 
