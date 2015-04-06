@@ -7,9 +7,11 @@ import javax.persistence.Embeddable;
 public class Address {
 
 	private String street;
+	private String houseNumber;
 	private String city;
 	private String postcode;
 	private String state;
+	private String country;
 
 	@SuppressWarnings("unused")
 	private Address() {
@@ -24,7 +26,7 @@ public class Address {
 
 	}
 
-	@Column(name = "ADDRESS_STREET", nullable = false, length=250)
+	@Column(name = "address_street", nullable = false, length=250)
 	public String getStreet() {
 		return street;
 	}
@@ -33,7 +35,7 @@ public class Address {
 		this.street = street;
 	}
 
-	@Column(name = "ADDRESS_CITY", nullable = false, length=50)
+	@Column(name = "address_city", nullable = false, length=50)
 	public String getCity() {
 		return city;
 	}
@@ -42,7 +44,7 @@ public class Address {
 		this.city = city;
 	}
 
-	@Column(name = "ADDRESS_STATE", nullable = false, length=50)
+	@Column(name = "address_state", nullable = false, length=50)
 	public String getState() {
 		return state;
 	}
@@ -51,7 +53,7 @@ public class Address {
 		this.state = state;
 	}
 
-	@Column(name = "ADDRESS_POSTCODE", nullable = false, length=10)
+	@Column(name = "address_postcode", nullable = false, length = 10)
 	public String getPostcode() {
 		return postcode;
 	}
@@ -60,11 +62,32 @@ public class Address {
 		this.postcode = postcode;
 	}
 
+	@Column(name = "address_house_number", nullable = false, length = 10)
+	public String getHouseNumber() {
+		return houseNumber;
+	}
+
+	public void setHouseNumber(String houseNumber) {
+		this.houseNumber = houseNumber;
+	}
+
+	@Column(name = "address_country", nullable = false, length = 30)
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result + ((country == null) ? 0 : country.hashCode());
+		result = prime * result
+				+ ((houseNumber == null) ? 0 : houseNumber.hashCode());
 		result = prime * result
 				+ ((postcode == null) ? 0 : postcode.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
@@ -85,6 +108,16 @@ public class Address {
 			if (other.city != null)
 				return false;
 		} else if (!city.equals(other.city))
+			return false;
+		if (country == null) {
+			if (other.country != null)
+				return false;
+		} else if (!country.equals(other.country))
+			return false;
+		if (houseNumber == null) {
+			if (other.houseNumber != null)
+				return false;
+		} else if (!houseNumber.equals(other.houseNumber))
 			return false;
 		if (postcode == null) {
 			if (other.postcode != null)
