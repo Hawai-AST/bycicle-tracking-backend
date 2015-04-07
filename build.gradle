@@ -16,23 +16,32 @@ eclipse {
 
 buildscript {
     repositories {
-        maven { url "http://repo.spring.io/libs-snapshot" }
+    	maven { url 'http://repo.spring.io/milestone' }
+    	maven { url 'http://repo.spring.io/snapshot' }
+    	mavenCentral()
         mavenLocal()
 		flatDir {
 			dirs 'lib'
 		}
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.9.RELEASE")
-        classpath("org.springframework:spring-test:4.1.2.RELEASE")
-        classpath("org.springframework:spring-beans:4.1.2.RELEASE")
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.1.9.RELEASE')
+        classpath('org.springframework:spring-test:4.1.2.RELEASE')
+        classpath('org.springframework:spring-beans:4.1.2.RELEASE')
+        classpath('com.h2database:h2:1.4.186')
+        classpath('org.hibernate:hibernate-core:4.3.8.Final')
+        classpath('org.hibernate:hibernate-entitymanager:4.3.8.Final')
+        classpath('org.unitils:unitils-spring:3.4.2')
+        classpath('org.springframework.data:spring-data-jpa:1.7.2.RELEASE')
+        classpath('org.assertj:assertj-core-java8:1.0.0m1')
     }
 }
 
-sourceSets.main.java.srcDirs = ["src/"]
+sourceSets.main.java.srcDirs = ['src/']
+sourceSets.test.java.srcDirs = ['test/']
 
 springBoot {
-	mainClass = "de.hawai.bicycle_tracking.server.Main"
+	mainClass = 'de.hawai.bicycle_tracking.server.Main'
 }
 
 jar {
@@ -43,18 +52,25 @@ jar {
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url "http://repo.spring.io/libs-snapshot" }
+    maven { url 'http://repo.spring.io/libs-snapshot' }
 
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter")
-    compile("org.springframework:spring-jdbc")
-    compile("org.springframework.boot:spring-boot-starter-jdbc")
+    compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework:spring-jdbc')
+    compile('org.springframework.boot:spring-boot-starter-jdbc')
+    compile('org.hibernate:hibernate-core:4.3.8.Final')
+    compile('org.hibernate:hibernate-entitymanager:4.3.8.Final')
+    compile('org.unitils:unitils-spring:3.4.2')
+    compile('org.springframework.data:spring-data-jpa:1.7.2.RELEASE')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('com.h2database:h2:1.4.186')
 
     runtime fileTree(dir: 'lib', include: '*.jar')
-    testCompile("org.springframework.boot:spring-boot-starter-test:1.1.9.RELEASE")
-    testCompile("junit:junit")
+    testCompile('org.springframework.boot:spring-boot-starter-test:1.1.9.RELEASE')
+    testCompile('junit:junit')
+    testCompile('org.assertj:assertj-core-java8:1.0.0m1')
 }
 
 task wrapper(type: Wrapper) {
