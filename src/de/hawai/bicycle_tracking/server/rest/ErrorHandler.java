@@ -1,5 +1,6 @@
 package de.hawai.bicycle_tracking.server.rest;
 
+import java.text.ParseException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -45,5 +46,13 @@ public class ErrorHandler
 	public ErrorMessage onAlreadyExists(AlreadyExistsException inAlreadyExists)
 	{
 		return new ErrorMessage(409, "Already exists", inAlreadyExists.getMessage());
+	}
+
+	@ExceptionHandler(ParseException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessage onParseException(ParseException inParseException)
+	{
+		return new ErrorMessage(400, "Invalid Input", inParseException.getMessage());
 	}
 }
