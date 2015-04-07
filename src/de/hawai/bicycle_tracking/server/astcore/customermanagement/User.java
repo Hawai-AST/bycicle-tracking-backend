@@ -98,7 +98,7 @@ public class User extends AbstractEntity implements IUser {
 		password = inPassword;
 	}
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	public List<LoginSession> getLoginSessions()
 	{
 		return loginSessions;
