@@ -38,10 +38,12 @@ public class LoginControllerTest
 	private static Date BIRTHDATE;
 	private static final int CUSTOMERNR = 1;
 	private static final String GENDER = "male";
-	private static final String STREET = "Wurstalee 1";
+	private static final String STREET = "Wurstalee";
+	private static final String HOUSENR = "1";
 	private static final String CITY = "Bielefeld";
 	private static final String POSTCODE = "42042";
-	private static final String STATE = "Germany";
+	private static final String STATE = "NIE";
+	private static final String COUNTRY = "Germany";
 
 	@Autowired
 	private WebApplicationContext context;
@@ -63,7 +65,7 @@ public class LoginControllerTest
 	@Before
 	public void initTest() {
 		User user = new User();
-		Address address = new Address(STREET, CITY, STATE, POSTCODE);
+		Address address = new Address(STREET, HOUSENR, CITY, STATE, POSTCODE, COUNTRY);
 		user.setAddress(address);
 		user.setFirstName(NAME);
 		user.setName(LASTNAME);

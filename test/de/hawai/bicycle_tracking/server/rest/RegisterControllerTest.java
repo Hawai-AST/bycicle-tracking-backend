@@ -33,10 +33,12 @@ public class RegisterControllerTest
 	private static final int CUSTOMERNR = 1;
 	private static final int INVALID_CUSTOMERNR = 1337;
 	private static final String GENDER = "male";
-	private static final String STREET = "Wurstalee 1";
+	private static final String STREET = "Wurstalee";
+	private static final String HOUSENR = "1";
 	private static final String CITY = "Bielefeld";
 	private static final String POSTCODE = "42042";
-	private static final String STATE = "Germany";
+	private static final String STATE = "NIE";
+	private static final String COUNTRY = "Germany";
 	private static final Address ADDRESS;
 
 	private MockMvc restViewerMockMvc;
@@ -50,7 +52,7 @@ public class RegisterControllerTest
 	private RegistrationDTO registration;
 
 	static {
-		ADDRESS = new Address(STREET, CITY, STATE, POSTCODE);
+		ADDRESS = new Address(STREET, HOUSENR, CITY, STATE, POSTCODE, COUNTRY);
 	}
 
 	@Before
