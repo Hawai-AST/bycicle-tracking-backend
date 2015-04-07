@@ -4,9 +4,11 @@ import java.text.*;
 import java.util.UUID;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.*;
 import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
+import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,8 +44,8 @@ public class RegisterController
 		newUser.setName(inRegistration.getNachname());
 		try	{
 			userRepository.save(newUser);
-		} catch(Exception e) {
-			throw new InternalError("Error saving to database");
+		} catch(DataIntegrityViolationException e) {
+			throw new AlreadyExistsException("User already exists");
 		}
 
 		LoginSession session = new LoginSession();

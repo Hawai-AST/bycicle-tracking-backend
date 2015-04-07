@@ -38,4 +38,12 @@ public class ErrorHandler
 	{
 		return new ErrorMessage(404, "Resource not Found", inNotFound.getMessage());
 	}
+
+	@ExceptionHandler(AlreadyExistsException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ErrorMessage onAlreadyExists(AlreadyExistsException inAlreadyExists)
+	{
+		return new ErrorMessage(409, "Already exists", inAlreadyExists.getMessage());
+	}
 }
