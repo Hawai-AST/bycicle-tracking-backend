@@ -2,10 +2,9 @@ package de.hawai.bicycle_tracking.server.rest;
 
 import de.hawai.bicycle_tracking.server.rest.exceptions.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@ControllerAdvice
 public class ErrorHandler
 {
 	@ExceptionHandler(NotAuthorizedException.class)
