@@ -4,6 +4,7 @@ import java.text.*;
 import java.util.UUID;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.*;
 import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
+import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class RegisterController
 		Application application;
 		application = this.applicationRepository.getByClientID(inClientID);
 		if(application == null){
-			throw new RuntimeException("No Client ID specified");
+			throw new InvalidClientException("No Client ID specified");
 		}
 
 		User newUser = new User();
@@ -42,7 +43,7 @@ public class RegisterController
 		try	{
 			userRepository.save(newUser);
 		} catch(Exception e) {
-			throw new RuntimeException("");
+			throw new InternalError("Error saving to database");
 		}
 
 		LoginSession session = new LoginSession();

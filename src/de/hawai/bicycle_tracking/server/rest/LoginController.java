@@ -3,6 +3,7 @@ package de.hawai.bicycle_tracking.server.rest;
 import java.util.UUID;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.*;
 import de.hawai.bicycle_tracking.server.dto.LoginDTO;
+import de.hawai.bicycle_tracking.server.rest.exceptions.*;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +33,13 @@ public class LoginController {
 		Application application;
 		application = this.applicationRepository.getByClientID(inClientID);
 		if(application == null){
-			throw new RuntimeException("No Client ID specified");
+			throw new InvalidClientException("Could not find application for specified ID");
 		}
 
 		if(inLoginDTO.getGrantType().equals(GrantType.PASSWORD.toString()))	{
 			return loginPasswordV1(inLoginDTO, application);
 		} else {
-			throw new RuntimeException("Invalid Grant-Type");
+			throw new MalformedRequestException("Invalid Grant-Type");
 		}
 	}
 
@@ -46,7 +47,7 @@ public class LoginController {
 	{
 		User toLogin = this.userRepository.getByeMailAddress(new EMail(inLoginDTO.getEmail()));
 		if(toLogin == null) {
-			throw new RuntimeException("No User found");
+			throw new NotFoundException("No User found");
 		} else {
 			if(toLogin.getPassword().equals(inLoginDTO.getCode())) {
 				LoginSession session = new LoginSession();
@@ -60,7 +61,7 @@ public class LoginController {
 				responseV1.setToken(session.getToken());
 				return responseV1;
 			} else {
-				throw new RuntimeException("Invalid password");
+				throw new NotAuthorizedException("Invalid password");
 			}
 		}
 	}
