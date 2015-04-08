@@ -1,8 +1,21 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
-import java.util.*;
-import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -88,6 +101,7 @@ public class User extends AbstractEntity implements IUser {
 		this.address = address;
 	}
 
+	@Column(name = "password", length = 100, nullable = false)
 	public String getPassword()
 	{
 		return password;
