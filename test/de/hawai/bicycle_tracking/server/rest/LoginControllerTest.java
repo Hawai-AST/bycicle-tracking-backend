@@ -1,9 +1,9 @@
 package de.hawai.bicycle_tracking.server.rest;
 
+import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.annotation.PostConstruct;
 import de.hawai.bicycle_tracking.server.*;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { AppConfig.class, DBConfig.class, DBFixuresConfig.class })
+@SpringApplicationConfiguration(classes = { Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
 @WebAppConfiguration
 @IntegrationTest
 public class LoginControllerTest
