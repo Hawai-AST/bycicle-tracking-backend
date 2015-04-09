@@ -22,8 +22,7 @@ import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
-import org.springframework.web.bind.annotation.*;
-@RestController
+import org.springframework.web.bind.annotation.*;@RestController
 @RequestMapping("/api")
 public class RegisterController {
 	private final DateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
