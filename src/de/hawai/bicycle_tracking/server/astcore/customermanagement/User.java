@@ -22,6 +22,7 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @Entity
 @Table(name="user", uniqueConstraints = { @UniqueConstraint(columnNames = {"email_address"})})
+@SuppressWarnings("unused")
 public class User extends AbstractEntity implements IUser {
 
 	/**
@@ -38,6 +39,10 @@ public class User extends AbstractEntity implements IUser {
 	@JsonIgnore
 	private List<LoginSession> loginSessions = new ArrayList<LoginSession>();
 
+	private User() {
+		super();
+	}
+
 	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password) {
 		this.name = name;
 		this.firstName = firstName;
@@ -47,8 +52,6 @@ public class User extends AbstractEntity implements IUser {
 		this.password = password;
 	}
 
-	public User(){
-	}
 
 	@Column(name="name", length=30, nullable=false)
 	@Override
@@ -81,23 +84,23 @@ public class User extends AbstractEntity implements IUser {
 		return eMailAddress;
 	}
 
-	public void setName(String name) {
+	private void setName(String name) {
 		this.name = name;
 	}
 
-	public void setFirstName(String firstName) {
+	private void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	public void setBirthdate(Date birthdate) {
+	private void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
 	}
 
-	public void seteMailAddress(EMail eMailAddress) {
+	private void seteMailAddress(EMail eMailAddress) {
 		this.eMailAddress = eMailAddress;
 	}
 
-	public void setAddress(Address address) {
+	private void setAddress(Address address) {
 		this.address = address;
 	}
 
@@ -107,7 +110,7 @@ public class User extends AbstractEntity implements IUser {
 		return password;
 	}
 
-	public void setPassword(final String inPassword)
+	private void setPassword(final String inPassword)
 	{
 		password = inPassword;
 	}
@@ -118,7 +121,7 @@ public class User extends AbstractEntity implements IUser {
 		return loginSessions;
 	}
 
-	public void setLoginSessions(final List<LoginSession> inLoginSessions)
+	private void setLoginSessions(final List<LoginSession> inLoginSessions)
 	{
 		loginSessions = inLoginSessions;
 	}

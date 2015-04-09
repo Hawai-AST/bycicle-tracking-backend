@@ -1,14 +1,27 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-import java.text.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.Application;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.ApplicationDao;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSession;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSessionDao;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
 import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
 import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -34,14 +47,13 @@ public class RegisterController
 			throw new InvalidClientException("No Client ID specified");
 		}
 
-		User newUser = new User();
-		newUser.setAddress(inRegistration.getAddress());
-		newUser.setBirthdate(this.m_dateFormat.parse(inRegistration.getBirthday()));
-		newUser.seteMailAddress(inRegistration.getEmail());
-		newUser.setFirstName(inRegistration.getFirstname());
-		newUser.setPassword(inRegistration.getPassword());
-		newUser.setName(inRegistration.getName());
-		try	{
+
+		User newUser = new User(inRegistration.getNachname(),
+				inRegistration.getVorname(),
+				new EMail(inRegistration.getEmail()),
+				inRegistration.getAddress(),
+				this.m_dateFormat.parse(inRegistration.getGeburtstag()),
+				inRegistration.getPassword());		try	{
 			userRepository.save(newUser);
 		} catch(DataIntegrityViolationException e) {
 			throw new AlreadyExistsException("User already exists");
