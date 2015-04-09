@@ -62,11 +62,11 @@ public class RegisterControllerTest
 		this.registration = new RegistrationDTO();
 		this.registration.setAddress(ADDRESS);
 		this.registration.setEmail(EMAIL);
-		this.registration.setGeburtstag(BIRTHDATE);
-		this.registration.setGeschlecht(GENDER);
-		this.registration.setKundennr(CUSTOMERNR);
-		this.registration.setNachname(LASTNAME);
-		this.registration.setVorname(NAME);
+		this.registration.setBirthday(BIRTHDATE);
+		this.registration.setGender(GENDER);
+		this.registration.setCustomerid(CUSTOMERNR);
+		this.registration.setName(LASTNAME);
+		this.registration.setFirstname(NAME);
 		this.registration.setPassword(PASSWORD);
 	}
 
@@ -94,7 +94,7 @@ public class RegisterControllerTest
 	@Test
 	public void testInvalidInput() throws Exception
 	{
-		this.registration.setGeburtstag(INVALID_BIRTHDATE);
+		this.registration.setBirthday(INVALID_BIRTHDATE);
 		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(registration)).header("Client-ID", "DEV-101")).andExpect(status().isBadRequest());
 	}
 
@@ -102,7 +102,7 @@ public class RegisterControllerTest
 	@Ignore // Skip because we don't have the backend for customer numbers yet.
 	public void testInvalidCustomerNr() throws Exception
 	{
-		this.registration.setKundennr(INVALID_CUSTOMERNR);
+		this.registration.setCustomerid(INVALID_CUSTOMERNR);
 		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(registration)).header("Client-ID", "DEV-101")).andExpect(status().isNotFound());
 	}
 }

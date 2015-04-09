@@ -6,12 +6,12 @@ public class RegistrationDTO
 {
 	private Address address;
 	private String email;
-	private int kundennr;
-	private String vorname;
-	private String nachname;
+	private int customerid;
+	private String firstname;
+	private String name;
 	private String password;
-	private String geschlecht;
-	private String geburtstag;
+	private String gender;
+	private String birthday;
 
 	public Address getAddress()
 	{
@@ -33,34 +33,34 @@ public class RegistrationDTO
 		email = inEmail;
 	}
 
-	public int getKundennr()
+	public int getCustomerid()
 	{
-		return kundennr;
+		return customerid;
 	}
 
-	public void setKundennr(final int inKundennr)
+	public void setCustomerid(final int inCustomerid)
 	{
-		kundennr = inKundennr;
+		customerid = inCustomerid;
 	}
 
-	public String getVorname()
+	public String getFirstname()
 	{
-		return vorname;
+		return firstname;
 	}
 
-	public void setVorname(final String inVorname)
+	public void setFirstname(final String inFirstname)
 	{
-		vorname = inVorname;
+		firstname = inFirstname;
 	}
 
-	public String getNachname()
+	public String getName()
 	{
-		return nachname;
+		return name;
 	}
 
-	public void setNachname(final String inNachname)
+	public void setName(final String inName)
 	{
-		nachname = inNachname;
+		name = inName;
 	}
 
 	public String getPassword()
@@ -73,24 +73,24 @@ public class RegistrationDTO
 		password = inPassword;
 	}
 
-	public String getGeschlecht()
+	public String getGender()
 	{
-		return geschlecht;
+		return gender;
 	}
 
-	public void setGeschlecht(final String inGeschlecht)
+	public void setGender(final String inGender)
 	{
-		geschlecht = inGeschlecht;
+		gender = inGender;
 	}
 
-	public String getGeburtstag()
+	public String getBirthday()
 	{
-		return geburtstag;
+		return birthday;
 	}
 
-	public void setGeburtstag(final String inGeburtstag)
+	public void setBirthday(final String inBirthday)
 	{
-		geburtstag = inGeburtstag;
+		birthday = inBirthday;
 	}
 
 	@Override
@@ -99,12 +99,12 @@ public class RegistrationDTO
 		return "RegistrationDTO{" +
 				"address=" + address +
 				", email=" + email +
-				", kundennr=" + kundennr +
-				", vorname='" + vorname + '\'' +
-				", nachname='" + nachname + '\'' +
+				", customerid=" + customerid +
+				", firstname='" + firstname + '\'' +
+				", name='" + name + '\'' +
 				", password='" + password + '\'' +
-				", geschlecht='" + geschlecht + '\'' +
-				", geburtstag='" + geburtstag + '\'' +
+				", gender='" + gender + '\'' +
+				", birthday='" + birthday + '\'' +
 				'}';
 	}
 }
