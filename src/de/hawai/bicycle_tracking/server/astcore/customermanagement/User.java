@@ -23,6 +23,7 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 @Entity
 @Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = {"email_address"})})
 @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public class User extends AbstractEntity implements IUser {
 
 	/**
