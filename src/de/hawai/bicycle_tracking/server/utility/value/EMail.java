@@ -7,12 +7,12 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
+@SuppressWarnings("unused")
 public class EMail {
 
 	private String eMailAddress;
 	private static final String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
-	@SuppressWarnings("unused")
 	private EMail() {
 		super();
 	}
@@ -35,7 +35,7 @@ public class EMail {
 		return eMailAddress;
 	}
 
-	public void seteMailAddress(String eMailAddress) {
+	private void seteMailAddress(String eMailAddress) {
 		this.eMailAddress = eMailAddress;
 	}
 
