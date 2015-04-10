@@ -25,8 +25,8 @@ public class Facade {
 		return customerManegement.getUserBy(eMail);
 	}
 
-	public IUser register(String name, String firstName, String eMailAddress, Address address, Date birthdate, String password) {
-		return customerManegement.register(name, firstName, eMailAddress, address, birthdate, password);
+	public IUser registerUser(String name, String firstName, String eMailAddress, Address address, Date birthdate, String password) {
+		return customerManegement.registerUser(name, firstName, eMailAddress, address, birthdate, password);
 	}
 
 }
