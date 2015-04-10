@@ -1,5 +1,6 @@
 package de.hawai.bicycle_tracking.server.rest;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,26 +61,30 @@ public class LoginController {
 
 	private LoginResponseV1 loginPasswordV1(LoginDTO inLoginDTO, Application inApplication)
 	{
-		User toLogin = this.userRepository.getByeMailAddress(new EMail(inLoginDTO.getEmail())).get();
-		if(toLogin == null) {
-			throw new NotFoundException("No User found");
-		} else {
-			if(toLogin.getPassword().equals(inLoginDTO.getCode())) {
-				LoginSession session = new LoginSession();
-				session.setApplication(inApplication);
-				session.setUser(toLogin);
-				session.setToken(UUID.randomUUID().toString());
-				this.loginSessionRepository.save(session);
+		Optional<User> userOptional = this.userRepository.getByeMailAddress(new EMail(inLoginDTO.getEmail()));
 
-				LoginResponseV1 responseV1 = new LoginResponseV1();
-				responseV1.setEmail(toLogin.geteMailAddress().geteMailAddress());
-				responseV1.setToken(session.getToken());
-				return responseV1;
-			} else {
-				throw new NotAuthorizedException("Invalid password");
-			}
+		User toLogin = null;
+		if (userOptional.isPresent()) {
+			toLogin = userOptional.get();
+		} else {
+			throw new NotFoundException("No User found");
+		}
+		if(toLogin.getPassword().equals(inLoginDTO.getCode())) {
+			LoginSession session = new LoginSession();
+			session.setApplication(inApplication);
+			session.setUser(toLogin);
+			session.setToken(UUID.randomUUID().toString());
+			this.loginSessionRepository.save(session);
+
+			LoginResponseV1 responseV1 = new LoginResponseV1();
+			responseV1.setEmail(toLogin.geteMailAddress().geteMailAddress());
+			responseV1.setToken(session.getToken());
+			return responseV1;
+		} else {
+			throw new NotAuthorizedException("Invalid password");
 		}
 	}
+
 
 	private static class LoginResponseV1 {
 		private String email;
