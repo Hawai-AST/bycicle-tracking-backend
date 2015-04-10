@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.Application;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.ApplicationDao;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSession;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSessionDao;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
 import de.hawai.bicycle_tracking.server.dto.LoginDTO;
+import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.NotAuthorizedException;
@@ -36,7 +36,7 @@ public class LoginController {
 	}
 
 	@Autowired
-	private UserDao userRepository;
+	private Facade facade;
 
 	@Autowired
 	private LoginSessionDao loginSessionRepository;
@@ -61,9 +61,9 @@ public class LoginController {
 
 	private LoginResponseV1 loginPasswordV1(LoginDTO inLoginDTO, Application inApplication)
 	{
-		Optional<User> userOptional = this.userRepository.getByeMailAddress(new EMail(inLoginDTO.getEmail()));
+		Optional<IUser> userOptional = this.facade.getUserBy(new EMail(inLoginDTO.getEmail()));
 
-		User toLogin = null;
+		IUser toLogin = null;
 		if (userOptional.isPresent()) {
 			toLogin = userOptional.get();
 		} else {
