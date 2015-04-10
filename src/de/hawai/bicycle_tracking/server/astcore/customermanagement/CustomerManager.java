@@ -21,7 +21,7 @@ public class CustomerManager implements ICustomerManagement {
 	}
 
 	@Override
-	public IUser register(String name, String firstName, String eMailAddress, Address address, Date birthdate, String password) {
+	public IUser registerUser(String name, String firstName, String eMailAddress, Address address, Date birthdate, String password) {
 		return userDao.save(new User(name, firstName, new EMail(eMailAddress), address, birthdate, password));
 	}
 

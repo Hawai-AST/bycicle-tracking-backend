@@ -45,7 +45,7 @@ public class FacadeIT {
 
 	@Before
 	public void setup() {
-		user = facade.register(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE, PASSWORD);
+		user = facade.registerUser(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE, PASSWORD);
 	}
 
 	@Test

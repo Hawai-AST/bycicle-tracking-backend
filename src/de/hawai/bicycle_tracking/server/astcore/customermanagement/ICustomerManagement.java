@@ -10,6 +10,6 @@ public interface ICustomerManagement {
 
 	public Optional<IUser> getUserBy(EMail eMail);
 
-	public IUser register(String name, String firstName, String eMailAddress, Address address, Date birthdate, String password);
+	public IUser registerUser(String name, String firstName, String eMailAddress, Address address, Date birthdate, String password);
 
 }

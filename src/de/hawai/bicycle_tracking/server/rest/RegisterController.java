@@ -46,8 +46,8 @@ public class RegisterController
 		if(application == null){
 			throw new InvalidClientException("No Client ID specified");
 		}
-
-			newUser = facade.register(inRegistration.getNachname(), inRegistration.getVorname(), inRegistration.getEmail(),
+		try	{
+			newUser = facade.registerUser(inRegistration.getNachname(), inRegistration.getVorname(), inRegistration.getEmail(),
 					inRegistration.getAddress(), this.m_dateFormat.parse(inRegistration.getGeburtstag()), inRegistration.getPassword());
 		} catch(DataIntegrityViolationException e) {
 			throw new AlreadyExistsException("User already exists");
