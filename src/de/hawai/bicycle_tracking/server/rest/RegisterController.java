@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.Application;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.ApplicationDao;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSession;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSessionDao;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
 import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
+import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
 
@@ -30,7 +30,7 @@ public class RegisterController
 	private final DateFormat m_dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
 	@Autowired
-	private UserDao userRepository;
+	private Facade facade;
 
 	@Autowired
 	private LoginSessionDao loginSessionRepository;
@@ -47,14 +47,8 @@ public class RegisterController
 			throw new InvalidClientException("No Client ID specified");
 		}
 
-
-		User newUser = new User(inRegistration.getNachname(),
-				inRegistration.getVorname(),
-				new EMail(inRegistration.getEmail()),
-				inRegistration.getAddress(),
-				this.m_dateFormat.parse(inRegistration.getGeburtstag()),
-				inRegistration.getPassword());		try	{
-			userRepository.save(newUser);
+			newUser = facade.register(inRegistration.getNachname(), inRegistration.getVorname(), inRegistration.getEmail(),
+					inRegistration.getAddress(), this.m_dateFormat.parse(inRegistration.getGeburtstag()), inRegistration.getPassword());
 		} catch(DataIntegrityViolationException e) {
 			throw new AlreadyExistsException("User already exists");
 		}
