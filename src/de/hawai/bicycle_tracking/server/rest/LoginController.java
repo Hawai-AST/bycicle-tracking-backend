@@ -1,12 +1,26 @@
 package de.hawai.bicycle_tracking.server.rest;
 
 import java.util.UUID;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.*;
-import de.hawai.bicycle_tracking.server.dto.LoginDTO;
-import de.hawai.bicycle_tracking.server.rest.exceptions.*;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.Application;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.ApplicationDao;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSession;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSessionDao;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
+import de.hawai.bicycle_tracking.server.dto.LoginDTO;
+import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
+import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestException;
+import de.hawai.bicycle_tracking.server.rest.exceptions.NotAuthorizedException;
+import de.hawai.bicycle_tracking.server.rest.exceptions.NotFoundException;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @RequestMapping("/api")
 @RestController
@@ -14,6 +28,7 @@ public class LoginController {
 	public enum GrantType {
 		PASSWORD;
 
+		@Override
 		public String toString() {
 			return this.name().toLowerCase();
 		}
@@ -45,7 +60,7 @@ public class LoginController {
 
 	private LoginResponseV1 loginPasswordV1(LoginDTO inLoginDTO, Application inApplication)
 	{
-		User toLogin = this.userRepository.getByeMailAddress(new EMail(inLoginDTO.getEmail()));
+		User toLogin = this.userRepository.getByeMailAddress(new EMail(inLoginDTO.getEmail())).get();
 		if(toLogin == null) {
 			throw new NotFoundException("No User found");
 		} else {
