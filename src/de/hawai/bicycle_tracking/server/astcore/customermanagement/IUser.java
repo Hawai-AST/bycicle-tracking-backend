@@ -22,4 +22,8 @@ public interface IUser {
 
 	public List<LoginSession> getLoginSessions();
 
+	public String getPassword();
+
+	public List<LoginSession> getLoginSessions();
+
 }
