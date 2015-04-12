@@ -37,11 +37,11 @@ public class RegisterController
 
 		User newUser = new User();
 		newUser.setAddress(inRegistration.getAddress());
-		newUser.setBirthdate(this.m_dateFormat.parse(inRegistration.getGeburtstag()));
+		newUser.setBirthdate(this.m_dateFormat.parse(inRegistration.getBirthday()));
 		newUser.seteMailAddress(new EMail(inRegistration.getEmail()));
-		newUser.setFirstName(inRegistration.getVorname());
+		newUser.setFirstName(inRegistration.getFirstname());
 		newUser.setPassword(inRegistration.getPassword());
-		newUser.setName(inRegistration.getNachname());
+		newUser.setName(inRegistration.getName());
 		try	{
 			userRepository.save(newUser);
 		} catch(DataIntegrityViolationException e) {
