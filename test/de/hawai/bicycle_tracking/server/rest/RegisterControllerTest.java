@@ -4,6 +4,7 @@ import de.hawai.bicycle_tracking.server.*;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
 import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class RegisterControllerTest
 {
 	private static final String NAME = "Hans";
 	private static final String LASTNAME = "Wurst";
-	private static final String EMAIL = "hans@wurst.com";
+	private static final EMail EMAIL = new EMail("hans@wurst.com");
 	private static final String BIRTHDATE = "01.01.1970";
 	private static final String INVALID_BIRTHDATE = "Erster.Erster.Siebzig";
 	private static final String PASSWORD = "thisismypassword";

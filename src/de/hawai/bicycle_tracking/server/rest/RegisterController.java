@@ -6,7 +6,6 @@ import de.hawai.bicycle_tracking.server.astcore.customermanagement.*;
 import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
 import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +37,7 @@ public class RegisterController
 		User newUser = new User();
 		newUser.setAddress(inRegistration.getAddress());
 		newUser.setBirthdate(this.m_dateFormat.parse(inRegistration.getBirthday()));
-		newUser.seteMailAddress(new EMail(inRegistration.getEmail()));
+		newUser.seteMailAddress(inRegistration.getEmail());
 		newUser.setFirstName(inRegistration.getFirstname());
 		newUser.setPassword(inRegistration.getPassword());
 		newUser.setName(inRegistration.getName());
