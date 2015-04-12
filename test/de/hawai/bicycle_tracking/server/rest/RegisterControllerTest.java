@@ -35,6 +35,7 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 public class RegisterControllerTest {
 	private static final String NAME = "Hans";
 	private static final String LASTNAME = "Wurst";
+
 	private static final EMail EMAIL = new EMail("hans@wurst.com");
 	private static final String BIRTHDATE = "1970-01-01";
 	private static final String INVALID_BIRTHDATE = "Erster.Erster.Siebzig";
