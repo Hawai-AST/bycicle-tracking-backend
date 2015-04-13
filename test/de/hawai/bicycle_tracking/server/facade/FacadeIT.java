@@ -33,7 +33,7 @@ public class FacadeIT {
 
 	private static final String NAME = "Name";
 	private static final String FIRST_NAME = "FirstName";
-	private static final String E_MAIL_ADDRESS = "foo@bar.com";
+	private static final EMail E_MAIL_ADDRESS = new EMail("foo@bar.com");
 	private static final Address ADDRESS = new Address("Foostreet", "1a", "Barheim", "DC", "1337", "Germany");
 	private static final Date BIRTHDATE = new Date(0);
 	private static final String PASSWORD = "TestingPassword";
@@ -50,7 +50,7 @@ public class FacadeIT {
 
 	@Test
 	public void createdUserCanBeRetrieved() {
-		assertThat(facade.getUserBy(new EMail(E_MAIL_ADDRESS)).isPresent()).isTrue();
+		assertThat(facade.getUserBy(E_MAIL_ADDRESS).isPresent()).isTrue();
 	}
 
 }
