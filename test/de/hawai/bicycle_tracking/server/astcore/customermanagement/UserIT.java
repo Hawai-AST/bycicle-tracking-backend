@@ -52,7 +52,7 @@ public class UserIT {
 
 	@Test
 	public void createdUserCanBeFoundByName() throws Exception {
-		assertThat(user).isEqualTo(userDao.getByName(NAME));
+		assertThat(user).isEqualTo(userDao.getByName(NAME).get());
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class UserIT {
 
 	@Test
 	public void nonExistentUsersCantBeFound() throws Exception {
-		assertThat(userDao.getByName("Foobar")).isNull();
+		assertThat(userDao.getByName("Foobar").isPresent()).isFalse();
 	}
 
 	@Test

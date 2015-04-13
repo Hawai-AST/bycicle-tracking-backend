@@ -1,12 +1,27 @@
 package de.hawai.bicycle_tracking.server.rest;
 
+import java.util.Optional;
 import java.util.UUID;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.*;
-import de.hawai.bicycle_tracking.server.dto.LoginDTO;
-import de.hawai.bicycle_tracking.server.rest.exceptions.*;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.Application;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.ApplicationDao;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSession;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSessionDao;
+import de.hawai.bicycle_tracking.server.dto.LoginDTO;
+import de.hawai.bicycle_tracking.server.facade.Facade;
+import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
+import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestException;
+import de.hawai.bicycle_tracking.server.rest.exceptions.NotAuthorizedException;
+import de.hawai.bicycle_tracking.server.rest.exceptions.NotFoundException;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @RequestMapping("/api")
 @RestController
@@ -14,13 +29,14 @@ public class LoginController {
 	public enum GrantType {
 		PASSWORD;
 
+		@Override
 		public String toString() {
 			return this.name().toLowerCase();
 		}
 	}
 
 	@Autowired
-	private UserDao userRepository;
+	private Facade facade;
 
 	@Autowired
 	private LoginSessionDao loginSessionRepository;
@@ -45,26 +61,30 @@ public class LoginController {
 
 	private LoginResponseV1 loginPasswordV1(LoginDTO inLoginDTO, Application inApplication)
 	{
-		User toLogin = this.userRepository.getByeMailAddress(new EMail(inLoginDTO.getEmail()));
-		if(toLogin == null) {
-			throw new NotFoundException("No User found");
-		} else {
-			if(toLogin.getPassword().equals(inLoginDTO.getCode())) {
-				LoginSession session = new LoginSession();
-				session.setApplication(inApplication);
-				session.setUser(toLogin);
-				session.setToken(UUID.randomUUID().toString());
-				this.loginSessionRepository.save(session);
+		Optional<IUser> userOptional = this.facade.getUserBy(new EMail(inLoginDTO.getEmail()));
 
-				LoginResponseV1 responseV1 = new LoginResponseV1();
-				responseV1.setEmail(toLogin.geteMailAddress().geteMailAddress());
-				responseV1.setToken(session.getToken());
-				return responseV1;
-			} else {
-				throw new NotAuthorizedException("Invalid password");
-			}
+		IUser toLogin = null;
+		if (userOptional.isPresent()) {
+			toLogin = userOptional.get();
+		} else {
+			throw new NotFoundException("No User found");
+		}
+		if(toLogin.getPassword().equals(inLoginDTO.getCode())) {
+			LoginSession session = new LoginSession();
+			session.setApplication(inApplication);
+			session.setUser(toLogin);
+			session.setToken(UUID.randomUUID().toString());
+			this.loginSessionRepository.save(session);
+
+			LoginResponseV1 responseV1 = new LoginResponseV1();
+			responseV1.setEmail(toLogin.geteMailAddress().geteMailAddress());
+			responseV1.setToken(session.getToken());
+			return responseV1;
+		} else {
+			throw new NotAuthorizedException("Invalid password");
 		}
 	}
+
 
 	private static class LoginResponseV1 {
 		private String email;
