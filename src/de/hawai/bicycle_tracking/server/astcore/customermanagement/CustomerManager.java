@@ -17,7 +17,7 @@ public class CustomerManager implements ICustomerManagement {
 
 	@Override
 	public Optional<IUser> getUserBy(EMail eMail) {
-		return Optional.ofNullable(userDao.getByeMailAddress(eMail).orElse(null));
+		return Optional.ofNullable(userDao.getByMailAddress(eMail).orElse(null));
 	}
 
 	@Override

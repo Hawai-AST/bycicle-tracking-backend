@@ -16,7 +16,7 @@ public interface IUser {
 
 	public Address getAddress();
 
-	public EMail geteMailAddress();
+	public EMail getMailAddress();
 
 	public String getPassword();
 
