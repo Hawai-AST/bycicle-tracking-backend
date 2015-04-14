@@ -1,4 +1,4 @@
-package de.hawai.bicycle_tracking.server.astcore.customermanagement;
+package de.hawai.bicycle_tracking.server.astcore.bikecomponent;
 
 import java.util.Date;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
