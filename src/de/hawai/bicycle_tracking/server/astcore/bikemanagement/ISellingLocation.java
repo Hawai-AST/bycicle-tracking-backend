@@ -1,4 +1,4 @@
-package de.hawai.bicycle_tracking.server.astcore.bikecomponent;
+package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 
