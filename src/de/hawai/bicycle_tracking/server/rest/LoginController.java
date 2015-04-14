@@ -77,7 +77,7 @@ public class LoginController {
 			this.loginSessionRepository.save(session);
 
 			LoginResponseV1 responseV1 = new LoginResponseV1();
-			responseV1.setEmail(toLogin.geteMailAddress().geteMailAddress());
+			responseV1.setEmail(toLogin.getMailAddress().getMailAddress());
 			responseV1.setToken(session.getToken());
 			return responseV1;
 		} else {
