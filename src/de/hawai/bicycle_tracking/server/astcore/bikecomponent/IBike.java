@@ -12,4 +12,6 @@ public interface IBike
 	public FrameNumber getFrameNumber();
 
 	public Date getNextMaintenanceDate();
+
+	public ISellingLocation getSoldLocation();
 }

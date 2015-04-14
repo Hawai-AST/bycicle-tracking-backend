@@ -11,6 +11,7 @@ public class Bike implements IBike
 	private FrameNumber frameNumber;
 	private Date buyDate;
 	private Date nextMaintenanceDate;
+	private SellingLocation soldLocation;
 
 	public Bike(final String inType, final FrameNumber inFrameNumber, final Date inBuyDate, final Date inNextMaintenanceDate)
 	{
@@ -48,6 +49,14 @@ public class Bike implements IBike
 	public Date getNextMaintenanceDate()
 	{
 		return nextMaintenanceDate;
+	}
+
+	@ManyToOne
+	@Column(name = "sold_location")
+	@Override
+	public SellingLocation getSoldLocation()
+	{
+		return soldLocation;
 	}
 
 	private void setType(final String inType)
