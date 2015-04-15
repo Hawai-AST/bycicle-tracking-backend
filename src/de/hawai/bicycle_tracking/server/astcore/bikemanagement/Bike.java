@@ -2,10 +2,11 @@ package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
 import java.util.Date;
 import javax.persistence.*;
+import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
 @Entity
-public class Bike implements IBike
+public class Bike extends AbstractEntity implements IBike
 {
 	private String type;
 	private FrameNumber frameNumber;
@@ -52,7 +53,6 @@ public class Bike implements IBike
 	}
 
 	@ManyToOne
-	@Column(name = "sold_location")
 	@Override
 	public SellingLocation getSoldLocation()
 	{
@@ -77,5 +77,10 @@ public class Bike implements IBike
 	private void setNextMaintenanceDate(final Date inNextMaintenanceDate)
 	{
 		nextMaintenanceDate = inNextMaintenanceDate;
+	}
+
+	private void setSoldLocation(final SellingLocation inSoldLocation)
+	{
+		soldLocation = inSoldLocation;
 	}
 }

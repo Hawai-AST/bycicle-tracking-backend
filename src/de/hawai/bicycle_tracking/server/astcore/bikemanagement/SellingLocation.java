@@ -1,10 +1,11 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
 import javax.persistence.*;
+import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 
 @Entity
-public class SellingLocation implements ISellingLocation
+public class SellingLocation extends AbstractEntity implements ISellingLocation
 {
 	private Address address;
 	private String name;

@@ -21,6 +21,11 @@ public class FrameNumber
 		return number;
 	}
 
+	private void setNumber(final long inNumber)
+	{
+		number = inNumber;
+	}
+
 	@Override
 	public boolean equals(final Object o)
 	{
