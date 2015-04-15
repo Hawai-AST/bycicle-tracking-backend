@@ -2,6 +2,7 @@ package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
 import java.util.Date;
 import javax.persistence.*;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
@@ -13,13 +14,16 @@ public class Bike extends AbstractEntity implements IBike
 	private Date buyDate;
 	private Date nextMaintenanceDate;
 	private SellingLocation soldLocation;
+	private User owner;
 
-	public Bike(final String inType, final FrameNumber inFrameNumber, final Date inBuyDate, final Date inNextMaintenanceDate)
+	public Bike(final String inType, final FrameNumber inFrameNumber, final Date inBuyDate, final Date inNextMaintenanceDate, final SellingLocation inSellingLocation, final User inOwner)
 	{
 		type = inType;
 		frameNumber = inFrameNumber;
 		buyDate = inBuyDate;
 		nextMaintenanceDate = inNextMaintenanceDate;
+		soldLocation = inSellingLocation;
+		owner = inOwner;
 	}
 
 	@Column(name = "type", length = 50)
@@ -59,6 +63,13 @@ public class Bike extends AbstractEntity implements IBike
 		return soldLocation;
 	}
 
+	@ManyToOne
+	@Override
+	public User getOwner()
+	{
+		return this.owner;
+	}
+
 	private void setType(final String inType)
 	{
 		type = inType;
@@ -82,5 +93,10 @@ public class Bike extends AbstractEntity implements IBike
 	private void setSoldLocation(final SellingLocation inSoldLocation)
 	{
 		soldLocation = inSoldLocation;
+	}
+
+	private void setOwner(final User inOwner)
+	{
+		owner = inOwner;
 	}
 }
