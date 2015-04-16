@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
@@ -45,7 +44,7 @@ public class LoginControllerTest
 	private static final String INVALID_PASSWORD = "thisisnotmypassword";
 	private static final String NAME = "Hans";
 	private static final String LASTNAME = "Wurst";
-	private static Date BIRTHDATE;
+	private static final Date BIRTHDATE = new Date(0);
 	private static final int CUSTOMERNR = 1;
 	private static final String GENDER = "male";
 	private static final String STREET = "Wurstalee";
@@ -66,9 +65,7 @@ public class LoginControllerTest
 	private LoginDTO login;
 
 	@PostConstruct
-	public void setup() throws ParseException
-	{
-		BIRTHDATE = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.1970");
+	public void setup() throws ParseException {
 		this.restViewerMockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 	}
 
@@ -85,28 +82,30 @@ public class LoginControllerTest
 	}
 
 	@After
-	public void teardown()
-	{
+	public void teardown() {
 		userRepository.deleteAll();
 	}
 
 	@Test
-	public void testLogin() throws Exception
-	{
-		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(this.login)).header("Client-ID", "DEV-101")).andExpect(status().isOk());
+	public void testLogin() throws Exception {
+		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(this.login))
+				.header("Client-ID", "DEV-101")).andExpect(status().isOk());
 	}
 
 	@Test
-	public void testInvalidPassword() throws Exception
-	{
+	public void testInvalidPassword() throws Exception {
 		this.login.setCode(INVALID_PASSWORD);
-		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(this.login)).header("Client-ID", "DEV-101")).andExpect(status().isUnauthorized());
+		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(this.login))
+				.header("Client-ID", "DEV-101")).andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	public void testInvalidUser() throws Exception
-	{
+	public void testInvalidUser() throws Exception {
 		this.login.setEmail(INVALID_EMAIL);
-		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(this.login)).header("Client-ID", "DEV-101")).andExpect(status().isNotFound());
+		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(this.login))
+				.header("Client-ID", "DEV-101")).andExpect(status().isNotFound());
 	}
 }

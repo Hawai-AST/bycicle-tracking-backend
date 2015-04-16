@@ -27,7 +27,8 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = AppConfig.class)
 @Transactional(noRollbackFor = Exception.class)
-@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
+@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
+		DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class UserIT {
 
@@ -86,7 +87,11 @@ public class UserIT {
 	@Test
 	public void eMailAddressMustBeUniqueForUser() throws Exception {
 		try {
-			userDao.save(new User("other name", "other first name", E_MAIL_ADDRESS, new Address("A", "B", "C", "D", "E", "F"), new Date(42), "Other Password"));
+			userDao.save(new User("other name",
+					"other first name", E_MAIL_ADDRESS,
+					new Address("A", "B", "C", "D", "E", "F"),
+					new Date(42),
+					"Other Password"));
 			fail("DataIntegrityViolationException expected because test tries to save a user with an already existent email address.");
 		} catch (DataIntegrityViolationException e) {
 			// do nothing

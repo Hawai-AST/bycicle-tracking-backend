@@ -30,7 +30,7 @@ public class EMail {
 		return matcher.matches();
 	}
 
-	@Column(name = "email_address", nullable = false, length=250)
+	@Column(name = "email_address", nullable = false, length = 250)
 	public String getMailAddress() {
 		return mailAddress;
 	}
