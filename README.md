@@ -1,1 +1,1 @@
-# bicycle-tracking-backend ![build status](https://travis-ci.org/Hawai-AST/bicycle-tracking-backend.svg?branch=master)
+# bicycle-tracking-backend [![build status](https://travis-ci.org/Hawai-AST/bicycle-tracking-backend.svg?branch=master)](https://travis-ci.org/Hawai-AST/bicycle-tracking-backend)
