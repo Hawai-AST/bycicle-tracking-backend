@@ -4,6 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LoginSessionDao extends JpaRepository<LoginSession, Long>
-{
+public interface LoginSessionDao extends JpaRepository<LoginSession, Long> {
 }

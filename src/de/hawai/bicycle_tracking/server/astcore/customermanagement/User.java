@@ -106,25 +106,21 @@ public class User extends AbstractEntity implements IUser {
 
 	@Override
 	@Column(name = "password", length = 100, nullable = false)
-	public String getPassword()
-	{
+	public String getPassword() {
 		return password;
 	}
 
-	private void setPassword(final String inPassword)
-	{
+	private void setPassword(final String inPassword) {
 		password = inPassword;
 	}
 
 	@Override
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-	public List<LoginSession> getLoginSessions()
-	{
+	public List<LoginSession> getLoginSessions() {
 		return loginSessions;
 	}
 
-	private void setLoginSessions(final List<LoginSession> inLoginSessions)
-	{
+	private void setLoginSessions(final List<LoginSession> inLoginSessions) {
 		loginSessions = inLoginSessions;
 	}
 
