@@ -1,13 +1,11 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-public class ErrorMessage
-{
+public class ErrorMessage {
 	private int status;
 	private String error;
 	private String message;
 
-	public ErrorMessage()
-	{
+	public ErrorMessage() {
 	}
 
 	public ErrorMessage(final int inStatus, final String inError, final String inMessage)
@@ -17,33 +15,27 @@ public class ErrorMessage
 		message = inMessage;
 	}
 
-	public int getStatus()
-	{
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(final int inStatus)
-	{
+	public void setStatus(final int inStatus) {
 		status = inStatus;
 	}
 
-	public String getError()
-	{
+	public String getError() {
 		return error;
 	}
 
-	public void setError(final String inError)
-	{
+	public void setError(final String inError) {
 		error = inError;
 	}
 
-	public String getMessage()
-	{
+	public String getMessage() {
 		return message;
 	}
 
-	public void setMessage(final String inMessage)
-	{
+	public void setMessage(final String inMessage) {
 		message = inMessage;
 	}
 }
