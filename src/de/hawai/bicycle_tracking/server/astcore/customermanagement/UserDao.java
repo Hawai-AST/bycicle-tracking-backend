@@ -12,6 +12,6 @@ public interface UserDao extends JpaRepository<User, Long> {
 
 	public Optional<User> getByName(String name);
 
-	public Optional<User> getByeMailAddress(EMail emailAddress);
+	public Optional<User> getByMailAddress(EMail emailAddress);
 
 }

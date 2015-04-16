@@ -61,7 +61,7 @@ public class RegisterController
 		this.loginSessionRepository.save(session);
 
 		RegisterResponseV1 responseV1 = new RegisterResponseV1();
-		responseV1.setEmail(newUser.geteMailAddress().geteMailAddress());
+		responseV1.setEmail(newUser.getMailAddress().getMailAddress());
 		responseV1.setToken(session.getToken());
 		return responseV1;
 	}
