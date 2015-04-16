@@ -21,12 +21,12 @@ public class RegistrationDTO {
 		address = inAddress;
 	}
 
-
-	public EMail getEmail() {		return email;
+	public EMail getEmail() {
+		return email;
 	}
 
-
-	public void setEmail(final EMail inEmail) {		email = inEmail;
+	public void setEmail(final EMail inEmail) {
+		email = inEmail;
 	}
 
 	public int getCustomerid() {
