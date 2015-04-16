@@ -36,8 +36,7 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 @SpringApplicationConfiguration(classes = { Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
 @WebAppConfiguration
 @IntegrationTest
-public class LoginControllerTest
-{
+public class LoginControllerTest {
 	private static final String EMAIL = "hans@wurst.com";
 	private static final String INVALID_EMAIL = "hans@peter.com";
 	private static final String PASSWORD = "thisismypassword";

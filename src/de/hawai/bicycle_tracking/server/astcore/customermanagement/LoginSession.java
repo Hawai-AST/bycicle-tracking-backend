@@ -9,8 +9,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "token"))
-public class LoginSession implements ILoginSession
-{
+public class LoginSession implements ILoginSession {
 	@Id
 	@GeneratedValue
 	private long id;
@@ -24,35 +23,29 @@ public class LoginSession implements ILoginSession
 	private IUser user;
 
 	@Override
-	public Application getApplication()
-	{
+	public Application getApplication() {
 		return application;
 	}
 
-	public void setApplication(final Application inApplication)
-	{
+	public void setApplication(final Application inApplication) {
 		application = inApplication;
 	}
 
 	@Override
-	public String getToken()
-	{
+	public String getToken() {
 		return token;
 	}
 
-	public void setToken(final String inToken)
-	{
+	public void setToken(final String inToken) {
 		token = inToken;
 	}
 
 	@Override
-	public IUser getUser()
-	{
+	public IUser getUser() {
 		return user;
 	}
 
-	public void setUser(final IUser inUser)
-	{
+	public void setUser(final IUser inUser) {
 		user = inUser;
 	}
 }
