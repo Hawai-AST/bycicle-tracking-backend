@@ -27,7 +27,7 @@ import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
 @RequestMapping("/api")
 public class RegisterController
 {
-	private final DateFormat m_dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+	private final DateFormat m_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
 	private Facade facade;
