@@ -90,6 +90,7 @@ public class LoginController {
 		private String email;
 		private String token;
 
+		@SuppressWarnings("unused")
 		public String getEmail() {
 			return email;
 		}
@@ -98,6 +99,7 @@ public class LoginController {
 			email = inEmail;
 		}
 
+		@SuppressWarnings("unused")
 		public String getToken() {
 			return token;
 		}

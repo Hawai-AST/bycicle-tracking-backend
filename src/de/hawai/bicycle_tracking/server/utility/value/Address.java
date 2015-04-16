@@ -28,7 +28,7 @@ public class Address {
 
 	}
 
-	@Column(name = "address_street", nullable = false, length=250)
+	@Column(name = "address_street", nullable = false, length = 250)
 	public String getStreet() {
 		return street;
 	}
@@ -37,7 +37,7 @@ public class Address {
 		this.street = street;
 	}
 
-	@Column(name = "address_city", nullable = false, length=50)
+	@Column(name = "address_city", nullable = false, length = 50)
 	public String getCity() {
 		return city;
 	}
@@ -46,7 +46,7 @@ public class Address {
 		this.city = city;
 	}
 
-	@Column(name = "address_state", nullable = false, length=50)
+	@Column(name = "address_state", nullable = false, length = 50)
 	public String getState() {
 		return state;
 	}

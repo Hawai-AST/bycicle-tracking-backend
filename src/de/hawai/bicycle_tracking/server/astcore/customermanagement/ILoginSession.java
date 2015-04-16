@@ -1,7 +1,6 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
-public interface ILoginSession
-{
+public interface ILoginSession {
 	IApplication getApplication();
 
 	IUser getUser();

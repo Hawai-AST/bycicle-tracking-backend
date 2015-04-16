@@ -3,8 +3,7 @@ package de.hawai.bicycle_tracking.server.dto;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
-public class RegistrationDTO
-{
+public class RegistrationDTO {
 	private Address address;
 	private EMail email;
 	private int customerid;
@@ -14,89 +13,72 @@ public class RegistrationDTO
 	private String gender;
 	private String birthday;
 
-	public Address getAddress()
-	{
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(final Address inAddress)
-	{
+	public void setAddress(final Address inAddress) {
 		address = inAddress;
 	}
 
-	public EMail getEmail()
-	{
+	public EMail getEmail() {
 		return email;
 	}
 
-	public void setEmail(final EMail inEmail)
-	{
+	public void setEmail(final EMail inEmail) {
 		email = inEmail;
 	}
 
-	public int getCustomerid()
-	{
+	public int getCustomerid() {
 		return customerid;
 	}
 
-	public void setCustomerid(final int inCustomerid)
-	{
+	public void setCustomerid(final int inCustomerid) {
 		customerid = inCustomerid;
 	}
 
-	public String getFirstname()
-	{
+	public String getFirstname() {
 		return firstname;
 	}
 
-	public void setFirstname(final String inFirstname)
-	{
+	public void setFirstname(final String inFirstname) {
 		firstname = inFirstname;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
-	public void setName(final String inName)
-	{
+	public void setName(final String inName) {
 		name = inName;
 	}
 
-	public String getPassword()
-	{
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(final String inPassword)
-	{
+	public void setPassword(final String inPassword) {
 		password = inPassword;
 	}
 
-	public String getGender()
-	{
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(final String inGender)
-	{
+	public void setGender(final String inGender) {
 		gender = inGender;
 	}
 
-	public String getBirthday()
-	{
+	public String getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(final String inBirthday)
-	{
+	public void setBirthday(final String inBirthday) {
 		birthday = inBirthday;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return "RegistrationDTO{" +
 				"address=" + address +
 				", email=" + email +

@@ -1,11 +1,15 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
 import java.util.List;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
-public class Application implements IApplication
-{
+public class Application implements IApplication {
 	@Id
 	@GeneratedValue
 	private int id;
@@ -16,24 +20,20 @@ public class Application implements IApplication
 	@OneToMany(mappedBy = "application")
 	private List<LoginSession> sessions;
 
-	public int getId()
-	{
+	public int getId() {
 		return id;
 	}
 
-	public void setId(final int inId)
-	{
+	public void setId(final int inId) {
 		id = inId;
 	}
 
 	@Override
-	public String getClientID()
-	{
+	public String getClientID() {
 		return clientID;
 	}
 
-	public void setClientID(final String inClientID)
-	{
+	public void setClientID(final String inClientID) {
 		clientID = inClientID;
 	}
 }
