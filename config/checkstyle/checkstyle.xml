@@ -87,7 +87,8 @@ page at http://checkstyle.sourceforge.net/config.html -->
     </module>
 
     <module name="MemberNameCheck">
-      <!-- Validates non-static members against the supplied expression. -->
+      <!-- Validates non-static members against the supplied
+      expression "^[a-z][a-zA-Z0-9]*$". -->
       <metadata name="altname" value="MemberName"/>
       <property name="applyToPublic" value="true"/>
       <property name="applyToProtected" value="true"/>
@@ -98,7 +99,8 @@ page at http://checkstyle.sourceforge.net/config.html -->
     </module>
 
     <module name="MethodNameCheck">
-      <!-- Validates identifiers for method names. -->
+      <!-- Validates identifiers for method names against the
+      supplied expression "^[a-z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$". -->
       <metadata name="altname" value="MethodName"/>
       <property name="format" value="^[a-z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$"/>
       <property name="severity" value="warning"/>
