@@ -53,6 +53,7 @@ Desktop.ini
 ######################
 # Eclipse
 ######################
+.checkstyle
 *.pydevproject
 .project
 .metadata
