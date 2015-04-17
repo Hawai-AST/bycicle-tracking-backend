@@ -71,8 +71,8 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
-					.antMatchers("/v{\\d+}/register", "/v{\\d+}/login").permitAll()
-					.antMatchers("/v{\\d+}/user/*").hasRole("ADMIN");
+					.antMatchers("/api/v{\\d+}/register", "/api/v{\\d+}/login").permitAll()
+					.antMatchers("/api/v{\\d+}/user/*").hasRole("ADMIN");
 
 		}
 	}
