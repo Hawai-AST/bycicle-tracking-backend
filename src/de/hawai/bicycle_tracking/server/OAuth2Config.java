@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 @EnableAuthorizationServer
 public class OAuth2Config extends AuthorizationServerConfigurerAdapter
 {
+	private static final int VALIDITY_TIME = 60 * 60 * 24 * 7;
+
 	@Autowired
 	private AuthenticationManager m_authenticationManager;
 
@@ -29,6 +31,6 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter
 				.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
 				.scopes("read", "write", "trust")
 				.resourceIds("sparklr")
-				.accessTokenValiditySeconds(60);
+				.accessTokenValiditySeconds(VALIDITY_TIME);
 	}
 }
