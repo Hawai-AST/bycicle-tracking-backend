@@ -48,6 +48,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter
 					.authorities("USER", "ADMIN")
 					.scopes("read", "write")
 					.resourceIds(RESOURCE_ID)
+					.secret("DEVSECRET")
 					.accessTokenValiditySeconds(VALIDITY_TIME);
 	}
 
@@ -72,7 +73,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter
 		public void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
 					.antMatchers("/api/v{\\d+}/register", "/api/v{\\d+}/login").permitAll()
-					.antMatchers("/api/v{\\d+}/user/*").hasRole("ADMIN");
+					.antMatchers("/api/v{\\d+}/user/*").hasAuthority("USER");
 
 		}
 	}
