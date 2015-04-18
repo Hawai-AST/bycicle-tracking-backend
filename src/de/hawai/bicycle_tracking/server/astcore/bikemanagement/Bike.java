@@ -80,11 +80,11 @@ public class Bike extends AbstractEntity implements IBike {
         nextMaintenanceDate = inNextMaintenanceDate;
     }
 
-    private void setSoldLocation(final SellingLocation inSoldLocation) {
+    private void setSoldLocation(final ISellingLocation inSoldLocation) {
         soldLocation = inSoldLocation;
     }
 
-    private void setOwner(final User inOwner) {
+    private void setOwner(final IUser inOwner) {
         owner = inOwner;
     }
 }
