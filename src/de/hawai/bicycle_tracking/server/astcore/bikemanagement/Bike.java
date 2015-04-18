@@ -1,5 +1,6 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
@@ -13,10 +14,10 @@ public class Bike extends AbstractEntity implements IBike {
     private FrameNumber frameNumber;
     private Date buyDate;
     private Date nextMaintenanceDate;
-    private SellingLocation soldLocation;
-    private User owner;
+    private ISellingLocation soldLocation;
+    private IUser owner;
 
-    public Bike(final String inType, final FrameNumber inFrameNumber, final Date inBuyDate, final Date inNextMaintenanceDate, final SellingLocation inSellingLocation, final User inOwner) {
+    public Bike(final String inType, final FrameNumber inFrameNumber, final Date inBuyDate, final Date inNextMaintenanceDate, final ISellingLocation inSellingLocation, final IUser inOwner) {
         type = inType;
         frameNumber = inFrameNumber;
         buyDate = inBuyDate;
@@ -51,15 +52,15 @@ public class Bike extends AbstractEntity implements IBike {
         return nextMaintenanceDate;
     }
 
-    @ManyToOne
+    @ManyToOne(targetEntity = SellingLocation.class)
     @Override
-    public SellingLocation getSoldLocation() {
+    public ISellingLocation getSoldLocation() {
         return soldLocation;
     }
 
-    @ManyToOne
+    @ManyToOne(targetEntity = User.class)
     @Override
-    public User getOwner() {
+    public IUser getOwner() {
         return this.owner;
     }
 
