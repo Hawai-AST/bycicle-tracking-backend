@@ -1,16 +1,16 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
-import java.util.List;
-
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface BikeDao extends JpaRepository<Bike, Long> {
-    List<Bike> findByOwner(User inCustomer);
+    List<IBike> findByOwner(IUser inCustomer);
 
     @Query("SELECT bike from Bike bike WHERE bike.soldLocation = ?")
-    List<Bike> findBySoldLocation(SellingLocation inSellingLocation);
+    List<IBike> findBySoldLocation(ISellingLocation inSellingLocation);
 }
