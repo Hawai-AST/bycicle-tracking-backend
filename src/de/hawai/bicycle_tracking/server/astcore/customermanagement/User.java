@@ -22,6 +22,7 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @Entity
 @Table(name="user", uniqueConstraints = { @UniqueConstraint(columnNames = {"email_address"})})
+@SuppressWarnings("unused")
 public class User extends AbstractEntity implements IUser {
 
 	/**
@@ -32,23 +33,25 @@ public class User extends AbstractEntity implements IUser {
 	private String firstName;
 	private Date birthdate;
 	private Address address;
-	private EMail eMailAddress;
+	private EMail mailAddress;
 	@JsonIgnore
 	private String password;
 	@JsonIgnore
 	private List<LoginSession> loginSessions = new ArrayList<LoginSession>();
+
+	private User() {
+		super();
+	}
 
 	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password) {
 		this.name = name;
 		this.firstName = firstName;
 		this.birthdate = birthdate;
 		this.address = address;
-		this.eMailAddress = eMailAddress;
+		this.mailAddress = eMailAddress;
 		this.password = password;
 	}
 
-	public User(){
-	}
 
 	@Column(name="name", length=30, nullable=false)
 	@Override
@@ -77,27 +80,27 @@ public class User extends AbstractEntity implements IUser {
 
 	@Embedded()
 	@Override
-	public EMail geteMailAddress() {
-		return eMailAddress;
+	public EMail getMailAddress() {
+		return mailAddress;
 	}
 
-	public void setName(String name) {
+	private void setName(String name) {
 		this.name = name;
 	}
 
-	public void setFirstName(String firstName) {
+	private void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	public void setBirthdate(Date birthdate) {
+	private void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
 	}
 
-	public void seteMailAddress(EMail eMailAddress) {
-		this.eMailAddress = eMailAddress;
+	private void setMailAddress(EMail eMailAddress) {
+		this.mailAddress = eMailAddress;
 	}
 
-	public void setAddress(Address address) {
+	private void setAddress(Address address) {
 		this.address = address;
 	}
 
@@ -107,7 +110,7 @@ public class User extends AbstractEntity implements IUser {
 		return password;
 	}
 
-	public void setPassword(final String inPassword)
+	private void setPassword(final String inPassword)
 	{
 		password = inPassword;
 	}
@@ -118,7 +121,7 @@ public class User extends AbstractEntity implements IUser {
 		return loginSessions;
 	}
 
-	public void setLoginSessions(final List<LoginSession> inLoginSessions)
+	private void setLoginSessions(final List<LoginSession> inLoginSessions)
 	{
 		loginSessions = inLoginSessions;
 	}
@@ -128,7 +131,7 @@ public class User extends AbstractEntity implements IUser {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((eMailAddress == null) ? 0 : eMailAddress.hashCode());
+				+ ((mailAddress == null) ? 0 : mailAddress.hashCode());
 		return result;
 	}
 
@@ -141,10 +144,10 @@ public class User extends AbstractEntity implements IUser {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (eMailAddress == null) {
-			if (other.eMailAddress != null)
+		if (mailAddress == null) {
+			if (other.mailAddress != null)
 				return false;
-		} else if (!eMailAddress.equals(other.eMailAddress))
+		} else if (!mailAddress.equals(other.mailAddress))
 			return false;
 		return true;
 	}

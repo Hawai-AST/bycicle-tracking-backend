@@ -1,16 +1,17 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-import javax.annotation.PostConstruct;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import de.hawai.bicycle_tracking.server.*;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
-import de.hawai.bicycle_tracking.server.dto.LoginDTO;
-import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
-import org.junit.*;
+
+import javax.annotation.PostConstruct;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
@@ -20,8 +21,17 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.DBConfig;
+import de.hawai.bicycle_tracking.server.DBFixuresConfig;
+import de.hawai.bicycle_tracking.server.Main;
+import de.hawai.bicycle_tracking.server.TestUtil;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
+import de.hawai.bicycle_tracking.server.dto.LoginDTO;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
@@ -64,14 +74,8 @@ public class LoginControllerTest
 
 	@Before
 	public void initTest() {
-		User user = new User();
 		Address address = new Address(STREET, HOUSENR, CITY, STATE, POSTCODE, COUNTRY);
-		user.setAddress(address);
-		user.setFirstName(NAME);
-		user.setName(LASTNAME);
-		user.setPassword(PASSWORD);
-		user.setBirthdate(BIRTHDATE);
-		user.seteMailAddress(new EMail(EMAIL));
+		User user = new User(LASTNAME, NAME, new EMail(EMAIL), address, BIRTHDATE, PASSWORD);
 		userRepository.save(user);
 
 		this.login = new LoginDTO();
