@@ -1,4 +1,4 @@
-package de.hawai.bicycle_tracking.server;
+package de.hawai.bicycle_tracking.server.utility.test;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
