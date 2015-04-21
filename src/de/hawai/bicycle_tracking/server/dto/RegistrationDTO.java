@@ -1,12 +1,11 @@
 package de.hawai.bicycle_tracking.server.dto;
 
 import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 public class RegistrationDTO
 {
 	private Address address;
-	private EMail email;
+	private String email;
 	private int customerid;
 	private String firstname;
 	private String name;
@@ -24,12 +23,12 @@ public class RegistrationDTO
 		address = inAddress;
 	}
 
-	public EMail getEmail()
+	public String getEmail()
 	{
 		return email;
 	}
 
-	public void setEmail(final EMail inEmail)
+	public void setEmail(final String inEmail)
 	{
 		email = inEmail;
 	}
