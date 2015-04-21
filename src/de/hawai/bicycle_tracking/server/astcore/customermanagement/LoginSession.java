@@ -1,11 +1,6 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "token"))
@@ -20,8 +15,8 @@ public class LoginSession implements ILoginSession
 
 	private String token;
 
-	@ManyToOne(targetEntity = User.class) 
-	private IUser user;
+	@ManyToOne
+	private User user;
 
 	@Override
 	public Application getApplication()
@@ -46,12 +41,12 @@ public class LoginSession implements ILoginSession
 	}
 
 	@Override
-	public IUser getUser()
+	public User getUser()
 	{
 		return user;
 	}
 
-	public void setUser(final IUser inUser)
+	public void setUser(final User inUser)
 	{
 		user = inUser;
 	}

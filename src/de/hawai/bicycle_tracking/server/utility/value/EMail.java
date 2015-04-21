@@ -7,12 +7,12 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-@SuppressWarnings("unused")
 public class EMail {
 
-	private String mailAddress;
+	private String eMailAddress;
 	private static final String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
+	@SuppressWarnings("unused")
 	private EMail() {
 		super();
 	}
@@ -21,7 +21,7 @@ public class EMail {
 		if 	(!verifyCorrectnessOf(eMailAddress)) {
 			throw new IllegalArgumentException(eMailAddress + " is not a valid E-Mail address.");
 		}
-		this.mailAddress = eMailAddress;
+		this.eMailAddress = eMailAddress;
 	}
 
 	private boolean verifyCorrectnessOf(String eMailAddress) {
@@ -31,12 +31,12 @@ public class EMail {
 	}
 
 	@Column(name = "email_address", nullable = false, length=250)
-	public String getMailAddress() {
-		return mailAddress;
+	public String geteMailAddress() {
+		return eMailAddress;
 	}
 
-	private void setMailAddress(String eMailAddress) {
-		this.mailAddress = eMailAddress;
+	public void seteMailAddress(String eMailAddress) {
+		this.eMailAddress = eMailAddress;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class EMail {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((mailAddress == null) ? 0 : mailAddress.hashCode());
+				+ ((eMailAddress == null) ? 0 : eMailAddress.hashCode());
 		return result;
 	}
 
@@ -57,10 +57,10 @@ public class EMail {
 		if (getClass() != obj.getClass())
 			return false;
 		EMail other = (EMail) obj;
-		if (mailAddress == null) {
-			if (other.mailAddress != null)
+		if (eMailAddress == null) {
+			if (other.eMailAddress != null)
 				return false;
-		} else if (!mailAddress.equals(other.mailAddress))
+		} else if (!eMailAddress.equals(other.eMailAddress))
 			return false;
 		return true;
 	}

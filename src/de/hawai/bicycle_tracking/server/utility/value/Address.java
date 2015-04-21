@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-@SuppressWarnings("unused")
 public class Address {
 
 	private String street;
@@ -14,6 +13,7 @@ public class Address {
 	private String postcode;
 	private String country;
 
+	@SuppressWarnings("unused")
 	private Address() {
 		super();
 	}
@@ -33,7 +33,7 @@ public class Address {
 		return street;
 	}
 
-	private void setStreet(String street) {
+	public void setStreet(String street) {
 		this.street = street;
 	}
 
@@ -42,7 +42,7 @@ public class Address {
 		return city;
 	}
 
-	private void setCity(String city) {
+	public void setCity(String city) {
 		this.city = city;
 	}
 
@@ -51,7 +51,7 @@ public class Address {
 		return state;
 	}
 
-	private void setState(String state) {
+	public void setState(String state) {
 		this.state = state;
 	}
 
@@ -60,7 +60,7 @@ public class Address {
 		return postcode;
 	}
 
-	private void setPostcode(String postcode) {
+	public void setPostcode(String postcode) {
 		this.postcode = postcode;
 	}
 
@@ -69,7 +69,7 @@ public class Address {
 		return houseNumber;
 	}
 
-	private void setHouseNumber(String houseNumber) {
+	public void setHouseNumber(String houseNumber) {
 		this.houseNumber = houseNumber;
 	}
 
@@ -78,7 +78,7 @@ public class Address {
 		return country;
 	}
 
-	private void setCountry(String country) {
+	public void setCountry(String country) {
 		this.country = country;
 	}
 
