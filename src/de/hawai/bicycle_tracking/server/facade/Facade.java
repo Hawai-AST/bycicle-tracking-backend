@@ -3,6 +3,10 @@ package de.hawai.bicycle_tracking.server.facade;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManager;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
@@ -11,12 +15,6 @@ import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class Facade {
