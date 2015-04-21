@@ -57,7 +57,7 @@ public class BikeIntegrationTest {
 	}
 
 	@Test
-	public void testFindBySoldLocation() {
+	public void findBySoldLocation_LocationWithExistingBike_BikeIsFound() {
 		Bike bike = new Bike("Stadt", new FrameNumber(101), new Date(1), new Date(), sellingLocation, user);
 		this.bikeRepository.save(bike);
 
@@ -65,7 +65,7 @@ public class BikeIntegrationTest {
 	}
 
 	@Test
-	public void testFindByOwner() {
+	public void findByOwner_OwnerWithExistingBike_BikeIsFound() {
 		Bike bike = new Bike("Cross", new FrameNumber(101), new Date(1), new Date(), sellingLocation, user);
 		this.bikeRepository.save(bike);
 
