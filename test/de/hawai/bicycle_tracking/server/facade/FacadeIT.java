@@ -76,7 +76,7 @@ public class FacadeIT {
 	}
 
 	@Test
-	public void createdUserCanBeRetrieved() {
+	public void getUserBy_UserExists_UserCanBeRetrieved() {
 		assertThat(facade.getUserBy(E_MAIL_ADDRESS).isPresent()).isTrue();
 	}
 
