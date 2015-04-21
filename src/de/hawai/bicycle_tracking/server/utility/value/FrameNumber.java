@@ -4,8 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class FrameNumber
-{
+public class FrameNumber {
 	private long number;
 
 	private FrameNumber() {
@@ -16,32 +15,28 @@ public class FrameNumber
 	}
 
 	@Column(name = "frame_number", nullable = false)
-	public long getNumber()
-	{
+	public long getNumber() {
 		return number;
 	}
 
-	private void setNumber(final long inNumber)
-	{
+	private void setNumber(final long inNumber) {
 		number = inNumber;
 	}
 
 	@Override
-	public boolean equals(final Object o)
-	{
-		if(this == o)
+	public boolean equals(final Object o) {
+		if (this == o)
 			return true;
-		if(o == null || getClass() != o.getClass())
+		if (o == null || getClass() != o.getClass())
 			return false;
 
-		FrameNumber that = (FrameNumber)o;
+		FrameNumber that = (FrameNumber) o;
 
 		return number == that.number;
 	}
 
 	@Override
-	public int hashCode()
-	{
-		return (int)(number ^ (number >>> 32));
+	public int hashCode() {
+		return (int) (number ^ (number >>> 32));
 	}
 }
