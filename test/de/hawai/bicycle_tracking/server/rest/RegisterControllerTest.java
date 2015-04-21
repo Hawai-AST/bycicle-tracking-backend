@@ -85,7 +85,7 @@ public class RegisterControllerTest {
 	}
 
 	@Test
-	public void testRegister() throws Exception {
+	public void register_ValidRegistration_RegistrationSucceeds() throws Exception {
 		assertThat(this.userRepository.findAll()).hasSize(0);
 		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(registration))
@@ -94,7 +94,7 @@ public class RegisterControllerTest {
 	}
 
 	@Test
-	public void testDoubleRegister() throws Exception {
+	public void register_ExistingUser_RegistrationFails() throws Exception {
 		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(registration))
 				.header("Client-ID", "DEV-101")).andExpect(status().isOk());
@@ -104,7 +104,7 @@ public class RegisterControllerTest {
 	}
 
 	@Test
-	public void testInvalidInput() throws Exception {
+	public void register_InvalidBirthdate_RegistrationFails() throws Exception {
 		this.registration.setBirthday(INVALID_BIRTHDATE);
 		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(registration))
