@@ -113,7 +113,7 @@ public class RegisterControllerTest {
 
 	@Test
 	@Ignore // Skip because we don't have the backend for customer numbers yet.
-	public void testInvalidCustomerNr() throws Exception {
+	public void register_InvalidCustomerNr_RegistrationFails() throws Exception {
 		this.registration.setCustomerid(INVALID_CUSTOMERNR);
 		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(registration))
