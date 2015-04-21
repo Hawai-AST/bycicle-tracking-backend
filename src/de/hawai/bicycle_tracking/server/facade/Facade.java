@@ -1,5 +1,8 @@
 package de.hawai.bicycle_tracking.server.facade;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManager;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
@@ -40,7 +43,8 @@ public class Facade {
 		return this.bikeManagement.findBikesBySoldLocation(inLocation);
 	}
 
-	public IBike createBike(String inType, FrameNumber inFrameNumber, Date inBuyDate, Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner) {
+	public IBike createBike(String inType, FrameNumber inFrameNumber, Date inBuyDate,
+			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner) {
 		return this.bikeManagement.createBike(inType, inFrameNumber, inBuyDate, inNextMaintenanceDate, inSellingLocation, inOwner);
 	}
 
