@@ -52,18 +52,18 @@ public class UserIT {
 
 
 	@Test
-	public void createdUserCanBeFoundByName() throws Exception {
+	public void getByName_UserExists_UserCanBeFound() throws Exception {
 		assertThat(user).isEqualTo(userDao.getByName(NAME).get());
 	}
 
 	@Test
-	public void createdUserCanBeFoundByID() throws Exception {
+	public void getOne_UserExists_UserCanBeFoundByID() throws Exception {
 		User userFromDB = userDao.getOne(user.getId());
 		assertThat(user).isEqualTo(userFromDB);
 	}
 
 	@Test
-	public void userGetsSerializedCorrectly() throws Exception {
+	public void getOne_UserExists_UserAttributesAreEqual() throws Exception {
 		User userFromDB = userDao.getOne(user.getId());
 		assertThat(user).isEqualTo(userFromDB);
 		assertThat(user.getName()).isEqualTo(userFromDB.getName());
@@ -80,12 +80,12 @@ public class UserIT {
 	}
 
 	@Test
-	public void nonExistentUsersCantBeFound() throws Exception {
-		assertThat(userDao.getByName("Foobar").isPresent()).isFalse();
+	public void getByMail_UserDoesntExit_UserCantBeFound() throws Exception {
+		assertThat(userDao.getByMailAddress(new EMail("foobar@bar.gov")).isPresent()).isFalse();
 	}
 
 	@Test
-	public void eMailAddressMustBeUniqueForUser() throws Exception {
+	public void save_UserWithSameMailExists_UserCantBeSaved() throws Exception {
 		try {
 			userDao.save(new User("other name",
 					"other first name", E_MAIL_ADDRESS,

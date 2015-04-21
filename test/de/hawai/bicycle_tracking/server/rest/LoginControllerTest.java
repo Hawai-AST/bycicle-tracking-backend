@@ -86,14 +86,14 @@ public class LoginControllerTest {
 	}
 
 	@Test
-	public void testLogin() throws Exception {
+	public void login_UserExists_LoginOk() throws Exception {
 		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(this.login))
 				.header("Client-ID", "DEV-101")).andExpect(status().isOk());
 	}
 
 	@Test
-	public void testInvalidPassword() throws Exception {
+	public void login_InvalidPassword_LoginFails() throws Exception {
 		this.login.setCode(INVALID_PASSWORD);
 		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(this.login))
@@ -101,7 +101,7 @@ public class LoginControllerTest {
 	}
 
 	@Test
-	public void testInvalidUser() throws Exception {
+	public void login_InvalidUser_LoginFails() throws Exception {
 		this.login.setEmail(INVALID_EMAIL);
 		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(this.login))
