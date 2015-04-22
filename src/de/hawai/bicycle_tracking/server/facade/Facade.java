@@ -49,4 +49,8 @@ public class Facade {
 	public List<? extends IBike> findByOwner(IUser inOwner) {
 		return this.bikeManagement.findByOwner(inOwner);
 	}
+
+	public ISellingLocation createSellingLocation(Address inAddress, String inName) {
+		return bikeManagement.createSellingLocation(inAddress, inName);
+	}
 }

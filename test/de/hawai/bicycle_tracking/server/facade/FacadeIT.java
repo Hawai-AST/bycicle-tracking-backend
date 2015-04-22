@@ -22,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import de.hawai.bicycle_tracking.server.AppConfig;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.SellingLocation;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.SellingLocationDao;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -57,9 +55,6 @@ public class FacadeIT {
 	@Autowired
 	private Facade facade;
 
-	@Autowired
-	private SellingLocationDao sellingLocationDao;
-
 	private IUser user;
 
 	private IBike bike;
@@ -70,8 +65,7 @@ public class FacadeIT {
 	public void setup() {
 		user = facade.registerUser(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE, PASSWORD);
 
-		sellingLocation = new SellingLocation(SELLING_LOCATION_ADDRESS, SELLING_LOCATION_NAME);
-		sellingLocationDao.save((SellingLocation) sellingLocation);
+		facade.createSellingLocation(SELLING_LOCATION_ADDRESS, SELLING_LOCATION_NAME);
 
 		bike = facade.createBike(BIKE_TYPE, BIKE_FRAME_NUMBER, BIKE_BUY_DATE, BIKE_NEXT_MAINTENANCE, sellingLocation, user);
 	}

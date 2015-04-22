@@ -1,10 +1,11 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
-import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
-
 import java.util.Date;
 import java.util.List;
+
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
 public interface IBikeManager {
 
@@ -14,5 +15,7 @@ public interface IBikeManager {
 
 	public IBike createBike(String inType, FrameNumber inFrameNumber, Date inBuyDate,
 			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner);
+
+	public ISellingLocation createSellingLocation(Address inAddress, String inName);
 
 }
