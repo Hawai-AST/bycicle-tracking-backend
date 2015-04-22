@@ -21,7 +21,7 @@ import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @Entity
-@Table(name="user", uniqueConstraints = { @UniqueConstraint(columnNames = {"email_address"})})
+@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = {"email_address"})})
 @SuppressWarnings("unused")
 public class User extends AbstractEntity implements IUser {
 
@@ -53,20 +53,20 @@ public class User extends AbstractEntity implements IUser {
 	}
 
 
-	@Column(name="name", length=30, nullable=false)
+	@Column(name = "name", length = 30, nullable = false)
 	@Override
 	public String getName() {
 		return name;
 	}
 
-	@Column(name="firstname", length=30, nullable=false)
+	@Column(name = "firstname", length = 30, nullable = false)
 	@Override
 	public String getFirstName() {
 		return firstName;
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="birthdate", nullable=false)
+	@Column(name = "birthdate", nullable = false)
 	@Override
 	public Date getBirthdate() {
 		return birthdate;
@@ -104,25 +104,23 @@ public class User extends AbstractEntity implements IUser {
 		this.address = address;
 	}
 
+	@Override
 	@Column(name = "password", length = 100, nullable = false)
-	public String getPassword()
-	{
+	public String getPassword() {
 		return password;
 	}
 
-	private void setPassword(final String inPassword)
-	{
+	private void setPassword(final String inPassword) {
 		password = inPassword;
 	}
 
+	@Override
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-	public List<LoginSession> getLoginSessions()
-	{
+	public List<LoginSession> getLoginSessions() {
 		return loginSessions;
 	}
 
-	private void setLoginSessions(final List<LoginSession> inLoginSessions)
-	{
+	private void setLoginSessions(final List<LoginSession> inLoginSessions) {
 		loginSessions = inLoginSessions;
 	}
 

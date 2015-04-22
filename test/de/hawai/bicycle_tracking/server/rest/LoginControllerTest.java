@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
@@ -26,10 +25,10 @@ import de.hawai.bicycle_tracking.server.AppConfig;
 import de.hawai.bicycle_tracking.server.DBConfig;
 import de.hawai.bicycle_tracking.server.DBFixuresConfig;
 import de.hawai.bicycle_tracking.server.Main;
-import de.hawai.bicycle_tracking.server.TestUtil;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
 import de.hawai.bicycle_tracking.server.dto.LoginDTO;
+import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
@@ -37,15 +36,14 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 @SpringApplicationConfiguration(classes = { Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
 @WebAppConfiguration
 @IntegrationTest
-public class LoginControllerTest
-{
+public class LoginControllerTest {
 	private static final String EMAIL = "hans@wurst.com";
 	private static final String INVALID_EMAIL = "hans@peter.com";
 	private static final String PASSWORD = "thisismypassword";
 	private static final String INVALID_PASSWORD = "thisisnotmypassword";
 	private static final String NAME = "Hans";
 	private static final String LASTNAME = "Wurst";
-	private static Date BIRTHDATE;
+	private static final Date BIRTHDATE = new Date(0);
 	private static final int CUSTOMERNR = 1;
 	private static final String GENDER = "male";
 	private static final String STREET = "Wurstalee";
@@ -66,9 +64,7 @@ public class LoginControllerTest
 	private LoginDTO login;
 
 	@PostConstruct
-	public void setup() throws ParseException
-	{
-		BIRTHDATE = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.1970");
+	public void setup() throws ParseException {
 		this.restViewerMockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 	}
 
@@ -85,28 +81,30 @@ public class LoginControllerTest
 	}
 
 	@After
-	public void teardown()
-	{
+	public void teardown() {
 		userRepository.deleteAll();
 	}
 
 	@Test
-	public void testLogin() throws Exception
-	{
-		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(this.login)).header("Client-ID", "DEV-101")).andExpect(status().isOk());
+	public void login_UserExists_LoginOk() throws Exception {
+		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(this.login))
+				.header("Client-ID", "DEV-101")).andExpect(status().isOk());
 	}
 
 	@Test
-	public void testInvalidPassword() throws Exception
-	{
+	public void login_InvalidPassword_LoginFails() throws Exception {
 		this.login.setCode(INVALID_PASSWORD);
-		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(this.login)).header("Client-ID", "DEV-101")).andExpect(status().isUnauthorized());
+		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(this.login))
+				.header("Client-ID", "DEV-101")).andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	public void testInvalidUser() throws Exception
-	{
+	public void login_InvalidUser_LoginFails() throws Exception {
 		this.login.setEmail(INVALID_EMAIL);
-		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(this.login)).header("Client-ID", "DEV-101")).andExpect(status().isNotFound());
+		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(this.login))
+				.header("Client-ID", "DEV-101")).andExpect(status().isNotFound());
 	}
 }

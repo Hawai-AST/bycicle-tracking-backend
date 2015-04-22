@@ -1,11 +1,13 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-import de.hawai.bicycle_tracking.server.*;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
-import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
-import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
-import org.junit.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
@@ -15,18 +17,25 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.DBConfig;
+import de.hawai.bicycle_tracking.server.DBFixuresConfig;
+import de.hawai.bicycle_tracking.server.Main;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
+import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
+import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {  Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
 @WebAppConfiguration
 @IntegrationTest
-public class RegisterControllerTest
-{
+public class RegisterControllerTest {
 	private static final String NAME = "Hans";
 	private static final String LASTNAME = "Wurst";
+
 	private static final EMail EMAIL = new EMail("hans@wurst.com");
 	private static final String BIRTHDATE = "1970-01-01";
 	private static final String INVALID_BIRTHDATE = "Erster.Erster.Siebzig";
@@ -57,8 +66,7 @@ public class RegisterControllerTest
 	}
 
 	@Before
-	public void setup()
-	{
+	public void setup() {
 		this.restViewerMockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 		this.registration = new RegistrationDTO();
 		this.registration.setAddress(ADDRESS);
@@ -72,38 +80,43 @@ public class RegisterControllerTest
 	}
 
 	@After
-	public void teardown()
-	{
+	public void teardown() {
 		this.userRepository.deleteAll();
 	}
 
 	@Test
-	public void testRegister() throws Exception
-	{
+	public void register_ValidRegistration_RegistrationSucceeds() throws Exception {
 		assertThat(this.userRepository.findAll()).hasSize(0);
-		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(registration)).header("Client-ID", "DEV-101")).andExpect(status().isOk());
+		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(registration))
+				.header("Client-ID", "DEV-101")).andExpect(status().isOk());
 		assertThat(this.userRepository.findAll()).hasSize(1);
 	}
 
 	@Test
-	public void testDoubleRegister() throws Exception
-	{
-		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(registration)).header("Client-ID", "DEV-101")).andExpect(status().isOk());
-		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(registration)).header("Client-ID", "DEV-101")).andExpect(status().isConflict());
+	public void register_ExistingUser_RegistrationFails() throws Exception {
+		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(registration))
+				.header("Client-ID", "DEV-101")).andExpect(status().isOk());
+		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(registration))
+				.header("Client-ID", "DEV-101")).andExpect(status().isConflict());
 	}
 
 	@Test
-	public void testInvalidInput() throws Exception
-	{
+	public void register_InvalidBirthdate_RegistrationFails() throws Exception {
 		this.registration.setBirthday(INVALID_BIRTHDATE);
-		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(registration)).header("Client-ID", "DEV-101")).andExpect(status().isBadRequest());
+		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(registration))
+				.header("Client-ID", "DEV-101")).andExpect(status().isBadRequest());
 	}
 
 	@Test
 	@Ignore // Skip because we don't have the backend for customer numbers yet.
-	public void testInvalidCustomerNr() throws Exception
-	{
+	public void register_InvalidCustomerNr_RegistrationFails() throws Exception {
 		this.registration.setCustomerid(INVALID_CUSTOMERNR);
-		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(registration)).header("Client-ID", "DEV-101")).andExpect(status().isNotFound());
+		this.restViewerMockMvc.perform(post("/api/v1/register").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(registration))
+				.header("Client-ID", "DEV-101")).andExpect(status().isNotFound());
 	}
 }

@@ -1,11 +1,28 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+apply plugin: 'checkstyle'
 apply plugin: 'spring-boot'
 
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+checkstyleMain {
+	configFile = new File("$rootProject.projectDir/config/checkstyle", "checkstyle.xml")
+}
+
+checkstyleTest {
+	configFile = new File("$rootProject.projectDir/config/checkstyle", "checkstyle-test.xml")
+}
+
+task checkstyleHtml << {
+    ant.xslt(in: checkstyleMain.reports.xml.destination,
+             style: new File("$rootProject.projectDir/config/checkstyle-noframes-sorted.xsl"),
+             out: new File(checkstyleMain.reports.xml.destination.parent, 'main.html'))
+}
+
+checkstyleMain.finalizedBy checkstyleHtml
 
 eclipse {
       jdt {
