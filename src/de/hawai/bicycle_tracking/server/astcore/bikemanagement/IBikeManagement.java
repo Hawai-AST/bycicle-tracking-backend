@@ -7,7 +7,7 @@ import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
-public interface IBikeManager {
+public interface IBikeManagement {
 
 	public List<? extends IBike> findBikesBySoldLocation(ISellingLocation inSellingLocation);
 
