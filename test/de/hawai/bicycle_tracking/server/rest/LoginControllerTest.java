@@ -8,26 +8,30 @@ import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import de.hawai.bicycle_tracking.server.AppConfig;
 import de.hawai.bicycle_tracking.server.DBConfig;
 import de.hawai.bicycle_tracking.server.DBFixuresConfig;
 import de.hawai.bicycle_tracking.server.Main;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
 import de.hawai.bicycle_tracking.server.dto.LoginDTO;
+import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -36,6 +40,10 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 @SpringApplicationConfiguration(classes = { Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
 @WebAppConfiguration
 @IntegrationTest
+@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
+		DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
+@Transactional(noRollbackFor = Exception.class)
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class LoginControllerTest {
 	private static final String EMAIL = "hans@wurst.com";
 	private static final String INVALID_EMAIL = "hans@peter.com";
@@ -57,7 +65,7 @@ public class LoginControllerTest {
 	private WebApplicationContext context;
 
 	@Autowired
-	private UserDao userRepository;
+	private Facade facade;
 
 	private MockMvc restViewerMockMvc;
 
@@ -71,18 +79,12 @@ public class LoginControllerTest {
 	@Before
 	public void initTest() {
 		Address address = new Address(STREET, HOUSENR, CITY, STATE, POSTCODE, COUNTRY);
-		User user = new User(LASTNAME, NAME, new EMail(EMAIL), address, BIRTHDATE, PASSWORD);
-		userRepository.save(user);
+		facade.registerUser(LASTNAME, NAME, new EMail(EMAIL), address, BIRTHDATE, PASSWORD);
 
 		this.login = new LoginDTO();
 		this.login.setEmail(EMAIL);
 		this.login.setCode(PASSWORD);
 		this.login.setGrantType("password");
-	}
-
-	@After
-	public void teardown() {
-		userRepository.deleteAll();
 	}
 
 	@Test

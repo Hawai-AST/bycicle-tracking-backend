@@ -43,7 +43,7 @@ public class User extends AbstractEntity implements IUser {
 		super();
 	}
 
-	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password) {
+	protected User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password) {
 		this.name = name;
 		this.firstName = firstName;
 		this.birthdate = birthdate;

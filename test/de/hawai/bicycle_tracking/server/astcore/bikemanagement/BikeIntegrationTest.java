@@ -18,8 +18,8 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import de.hawai.bicycle_tracking.server.AppConfig;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
@@ -38,10 +38,10 @@ public class BikeIntegrationTest {
 	private SellingLocationDao locationRepository;
 
 	@Autowired
-	private UserDao userRepository;
+	private Facade facade;
 
 	private SellingLocation sellingLocation;
-	private User user;
+	private IUser user;
 
 	@Before
 	public void setup() {
@@ -51,8 +51,7 @@ public class BikeIntegrationTest {
 		}
 
 		if (this.user == null) {
-			user = new User("", "", new EMail("a@a.com"), new Address("", "", "", "", "", ""), new Date(), "");
-			this.userRepository.save(user);
+			user = facade.registerUser("", "", new EMail("a@a.com"), new Address("", "", "", "", "", ""), new Date(), "");
 		}
 	}
 
