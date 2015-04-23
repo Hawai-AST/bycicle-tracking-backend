@@ -22,7 +22,7 @@ public class Bike extends AbstractEntity implements IBike {
 	private ISellingLocation soldLocation;
 	private IUser owner;
 
-	public Bike(final String inType, final FrameNumber inFrameNumber, final Date inBuyDate, final Date inNextMaintenanceDate,
+	protected Bike(final String inType, final FrameNumber inFrameNumber, final Date inBuyDate, final Date inNextMaintenanceDate,
 			final ISellingLocation inSellingLocation, final IUser inOwner) {
 		type = inType;
 		frameNumber = inFrameNumber;

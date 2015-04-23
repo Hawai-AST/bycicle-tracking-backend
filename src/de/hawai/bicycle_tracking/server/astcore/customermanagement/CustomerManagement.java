@@ -10,7 +10,7 @@ import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @Component
-public class CustomerManager implements ICustomerManagement {
+public class CustomerManagement implements ICustomerManagement {
 
 	@Autowired
 	private UserDao userDao;

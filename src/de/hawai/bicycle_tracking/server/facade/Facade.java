@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManager;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.ICustomerManagement;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
@@ -23,7 +23,7 @@ public class Facade {
 	private ICustomerManagement customerManegement;
 
 	@Autowired
-	private IBikeManager bikeManagement;
+	private IBikeManagement bikeManagement;
 
 	private Facade() {
 		super();
@@ -48,5 +48,9 @@ public class Facade {
 
 	public List<? extends IBike> findByOwner(IUser inOwner) {
 		return this.bikeManagement.findByOwner(inOwner);
+	}
+
+	public ISellingLocation createSellingLocation(Address inAddress, String inName) {
+		return bikeManagement.createSellingLocation(inAddress, inName);
 	}
 }

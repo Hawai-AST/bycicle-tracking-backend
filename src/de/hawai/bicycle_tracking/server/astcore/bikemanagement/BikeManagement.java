@@ -1,18 +1,22 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
-import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
+
 @Component
-public class BikeManager implements IBikeManager {
+public class BikeManagement implements IBikeManagement {
 
 	@Autowired
 	private BikeDao bikeDao;
+	@Autowired
+	private SellingLocationDao sellingLocationDao;
 
 	@Override
 	public List<? extends IBike> findBikesBySoldLocation(ISellingLocation inSellingLocation) {
@@ -28,5 +32,10 @@ public class BikeManager implements IBikeManager {
 	@Override
 	public List<? extends IBike> findByOwner(IUser inOwner) {
 		return this.bikeDao.findByOwner(inOwner);
+	}
+
+	@Override
+	public ISellingLocation createSellingLocation(Address inAddress, String inName) {
+		return sellingLocationDao.save(new SellingLocation(inAddress, inName));
 	}
 }
