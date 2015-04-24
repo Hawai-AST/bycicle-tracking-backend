@@ -4,11 +4,13 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UserDao extends JpaRepository<User, Long> {
 
-	public User getByName(String name);
+	public Optional<User> getByName(String name);
 
-	User getByeMailAddress(EMail emailAddress);
+	public Optional<User> getByMailAddress(EMail emailAddress);
 
 }

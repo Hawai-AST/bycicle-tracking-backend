@@ -53,7 +53,7 @@ public class UserIT {
 
 	@Test
 	public void createdUserCanBeFoundByName() throws Exception {
-		assertThat(user).isEqualTo(userDao.getByName(NAME));
+		assertThat(user).isEqualTo(userDao.getByName(NAME).get());
 	}
 
 	@Test
@@ -68,12 +68,12 @@ public class UserIT {
 		assertThat(user).isEqualTo(userFromDB);
 		assertThat(user.getName()).isEqualTo(userFromDB.getName());
 		assertThat(user.getFirstName()).isEqualTo(userFromDB.getFirstName());
-		assertThat(user.geteMailAddress()).isEqualTo(userFromDB.geteMailAddress());
+		assertThat(user.getMailAddress()).isEqualTo(userFromDB.getMailAddress());
 		assertThat(user.getAddress()).isEqualTo(userFromDB.getAddress());
 		assertThat(user.getBirthdate()).isEqualTo(userFromDB.getBirthdate());
 		assertThat(NAME).isEqualTo(userFromDB.getName());
 		assertThat(FIRST_NAME).isEqualTo(userFromDB.getFirstName());
-		assertThat(E_MAIL_ADDRESS).isEqualTo(userFromDB.geteMailAddress());
+		assertThat(E_MAIL_ADDRESS).isEqualTo(userFromDB.getMailAddress());
 		assertThat(ADDRESS).isEqualTo(userFromDB.getAddress());
 		assertThat(BIRTHDATE).isEqualTo(userFromDB.getBirthdate());
 		assertThat(PASSWORD).isEqualTo(userFromDB.getPassword());
@@ -81,7 +81,7 @@ public class UserIT {
 
 	@Test
 	public void nonExistentUsersCantBeFound() throws Exception {
-		assertThat(userDao.getByName("Foobar")).isNull();
+		assertThat(userDao.getByName("Foobar").isPresent()).isFalse();
 	}
 
 	@Test
