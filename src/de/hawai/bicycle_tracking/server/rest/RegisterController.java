@@ -1,14 +1,17 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-import java.text.*;
-import java.util.UUID;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.*;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
 import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
 import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
-import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 @RestController
 @RequestMapping("/api")
@@ -19,21 +22,9 @@ public class RegisterController
 	@Autowired
 	private UserDao userRepository;
 
-	@Autowired
-	private LoginSessionDao loginSessionRepository;
-
-	@Autowired
-	private ApplicationDao applicationRepository;
-
 	@RequestMapping(value = "/v1/register", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public RegisterResponseV1 registerV1(@RequestBody RegistrationDTO inRegistration, @RequestHeader("Client-ID") String inClientID) throws ParseException
 	{
-		Application application;
-		application = this.applicationRepository.getByClientID(inClientID);
-		if(application == null){
-			throw new InvalidClientException("No Client ID specified");
-		}
-
 		User newUser = new User();
 		newUser.setAddress(inRegistration.getAddress());
 		newUser.setBirthdate(this.m_dateFormat.parse(inRegistration.getBirthday()));
@@ -41,21 +32,16 @@ public class RegisterController
 		newUser.setFirstName(inRegistration.getFirstname());
 		newUser.setPassword(inRegistration.getPassword());
 		newUser.setName(inRegistration.getName());
+		newUser.setAuthority(HawaiAuthority.USER);
 		try	{
 			userRepository.save(newUser);
 		} catch(DataIntegrityViolationException e) {
 			throw new AlreadyExistsException("User already exists");
 		}
 
-		LoginSession session = new LoginSession();
-		session.setApplication(application);
-		session.setUser(newUser);
-		session.setToken(UUID.randomUUID().toString());
-		this.loginSessionRepository.save(session);
-
 		RegisterResponseV1 responseV1 = new RegisterResponseV1();
 		responseV1.setEmail(newUser.geteMailAddress().geteMailAddress());
-		responseV1.setToken(session.getToken());
+		responseV1.setToken("");
 		return responseV1;
 	}
 

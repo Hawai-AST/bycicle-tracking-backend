@@ -22,7 +22,6 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 @EnableAuthorizationServer
 public class OAuth2Config extends AuthorizationServerConfigurerAdapter
 {
-	private static final int VALIDITY_TIME = 60 * 60 * 24 * 7;
 	private static final String RESOURCE_ID = "hawai-ast";
 
 	@Autowired
@@ -30,6 +29,9 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter
 
 	@Autowired
 	private UserDetailsService detailsService;
+
+	@Autowired
+	private ClientSecurityService clientSecurityService;
 
 	private TokenStore tokenStore = new InMemoryTokenStore();
 
@@ -41,15 +43,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients
-			.inMemory()
-				.withClient("DEV-101")
-					.authorizedGrantTypes("password", "refresh_token")
-					.authorities("USER", "ADMIN")
-					.scopes("read", "write")
-					.resourceIds(RESOURCE_ID)
-					.secret("DEVSECRET")
-					.accessTokenValiditySeconds(VALIDITY_TIME);
+		clients.withClientDetails(this.clientSecurityService);
 	}
 
 	@Bean
@@ -73,8 +67,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter
 		public void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
 					.antMatchers("/api/v{\\d+}/register", "/api/v{\\d+}/login").permitAll()
-					.antMatchers("/api/v{\\d+}/user/*").hasAuthority("USER");
-
+					.antMatchers("/api/v{\\d+}/admin").hasAuthority("ADMIN");
 		}
 	}
 }

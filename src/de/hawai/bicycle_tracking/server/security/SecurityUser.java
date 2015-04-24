@@ -6,12 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 public class SecurityUser implements UserDetails {
-    private static final Set<GrantedAuthority> AUTHORITIES = new HashSet<>(Collections.singletonList(new HawaiAuthority()));
-
     private final User user;
 
     public SecurityUser(User user) {
@@ -20,7 +16,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AUTHORITIES;
+        return Collections.singletonList(this.user.getAuthority());
     }
 
     @Override

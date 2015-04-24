@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class UserTestingController {
-    @RequestMapping(value = "/v1/user/testing", method = RequestMethod.GET)
-    public ResponseEntity<String> getAdminTest() {
+
+    @RequestMapping(value = "/v1/admin", method = RequestMethod.GET)
+    public ResponseEntity<String> getAdmin() {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

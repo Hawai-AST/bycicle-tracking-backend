@@ -6,6 +6,7 @@ import de.hawai.bicycle_tracking.server.DBFixuresConfig;
 import de.hawai.bicycle_tracking.server.Main;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import org.junit.Before;
@@ -50,18 +51,19 @@ public class SecurityTest {
     public void setup() {
         this.restViewerMockMvc = MockMvcBuilders.webAppContextSetup(context).addFilter(springSecurityFilterChain).build();
         this.userRepository.deleteAll();
-        User testUser = new User("Buttington", "Peter", new EMail("peter@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"), new Date(1), "poop");
+        User testUser = new User("Buttington", "Peter", new EMail("peter@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"), new Date(1), "poop", HawaiAuthority.ADMIN);
         this.userRepository.save(testUser);
+        User testUser2 = new User("Buttington", "Peter", new EMail("peter2@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"), new Date(1), "poop", HawaiAuthority.USER);
+        this.userRepository.save(testUser2);
     }
 
     @Test
     public void testNotAccessible() throws Exception {
-        this.restViewerMockMvc.perform(get("/api/v1/user/testing")).andExpect(status().isUnauthorized());
+        this.restViewerMockMvc.perform(get("/api/v1/admin")).andExpect(status().isUnauthorized());
     }
 
     private String getAccessToken(String username, String password) throws Exception {
         String authorization = "Basic " + new String(Base64.getEncoder().encode("DEV-101:DEVSECRET".getBytes()));
-        String contentType = MediaType.APPLICATION_JSON + ";charset=UTF-8";
 
         // @formatter:off
         String content = restViewerMockMvc
@@ -73,19 +75,19 @@ public class SecurityTest {
                                 .param("username", username)
                                 .param("password", password)
                                 .param("grant_type", "password")
-                                .param("scope", "read write")
-                                .param("client_id", "DEV-101"))
+                                .param("scope", "read write"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         // @formatter:on
-
         return content.substring(17, 53);
     }
 
     @Test
-    public void testAccessible() throws Exception {
+    public void testForAdminAccessible() throws Exception {
         String token = getAccessToken("peter@buttington.com", "poop");
-        this.restViewerMockMvc.perform(get("/api/v1/user/testing").header("Authorization", "Bearer " + token)).andExpect(status().isOk());
+        this.restViewerMockMvc.perform(get("/api/v1/admin").header("Authorization", "Bearer " + token)).andExpect(status().isOk());
+        String token2 = getAccessToken("peter2@buttington.com", "poop");
+        this.restViewerMockMvc.perform(get("/api/v1/admin").header("Authorization", "Bearer " + token2)).andExpect(status().isForbidden());
     }
 }

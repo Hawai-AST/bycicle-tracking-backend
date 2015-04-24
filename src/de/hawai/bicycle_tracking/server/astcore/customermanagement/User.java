@@ -1,24 +1,15 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import org.hibernate.annotations.Target;
+import org.springframework.security.core.GrantedAuthority;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name="user", uniqueConstraints = { @UniqueConstraint(columnNames = {"email_address"})})
@@ -36,15 +27,16 @@ public class User extends AbstractEntity implements IUser {
 	@JsonIgnore
 	private String password;
 	@JsonIgnore
-	private List<LoginSession> loginSessions = new ArrayList<LoginSession>();
+	private GrantedAuthority authority;
 
-	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password) {
+	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password, GrantedAuthority authority) {
 		this.name = name;
 		this.firstName = firstName;
 		this.birthdate = birthdate;
 		this.address = address;
 		this.eMailAddress = eMailAddress;
 		this.password = password;
+		this.authority = authority;
 	}
 
 	public User(){
@@ -81,6 +73,16 @@ public class User extends AbstractEntity implements IUser {
 		return eMailAddress;
 	}
 
+	@Target(HawaiAuthority.class)
+	@Column(name = "user_type", nullable = false)
+	public GrantedAuthority getAuthority() {
+		return this.authority;
+	}
+
+	public void setAuthority(GrantedAuthority inAuthority) {
+		this.authority = inAuthority;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -110,17 +112,6 @@ public class User extends AbstractEntity implements IUser {
 	public void setPassword(final String inPassword)
 	{
 		password = inPassword;
-	}
-
-	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-	public List<LoginSession> getLoginSessions()
-	{
-		return loginSessions;
-	}
-
-	public void setLoginSessions(final List<LoginSession> inLoginSessions)
-	{
-		loginSessions = inLoginSessions;
 	}
 
 	@Override
