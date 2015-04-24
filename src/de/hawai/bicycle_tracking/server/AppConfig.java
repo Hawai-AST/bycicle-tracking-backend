@@ -15,6 +15,4 @@ excludeFilters = { @Filter(type = FilterType.ANNOTATION, value = Configuration.c
 @Import(DBConfig.class)
 @Configuration
 public class AppConfig {
-
-
 }

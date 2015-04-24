@@ -34,7 +34,7 @@ public class LoginController {
 	@RequestMapping(value = "/v1/login", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public LoginResponseV1 loginV1(@RequestBody LoginDTO inLoginDTO) {
 
-		if(inLoginDTO.getGrantType().equals(GrantType.PASSWORD.toString()))	{
+		if (inLoginDTO.getGrantType().equals(GrantType.PASSWORD.toString())) {
 			return loginPasswordV1(inLoginDTO);
 		} else {
 			throw new MalformedRequestException("Invalid Grant-Type");
@@ -51,7 +51,7 @@ public class LoginController {
 		} else {
 			throw new NotFoundException("No User found");
 		}
-		if(toLogin.getPassword().equals(inLoginDTO.getCode())) {
+		if (toLogin.getPassword().equals(inLoginDTO.getCode())) {
 			LoginResponseV1 responseV1 = new LoginResponseV1();
 			responseV1.setEmail(toLogin.getMailAddress().getMailAddress());
 			return responseV1;
@@ -65,23 +65,21 @@ public class LoginController {
 		private String email;
 		private String token;
 
-		public String getEmail()
-		{
+		@SuppressWarnings("unused")
+		public String getEmail() {
 			return email;
 		}
 
-		public void setEmail(final String inEmail)
-		{
+		public void setEmail(final String inEmail) {
 			email = inEmail;
 		}
 
-		public String getToken()
-		{
+		@SuppressWarnings("unused")
+		public String getToken() {
 			return token;
 		}
 
-		public void setToken(final String inToken)
-		{
+		public void setToken(final String inToken) {
 			token = inToken;
 		}
 	}

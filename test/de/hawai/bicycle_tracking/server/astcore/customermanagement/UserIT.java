@@ -28,7 +28,8 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = AppConfig.class)
 @Transactional(noRollbackFor = Exception.class)
-@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
+@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
+		DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class UserIT {
 
@@ -52,18 +53,18 @@ public class UserIT {
 
 
 	@Test
-	public void createdUserCanBeFoundByName() throws Exception {
+	public void getByName_UserExists_UserCanBeFound() throws Exception {
 		assertThat(user).isEqualTo(userDao.getByName(NAME).get());
 	}
 
 	@Test
-	public void createdUserCanBeFoundByID() throws Exception {
+	public void getOne_UserExists_UserCanBeFoundByID() throws Exception {
 		User userFromDB = userDao.getOne(user.getId());
 		assertThat(user).isEqualTo(userFromDB);
 	}
 
 	@Test
-	public void userGetsSerializedCorrectly() throws Exception {
+	public void getOne_UserExists_UserAttributesAreEqual() throws Exception {
 		User userFromDB = userDao.getOne(user.getId());
 		assertThat(user).isEqualTo(userFromDB);
 		assertThat(user.getName()).isEqualTo(userFromDB.getName());
@@ -80,14 +81,18 @@ public class UserIT {
 	}
 
 	@Test
-	public void nonExistentUsersCantBeFound() throws Exception {
-		assertThat(userDao.getByName("Foobar").isPresent()).isFalse();
+	public void getByMail_UserDoesntExit_UserCantBeFound() throws Exception {
+		assertThat(userDao.getByMailAddress(new EMail("foobar@bar.gov")).isPresent()).isFalse();
 	}
 
 	@Test
-	public void eMailAddressMustBeUniqueForUser() throws Exception {
+	public void save_UserWithSameMailExists_UserCantBeSaved() throws Exception {
 		try {
-			userDao.save(new User("other name", "other first name", E_MAIL_ADDRESS, new Address("A", "B", "C", "D", "E", "F"), new Date(42), "Other Password", HawaiAuthority.USER));
+			userDao.save(new User("other name",
+					"other first name", E_MAIL_ADDRESS,
+					new Address("A", "B", "C", "D", "E", "F"),
+					new Date(42),
+					"Other Password", HawaiAuthority.USER));
 			fail("DataIntegrityViolationException expected because test tries to save a user with an already existent email address.");
 		} catch (DataIntegrityViolationException e) {
 			// do nothing

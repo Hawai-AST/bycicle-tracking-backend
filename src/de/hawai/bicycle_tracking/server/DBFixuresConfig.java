@@ -10,14 +10,12 @@ import javax.annotation.PostConstruct;
 import java.util.Arrays;
 
 @Configuration
-public class DBFixuresConfig
-{
+public class DBFixuresConfig {
 	@Autowired
 	private ApplicationDao applicationRepository;
 
 	@PostConstruct
-	public void setupApplication()
-	{
+	public void setupApplication() {
 		Application app = new Application("DEV-101", "DEVSECRET", Arrays.asList(HawaiAuthority.USER, HawaiAuthority.ADMIN), "read;write;track");
 		this.applicationRepository.save(app);
 	}

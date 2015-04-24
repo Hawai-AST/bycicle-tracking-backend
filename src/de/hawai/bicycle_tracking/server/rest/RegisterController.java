@@ -19,21 +19,25 @@ import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
 
 @RestController
 @RequestMapping("/api")
-public class RegisterController
-{
-	private final DateFormat m_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+public class RegisterController {
+	private final DateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
 	private Facade facade;
 
 	@RequestMapping(value = "/v1/register", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public RegisterResponseV1 registerV1(@RequestBody RegistrationDTO inRegistration) throws ParseException
-	{
+	public RegisterResponseV1 registerV1(@RequestBody RegistrationDTO inRegistration)
+			throws ParseException {
 		IUser newUser = null;
 		try	{
-			newUser = facade.registerUser(inRegistration.getName(), inRegistration.getFirstname(), inRegistration.getEmail(),
-					inRegistration.getAddress(), this.m_dateFormat.parse(inRegistration.getBirthday()), inRegistration.getPassword(), HawaiAuthority.USER);
-		} catch(DataIntegrityViolationException e) {
+			newUser = facade.registerUser(inRegistration.getName(),
+					inRegistration.getFirstname(),
+					inRegistration.getEmail(),
+					inRegistration.getAddress(),
+					this.mDateFormat.parse(inRegistration.getBirthday()),
+					inRegistration.getPassword(),
+					HawaiAuthority.USER);
+		} catch (DataIntegrityViolationException e) {
 			throw new AlreadyExistsException("User already exists");
 		}
 
@@ -43,28 +47,25 @@ public class RegisterController
 		return responseV1;
 	}
 
-	private static class RegisterResponseV1
-	{
+	private static class RegisterResponseV1 {
 		private String email;
 		private String token;
 
-		public String getEmail()
-		{
+		@SuppressWarnings("unused")
+		public String getEmail() {
 			return email;
 		}
 
-		public void setEmail(final String inEmail)
-		{
+		public void setEmail(final String inEmail) {
 			email = inEmail;
 		}
 
-		public String getToken()
-		{
+		@SuppressWarnings("unused")
+		public String getToken() {
 			return token;
 		}
 
-		public void setToken(final String inToken)
-		{
+		public void setToken(final String inToken) {
 			token = inToken;
 		}
 	}

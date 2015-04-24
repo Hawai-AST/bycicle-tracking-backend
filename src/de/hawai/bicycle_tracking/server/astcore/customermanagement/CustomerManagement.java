@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Component
-public class CustomerManager implements ICustomerManagement {
+public class CustomerManagement implements ICustomerManagement {
 
 	@Autowired
 	private UserDao userDao;

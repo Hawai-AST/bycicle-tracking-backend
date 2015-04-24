@@ -1,11 +1,28 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+apply plugin: 'checkstyle'
 apply plugin: 'spring-boot'
 
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+checkstyleMain {
+	configFile = new File("$rootProject.projectDir/config/checkstyle", "checkstyle.xml")
+}
+
+checkstyleTest {
+	configFile = new File("$rootProject.projectDir/config/checkstyle", "checkstyle-test.xml")
+}
+
+task checkstyleHtml << {
+    ant.xslt(in: checkstyleMain.reports.xml.destination,
+             style: new File("$rootProject.projectDir/config/checkstyle-noframes-sorted.xsl"),
+             out: new File(checkstyleMain.reports.xml.destination.parent, 'main.html'))
+}
+
+checkstyleMain.finalizedBy checkstyleHtml
 
 eclipse {
       jdt {
@@ -69,6 +86,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-aop')
     compile('org.springframework.security.oauth:spring-security-oauth2:2.0.7.RELEASE')
     compile('com.h2database:h2:1.4.186')
+    compile('org.aspectj:aspectjweaver:1.8.5')
 
     runtime fileTree(dir: 'lib', include: '*.jar')
     testCompile('org.springframework.boot:spring-boot-starter-test:1.1.9.RELEASE')
