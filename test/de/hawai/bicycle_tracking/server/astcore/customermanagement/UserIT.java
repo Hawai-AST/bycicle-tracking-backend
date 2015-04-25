@@ -57,13 +57,13 @@ public class UserIT {
 	}
 
 	@Test
-	public void getOne_UserExists_UserCanBeFoundByID() throws Exception {
+	public void getOneByID_UserExists_UserCanBeFoundByID() throws Exception {
 		User userFromDB = userDao.getOne(user.getId());
 		assertThat(user).isEqualTo(userFromDB);
 	}
 
 	@Test
-	public void getOne_UserExists_UserAttributesAreEqual() throws Exception {
+	public void getOneByID_UserExists_UserAttributesAreEqual() throws Exception {
 		User userFromDB = userDao.getOne(user.getId());
 		assertThat(user).isEqualTo(userFromDB);
 		assertThat(user.getName()).isEqualTo(userFromDB.getName());
