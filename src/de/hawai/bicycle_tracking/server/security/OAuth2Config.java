@@ -20,12 +20,11 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 
 @Configuration
 @EnableAuthorizationServer
-public class OAuth2Config extends AuthorizationServerConfigurerAdapter
-{
+public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 	private static final String RESOURCE_ID = "hawai-ast";
 
 	@Autowired
-	private AuthenticationManager m_authenticationManager;
+	private AuthenticationManager authenticationManager;
 
 	@Autowired
 	private UserDetailsService detailsService;
@@ -38,7 +37,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception
 	{
-		endpoints.authenticationManager(m_authenticationManager).tokenStore(tokenStore).userDetailsService(detailsService);
+		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore).userDetailsService(detailsService);
 	}
 
 	@Override

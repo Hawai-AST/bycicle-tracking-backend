@@ -9,8 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Application implements IApplication
-{
+public class Application implements IApplication {
 	@Id
 	@GeneratedValue
 	private int id;
@@ -37,14 +36,12 @@ public class Application implements IApplication
 	protected Application() {
 	}
 
-	public int getId()
-	{
+	public int getId() {
 		return id;
 	}
 
 	@Override
-	public String getClientID()
-	{
+	public String getClientID() {
 		return clientID;
 	}
 
@@ -63,13 +60,11 @@ public class Application implements IApplication
 		return this.authorities;
 	}
 
-	private void setId(final int inId)
-	{
+	private void setId(final int inId) {
 		id = inId;
 	}
 
-	private void setClientID(final String inClientID)
-	{
+	private void setClientID(final String inClientID) {
 		clientID = inClientID;
 	}
 

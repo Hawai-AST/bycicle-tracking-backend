@@ -51,43 +51,42 @@ public class SecurityTest {
     public void setup() {
         this.restViewerMockMvc = MockMvcBuilders.webAppContextSetup(context).addFilter(springSecurityFilterChain).build();
         this.userRepository.deleteAll();
-        User testUser = new User("Buttington", "Peter", new EMail("peter@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"), new Date(1), "poop", HawaiAuthority.ADMIN);
+        User testUser = new User("Buttington", "Peter", new EMail("peter@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
+                new Date(1), "poop", HawaiAuthority.ADMIN);
         this.userRepository.save(testUser);
-        User testUser2 = new User("Buttington", "Peter", new EMail("peter2@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"), new Date(1), "poop", HawaiAuthority.USER);
+        User testUser2 = new User("Buttington", "Peter", new EMail("peter2@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
+                new Date(1), "poop", HawaiAuthority.USER);
         this.userRepository.save(testUser2);
     }
 
     @Test
-    public void testNotAccessible() throws Exception {
+    public void accessAdmin_WithoutLogin_Unauthorized() throws Exception {
         this.restViewerMockMvc.perform(get("/api/v1/admin")).andExpect(status().isUnauthorized());
     }
 
-    private String getAccessToken(String username, String password) throws Exception {
+    private String setup_access_token(String username, String password) throws Exception {
         String authorization = "Basic " + new String(Base64.getEncoder().encode("DEV-101:DEVSECRET".getBytes()));
 
-        // @formatter:off
         String content = restViewerMockMvc
-                .perform(
-                        post("/oauth/token")
-                                .header("Authorization", authorization)
-                                .contentType(
-                                        MediaType.APPLICATION_FORM_URLENCODED)
-                                .param("username", username)
-                                .param("password", password)
-                                .param("grant_type", "password")
-                                .param("scope", "read write"))
+                .perform(post("/oauth/token").header("Authorization", authorization)
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .param("username", username).param("password", password)
+                                .param("grant_type", "password").param("scope", "read write"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        // @formatter:on
         return content.substring(17, 53);
     }
 
     @Test
-    public void testForAdminAccessible() throws Exception {
-        String token = getAccessToken("peter@buttington.com", "poop");
+    public void accessAdmin_AsAdmin_Success() throws Exception {
+        String token = setup_access_token("peter@buttington.com", "poop");
         this.restViewerMockMvc.perform(get("/api/v1/admin").header("Authorization", "Bearer " + token)).andExpect(status().isOk());
-        String token2 = getAccessToken("peter2@buttington.com", "poop");
+    }
+
+    @Test
+    public void accessAdmin_AsUser_Forbidden() throws Exception {
+        String token2 = setup_access_token("peter2@buttington.com", "poop");
         this.restViewerMockMvc.perform(get("/api/v1/admin").header("Authorization", "Bearer " + token2)).andExpect(status().isForbidden());
     }
 }

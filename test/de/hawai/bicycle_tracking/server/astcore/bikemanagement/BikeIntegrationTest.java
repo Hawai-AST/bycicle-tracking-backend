@@ -52,7 +52,8 @@ public class BikeIntegrationTest {
 		}
 
 		if (this.user == null) {
-			user = facade.registerUser("", "", new EMail("a@a.com"), new Address("", "", "", "", "", ""), new Date(), "", HawaiAuthority.USER);
+			user = facade.registerUser("", "", new EMail("a@a.com"), new Address("", "", "", "", "", ""), new Date(), "",
+					HawaiAuthority.USER);
 		}
 	}
 

@@ -1,13 +1,5 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.dto.LoginDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
@@ -15,6 +7,13 @@ import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestExceptio
 import de.hawai.bicycle_tracking.server.rest.exceptions.NotAuthorizedException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.NotFoundException;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RequestMapping("/api")
 @RestController
@@ -41,8 +40,7 @@ public class LoginController {
 		}
 	}
 
-	private LoginResponseV1 loginPasswordV1(LoginDTO inLoginDTO)
-	{
+	private LoginResponseV1 loginPasswordV1(LoginDTO inLoginDTO) {
 		Optional<IUser> userOptional = this.facade.getUserBy(new EMail(inLoginDTO.getEmail()));
 
 		IUser toLogin;

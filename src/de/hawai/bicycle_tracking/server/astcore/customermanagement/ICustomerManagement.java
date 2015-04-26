@@ -11,6 +11,7 @@ public interface ICustomerManagement {
 
 	public Optional<IUser> getUserBy(EMail eMail);
 
-	public IUser registerUser(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password, GrantedAuthority authority);
+	public IUser registerUser(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password,
+			  GrantedAuthority authority);
 
 }

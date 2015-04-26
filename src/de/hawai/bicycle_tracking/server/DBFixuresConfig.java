@@ -16,7 +16,8 @@ public class DBFixuresConfig {
 
 	@PostConstruct
 	public void setupApplication() {
-		Application app = new Application("DEV-101", "DEVSECRET", Arrays.asList(HawaiAuthority.USER, HawaiAuthority.ADMIN), "read;write;track");
+		Application app = new Application("DEV-101", "DEVSECRET", Arrays.asList(HawaiAuthority.USER, HawaiAuthority.ADMIN),
+				"read;write;track");
 		this.applicationRepository.save(app);
 	}
 }
