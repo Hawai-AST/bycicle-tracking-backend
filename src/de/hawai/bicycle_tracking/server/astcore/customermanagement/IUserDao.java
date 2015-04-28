@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserDao extends JpaRepository<User, Long> {
+public interface IUserDao extends JpaRepository<User, Long> {
 
 	public Optional<User> getByName(String name);
 

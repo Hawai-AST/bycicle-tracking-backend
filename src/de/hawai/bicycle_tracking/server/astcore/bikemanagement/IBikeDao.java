@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BikeDao extends JpaRepository<Bike, Long> {
+public interface IBikeDao extends JpaRepository<Bike, Long> {
     List<IBike> findByOwner(IUser inCustomer);
 
     @Query("SELECT bike from Bike bike WHERE bike.soldLocation = ?")

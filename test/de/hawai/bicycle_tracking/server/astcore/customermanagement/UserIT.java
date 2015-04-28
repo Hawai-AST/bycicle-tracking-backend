@@ -41,7 +41,7 @@ public class UserIT {
 	private static final String PASSWORD = "TestingPassword";
 
 	@Autowired
-	private UserDao userDao;
+	private IUserDao userDao;
 
 	private User user;
 

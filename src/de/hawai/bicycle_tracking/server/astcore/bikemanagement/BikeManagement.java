@@ -14,7 +14,7 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 public class BikeManagement implements IBikeManagement {
 
 	@Autowired
-	private BikeDao bikeDao;
+	private IBikeDao bikeDao;
 	@Autowired
 	private SellingLocationDao sellingLocationDao;
 

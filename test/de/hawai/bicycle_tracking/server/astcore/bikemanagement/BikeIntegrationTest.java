@@ -33,7 +33,7 @@ import java.util.Date;
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class BikeIntegrationTest {
 	@Autowired
-	private BikeDao bikeRepository;
+	private IBikeDao bikeRepository;
 
 	@Autowired
 	private SellingLocationDao locationRepository;
