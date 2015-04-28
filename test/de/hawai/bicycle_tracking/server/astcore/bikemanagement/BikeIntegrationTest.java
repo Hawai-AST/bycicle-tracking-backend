@@ -32,7 +32,7 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class BikeIntegrationTest {
 	@Autowired
-	private BikeDao bikeRepository;
+	private IBikeDao bikeRepository;
 
 	@Autowired
 	private SellingLocationDao locationRepository;

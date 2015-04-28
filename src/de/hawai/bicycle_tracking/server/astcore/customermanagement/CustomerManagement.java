@@ -13,7 +13,7 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 public class CustomerManagement implements ICustomerManagement {
 
 	@Autowired
-	private UserDao userDao;
+	private IUserDao userDao;
 
 	@Override
 	public Optional<IUser> getUserBy(EMail eMail) {
