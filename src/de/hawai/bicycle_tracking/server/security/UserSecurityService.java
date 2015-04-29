@@ -1,7 +1,7 @@
 package de.hawai.bicycle_tracking.server.security;
 
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUserDao;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class UserSecurityService implements UserDetailsService {
 
     @Autowired
-    private UserDao userRepository;
+    private IUserDao userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

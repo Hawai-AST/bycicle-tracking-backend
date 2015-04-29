@@ -4,8 +4,8 @@ import de.hawai.bicycle_tracking.server.AppConfig;
 import de.hawai.bicycle_tracking.server.DBConfig;
 import de.hawai.bicycle_tracking.server.DBFixuresConfig;
 import de.hawai.bicycle_tracking.server.Main;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUserDao;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.UserDao;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -43,7 +43,7 @@ public class SecurityTest {
     private Filter springSecurityFilterChain;
 
     @Autowired
-    private UserDao userRepository;
+    private IUserDao userRepository;
 
     private MockMvc restViewerMockMvc;
 
