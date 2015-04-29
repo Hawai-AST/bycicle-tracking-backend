@@ -1,27 +1,19 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.Application;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.ApplicationDao;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSession;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.LoginSessionDao;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.*;
 import de.hawai.bicycle_tracking.server.dto.RegistrationDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -46,12 +38,16 @@ public class RegisterController {
 			throw new InvalidClientException("No Client ID specified");
 		}
 		IUser newUser = null;
+		Date birthdate = null;
+		if (inRegistration.getBirthday() != null && inRegistration.getBirthday().length() > 0) {
+			birthdate = this.mDateFormat.parse(inRegistration.getBirthday());
+		}
 		try	{
 			newUser = facade.registerUser(inRegistration.getName(),
 					inRegistration.getFirstname(),
 					inRegistration.getEmail(),
 					inRegistration.getAddress(),
-					this.mDateFormat.parse(inRegistration.getBirthday()),
+					birthdate,
 					inRegistration.getPassword());
 		} catch (DataIntegrityViolationException e) {
 			throw new AlreadyExistsException("User already exists");
