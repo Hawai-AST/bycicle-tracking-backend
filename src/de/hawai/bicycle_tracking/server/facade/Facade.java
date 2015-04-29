@@ -20,7 +20,7 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 public class Facade {
 
 	@Autowired
-	private ICustomerManagement customerManegement;
+	private ICustomerManagement customerManagement;
 
 	@Autowired
 	private IBikeManagement bikeManagement;
@@ -30,11 +30,11 @@ public class Facade {
 	}
 
 	public Optional<IUser> getUserBy(EMail eMail) {
-		return customerManegement.getUserBy(eMail);
+		return customerManagement.getUserBy(eMail);
 	}
 
 	public IUser registerUser(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password) {
-		return customerManegement.registerUser(name, firstName, eMailAddress, address, birthdate, password);
+		return customerManagement.registerUser(name, firstName, eMailAddress, address, birthdate, password);
 	}
 
 	public List<? extends IBike> findBikesBySoldLocation(ISellingLocation inLocation) {
