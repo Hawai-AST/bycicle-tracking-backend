@@ -96,4 +96,8 @@ dependencies {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
-    }
+}
+
+configurations {
+    all*.exclude module: 'slf4j-nop'
+}
