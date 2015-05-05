@@ -61,8 +61,13 @@ public class BikeManagement implements IBikeManagement {
 	@Override
 	public void updateBike(IBike inBike, String inType, FrameNumber inFrameNumber, Date inBuyDate,
 						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner) {
-		Bike updated = new Bike(inType, inFrameNumber, inBuyDate, inNextMaintenanceData, inSellingLocation, inOwner);
-		updated.setId(((Bike) inBike).getId());
-		bikeDao.save(updated);
+		Bike old = (Bike) inBike;
+		old.setBuyDate(inBuyDate);
+		old.setFrameNumber(inFrameNumber);
+		old.setNextMaintenanceDate(inNextMaintenanceData);
+		old.setType(inType);
+		old.setOwner(inOwner);
+		old.setSoldLocation(inSellingLocation);
+		bikeDao.save(old);
 	}
 }

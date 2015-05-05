@@ -70,27 +70,27 @@ public class Bike extends AbstractEntity implements IBike {
 		return this.owner;
 	}
 
-	private void setType(final String inType) {
+	protected void setType(final String inType) {
 		type = inType;
 	}
 
-	private void setFrameNumber(final FrameNumber inFrameNumber) {
+	protected void setFrameNumber(final FrameNumber inFrameNumber) {
 		frameNumber = inFrameNumber;
 	}
 
-	private void setBuyDate(final Date inBuyDate) {
+	protected void setBuyDate(final Date inBuyDate) {
 		buyDate = inBuyDate;
 	}
 
-	private void setNextMaintenanceDate(final Date inNextMaintenanceDate) {
+	protected void setNextMaintenanceDate(final Date inNextMaintenanceDate) {
 		nextMaintenanceDate = inNextMaintenanceDate;
 	}
 
-	private void setSoldLocation(final ISellingLocation inSoldLocation) {
+	protected void setSoldLocation(final ISellingLocation inSoldLocation) {
 		soldLocation = inSoldLocation;
 	}
 
-	private void setOwner(final IUser inOwner) {
+	protected void setOwner(final IUser inOwner) {
 		owner = inOwner;
 	}
 }
