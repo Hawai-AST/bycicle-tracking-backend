@@ -32,6 +32,7 @@ import de.hawai.bicycle_tracking.server.DBFixuresConfig;
 import de.hawai.bicycle_tracking.server.Main;
 import de.hawai.bicycle_tracking.server.dto.LoginDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -79,7 +80,7 @@ public class LoginControllerTest {
 	@Before
 	public void initTest() {
 		Address address = new Address(STREET, HOUSENR, CITY, STATE, POSTCODE, COUNTRY);
-		facade.registerUser(LASTNAME, NAME, new EMail(EMAIL), address, BIRTHDATE, PASSWORD);
+		facade.registerUser(LASTNAME, NAME, new EMail(EMAIL), address, BIRTHDATE, PASSWORD, HawaiAuthority.USER);
 
 		this.login = new LoginDTO();
 		this.login.setEmail(EMAIL);

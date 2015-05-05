@@ -1,10 +1,13 @@
 package de.hawai.bicycle_tracking.server.facade;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Date;
-import java.util.List;
-
+import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,13 +22,10 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.hawai.bicycle_tracking.server.AppConfig;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
-import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
-import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
+import java.util.Date;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -63,7 +63,7 @@ public class FacadeIT {
 
 	@Before
 	public void setup() {
-		user = facade.registerUser(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE, PASSWORD);
+		user = facade.registerUser(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE, PASSWORD, HawaiAuthority.USER);
 
 		facade.createSellingLocation(SELLING_LOCATION_ADDRESS, SELLING_LOCATION_NAME);
 

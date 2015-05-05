@@ -1,7 +1,5 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
-import java.util.Date;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,9 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 import de.hawai.bicycle_tracking.server.AppConfig;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.facade.Facade;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
+
+import java.util.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = AppConfig.class)
@@ -51,7 +52,8 @@ public class BikeIntegrationTest {
 		}
 
 		if (this.user == null) {
-			user = facade.registerUser("", "", new EMail("a@a.com"), new Address("", "", "", "", "", ""), new Date(), "");
+			user = facade.registerUser("", "", new EMail("a@a.com"), new Address("", "", "", "", "", ""), new Date(), "",
+					HawaiAuthority.USER);
 		}
 	}
 
