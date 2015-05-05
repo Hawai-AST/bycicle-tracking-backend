@@ -40,7 +40,7 @@ public class BikeController {
     }
 
     @RequestMapping(value = "/v1/bike", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<BikeDTO> createBike(BikeDTO inBike) {
+    public ResponseEntity<BikeDTO> createBike(@RequestBody BikeDTO inBike) {
         try {
             Date purchaseDate = mDateFormat.parse(inBike.getPurchaseDate());
             Date maintenanceDate = mDateFormat.parse(inBike.getNextMaintenance());
@@ -99,7 +99,8 @@ public class BikeController {
             Date purchaseDate = mDateFormat.parse(inNew.getPurchaseDate());
             Date maintenanceDate = mDateFormat.parse(inNew.getNextMaintenance());
             facade.updateBike(old, inNew.getType(), new FrameNumber(inNew.getFrameNumber()), purchaseDate, maintenanceDate, null, owner);
-            return new ResponseEntity<>(HttpStatus.OK);
+            inNew.setId(id);
+            return new ResponseEntity<>(inNew, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
