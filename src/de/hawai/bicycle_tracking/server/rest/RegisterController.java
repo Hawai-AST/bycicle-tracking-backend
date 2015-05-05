@@ -5,8 +5,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +37,7 @@ public class RegisterController {
 					inRegistration.getEmail(),
 					inRegistration.getAddress(),
 					this.mDateFormat.parse(inRegistration.getBirthday()),
-					inRegistration.getPassword(),
+					BCrypt.hashpw(inRegistration.getPassword(), BCrypt.gensalt()),
 					HawaiAuthority.USER);
 		} catch (DataIntegrityViolationException e) {
 			throw new AlreadyExistsException("User already exists");

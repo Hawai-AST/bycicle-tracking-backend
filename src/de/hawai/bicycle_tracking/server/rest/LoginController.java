@@ -7,7 +7,9 @@ import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestExceptio
 import de.hawai.bicycle_tracking.server.rest.exceptions.NotAuthorizedException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.NotFoundException;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,7 +51,7 @@ public class LoginController {
 		} else {
 			throw new NotFoundException("No User found");
 		}
-		if (toLogin.getPassword().equals(inLoginDTO.getCode())) {
+		if (BCrypt.checkpw(inLoginDTO.getCode(), toLogin.getPassword())) {
 			LoginResponseV1 responseV1 = new LoginResponseV1();
 			responseV1.setEmail(toLogin.getMailAddress().getMailAddress());
 			return responseV1;
