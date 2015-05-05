@@ -5,6 +5,9 @@ import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.dto.BikeDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
+import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
+import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidAccessException;
+import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestException;
 import de.hawai.bicycle_tracking.server.security.SessionService;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
@@ -13,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -41,21 +46,30 @@ public class BikeController {
 
     @RequestMapping(value = "/v1/bike", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity<BikeDTO> createBike(@RequestBody BikeDTO inBike) {
+        Date purchaseDate;
+        Date maintenanceDate;
         try {
-            Date purchaseDate = mDateFormat.parse(inBike.getPurchaseDate());
-            Date maintenanceDate = mDateFormat.parse(inBike.getNextMaintenance());
-            IBike created = facade.createBike(inBike.getType(), new FrameNumber(inBike.getFrameNumber()), purchaseDate, maintenanceDate, null, null);
-            BikeDTO response = new BikeDTO();
-            response.setId(facade.getIdOfBike(created));
-            response.setFrameNumber(created.getFrameNumber().getNumber());
-            response.setNextMaintenance(mDateFormat.format(created.getNextMaintenanceDate()));
-            response.setPurchaseDate(mDateFormat.format(created.getBuyDate()));
-            response.setType(created.getType());
-            response.setSalesLocation(created.getSoldLocation() != null ? created.getSoldLocation().getName() : null);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            purchaseDate = mDateFormat.parse(inBike.getPurchaseDate());
+            maintenanceDate = mDateFormat.parse(inBike.getNextMaintenance());
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new MalformedRequestException("Invalid date detected");
         }
+
+        IBike created;
+        try {
+            created = facade.createBike(inBike.getType(), new FrameNumber(inBike.getFrameNumber()), purchaseDate, maintenanceDate, null, null);
+        } catch (ConstraintViolationException e) {
+            throw new AlreadyExistsException("Bike with the framenumber exists already.");
+        }
+
+        BikeDTO response = new BikeDTO();
+        response.setId(facade.getIdOfBike(created));
+        response.setFrameNumber(created.getFrameNumber().getNumber());
+        response.setNextMaintenance(mDateFormat.format(created.getNextMaintenanceDate()));
+        response.setPurchaseDate(mDateFormat.format(created.getBuyDate()));
+        response.setType(created.getType());
+        response.setSalesLocation(created.getSoldLocation() != null ? created.getSoldLocation().getName() : null);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/v1/bikes", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
@@ -92,18 +106,22 @@ public class BikeController {
         String email = this.sessionService.getCurrentlyLoggedinUser();
         IUser owner = facade.getUserBy(new EMail(email)).get();
         if (!old.getOwner().equals(owner)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new InvalidAccessException("This bike does not belong to you.");
         }
 
+        Date purchaseDate;
+        Date maintenanceDate;
+
         try {
-            Date purchaseDate = mDateFormat.parse(inNew.getPurchaseDate());
-            Date maintenanceDate = mDateFormat.parse(inNew.getNextMaintenance());
-            facade.updateBike(old, inNew.getType(), new FrameNumber(inNew.getFrameNumber()), purchaseDate, maintenanceDate, null, owner);
-            inNew.setId(id);
-            return new ResponseEntity<>(inNew, HttpStatus.OK);
+            purchaseDate = mDateFormat.parse(inNew.getPurchaseDate());
+            maintenanceDate = mDateFormat.parse(inNew.getNextMaintenance());
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new MalformedRequestException("Invalid date detected");
         }
+
+        facade.updateBike(old, inNew.getType(), new FrameNumber(inNew.getFrameNumber()), purchaseDate, maintenanceDate, null, owner);
+        inNew.setId(id);
+        return new ResponseEntity<>(inNew, HttpStatus.OK);
     }
 
     private static class SalesLocationsResponse {
