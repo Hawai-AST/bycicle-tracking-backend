@@ -49,7 +49,14 @@ public class ErrorHandler {
 	@ExceptionHandler(MalformedRequestException.class)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorMessage onParseException(MalformedRequestException inParseException) {
+	public ErrorMessage onMalformedRequestException(MalformedRequestException inParseException) {
+		return new ErrorMessage(400, "Invalid Input", inParseException.getMessage());
+	}
+
+	@ExceptionHandler(ParseException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessage onParseException(ParseException inParseException) {
 		return new ErrorMessage(400, "Invalid Input", inParseException.getMessage());
 	}
 
