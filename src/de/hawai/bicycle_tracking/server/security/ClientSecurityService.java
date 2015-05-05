@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ClientSecurityService implements ClientDetailsService {
 
     @Autowired
-    private ApplicationDao applicationDao;
+    private IApplicationDao applicationDao;
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {

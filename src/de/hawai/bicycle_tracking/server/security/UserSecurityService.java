@@ -1,7 +1,8 @@
 package de.hawai.bicycle_tracking.server.security;
 
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUserDao;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
+import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,14 +16,14 @@ import java.util.Optional;
 public class UserSecurityService implements UserDetailsService {
 
     @Autowired
-    private IUserDao userRepository;
+    private Facade facade;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
             EMail mail = new EMail(username);
-            Optional<User> user = this.userRepository.getByMailAddress(mail);
-            return new SecurityUser(user.get());
+            Optional<IUser> user = this.facade.getUserBy(mail);
+            return new SecurityUser((User) user.get());
         } catch (IllegalArgumentException e) {
             throw new UsernameNotFoundException("Couldn't find " + username);
         }
