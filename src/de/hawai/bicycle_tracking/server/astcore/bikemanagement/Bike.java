@@ -32,6 +32,9 @@ public class Bike extends AbstractEntity implements IBike {
 		owner = inOwner;
 	}
 
+	protected Bike() {
+	}
+
 	@Column(name = "type", length = 50)
 	@Override
 	public String getType() {
