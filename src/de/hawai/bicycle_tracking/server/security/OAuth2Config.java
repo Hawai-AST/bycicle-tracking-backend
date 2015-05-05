@@ -66,6 +66,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 		public void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
 					.antMatchers("/api/v{\\d+}/register", "/api/v{\\d+}/login").permitAll()
+					.antMatchers("/api/v{\\d+}/user{.*}").authenticated()
 					.antMatchers("/api/v{\\d+}/admin").hasAuthority("ADMIN");
 		}
 	}

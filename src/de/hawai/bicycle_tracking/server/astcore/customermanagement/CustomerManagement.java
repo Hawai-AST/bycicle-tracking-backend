@@ -26,4 +26,20 @@ public class CustomerManagement implements ICustomerManagement {
 		return userDao.save(new User(name, firstName, eMailAddress, address, birthdate, password, authority));
 	}
 
+	@Override
+	public void updatePassword(IUser user, String password) {
+		User actualUser = (User) user;
+		actualUser.setPassword(password);
+		userDao.save(actualUser);
+	}
+
+	@Override
+	public void updateUser(IUser user, String name, String firstName, Date birthday, Address address) {
+		User actualUser = (User) user;
+		actualUser.setName(name);
+		actualUser.setFirstName(firstName);
+		actualUser.setBirthdate(birthday);
+		actualUser.setAddress(address);
+		userDao.save(actualUser);
+	}
 }
