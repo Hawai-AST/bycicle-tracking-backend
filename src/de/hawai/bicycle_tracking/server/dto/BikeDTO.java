@@ -1,9 +1,6 @@
 package de.hawai.bicycle_tracking.server.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class BikeDTO {
-    @JsonProperty(required = false)
     private long id;
     private long frameNumber;
     private String type;
