@@ -55,9 +55,10 @@ public class BikeController {
             throw new MalformedRequestException("Invalid date detected");
         }
 
+        String email = this.sessionService.getCurrentlyLoggedinUser();
         IBike created;
         try {
-            created = facade.createBike(inBike.getType(), new FrameNumber(inBike.getFrameNumber()), purchaseDate, maintenanceDate, null, null);
+            created = facade.createBike(inBike.getType(), new FrameNumber(inBike.getFrameNumber()), purchaseDate, maintenanceDate, null, facade.getUserBy(new EMail(email)).get());
         } catch (ConstraintViolationException e) {
             throw new AlreadyExistsException("Bike with the framenumber exists already.");
         }
