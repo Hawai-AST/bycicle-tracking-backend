@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -53,5 +54,22 @@ public class Facade {
 
 	public ISellingLocation createSellingLocation(Address inAddress, String inName) {
 		return bikeManagement.createSellingLocation(inAddress, inName);
+	}
+
+	public Collection<? extends ISellingLocation> getAllSellingLocations() {
+		return bikeManagement.getAllSellingLocations();
+	}
+
+	public long getIdOfBike(IBike inBike) {
+		return bikeManagement.getIdOfBike(inBike);
+	}
+
+	public IBike getBikeById(long inID) {
+		return bikeManagement.getBikeById(inID);
+	}
+
+	public void updateBike(IBike inBike, String inType, FrameNumber inFrameNumber, Date inBuyDate,
+						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner) {
+		bikeManagement.updateBike(inBike, inType, inFrameNumber, inBuyDate, inNextMaintenanceData, inSellingLocation, inOwner);
 	}
 }
