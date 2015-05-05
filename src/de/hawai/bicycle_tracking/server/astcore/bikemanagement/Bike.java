@@ -38,7 +38,7 @@ public class Bike extends AbstractEntity implements IBike {
 		return type;
 	}
 
-	@Column(name = "frame_number", nullable = false)
+	@Column(name = "frame_number", nullable = false, unique = true)
 	@Override
 	public FrameNumber getFrameNumber() {
 		return frameNumber;
