@@ -4,11 +4,11 @@ import de.hawai.bicycle_tracking.server.utility.value.Address;
 
 public class UserDTO {
     private Address address;
-    private int customerid;
-    private String firstname;
+    private int id;
+    private String firstName;
     private String name;
     private String gender;
-    private String birthday;
+    private String birthdate;
 
     public Address getAddress() {
         return address;
@@ -19,19 +19,19 @@ public class UserDTO {
     }
 
     public int getCustomerid() {
-        return customerid;
+        return id;
     }
 
-    public void setCustomerid(int customerid) {
-        this.customerid = customerid;
+    public void setCustomerid(int id) {
+        this.id = id;
     }
 
     public String getFirstname() {
-        return firstname;
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getName() {
@@ -50,11 +50,11 @@ public class UserDTO {
         this.gender = gender;
     }
 
-    public String getBirthday() {
-        return birthday;
+    public String getBirthdate() {
+        return birthdate;
     }
 
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
+    public void setBirthdate(String birthday) {
+        this.birthdate = birthday;
     }
 }

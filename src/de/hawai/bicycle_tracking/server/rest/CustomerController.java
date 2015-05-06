@@ -39,8 +39,8 @@ public class CustomerController {
         Date birthday;
 
         try {
-            if (inUser.getBirthday() != null && inUser.getBirthday().length() > 0) {
-                birthday = dateFormat.parse(inUser.getBirthday());
+            if (inUser.getBirthdate() != null && inUser.getBirthdate().length() > 0) {
+                birthday = dateFormat.parse(inUser.getBirthdate());
             } else {
                 birthday = null;
             }
