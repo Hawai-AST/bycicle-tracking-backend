@@ -105,8 +105,8 @@ public class AccountControllerTest {
     public void updateUser_ValidInfor_Success() throws Exception {
         UserDTO userDTO = new UserDTO();
         userDTO.setAddress(NEW_ADDRESS);
-        userDTO.setBirthday(NEW_BIRTHDAY);
-        userDTO.setFirstname(NEW_NAME);
+        userDTO.setBirthdate(NEW_BIRTHDAY);
+        userDTO.setFirstName(NEW_NAME);
         userDTO.setName(NEW_LAST_NAME);
         this.restViewerMockMvc.perform(post("/api/v1/user")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
