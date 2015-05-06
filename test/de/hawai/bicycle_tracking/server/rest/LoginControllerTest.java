@@ -33,6 +33,7 @@ import de.hawai.bicycle_tracking.server.Main;
 import de.hawai.bicycle_tracking.server.dto.LoginDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+import de.hawai.bicycle_tracking.server.security.WebSecurityConfig;
 import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -93,6 +94,7 @@ public class LoginControllerTest {
 		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(this.login))
 				.header("Client-ID", "DEV-101")).andExpect(status().isOk());
+		System.err.println(facade.getUserBy(new EMail(EMAIL)).get().getPassword());
 	}
 
 	@Test
