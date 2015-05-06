@@ -54,4 +54,12 @@ public class Facade {
 	public ISellingLocation createSellingLocation(Address inAddress, String inName) {
 		return bikeManagement.createSellingLocation(inAddress, inName);
 	}
+
+	public void updatePassword(IUser user, String password) {
+		this.customerManagement.updatePassword(user, password);
+	}
+
+	public void updateUser(IUser user, String name, String firstName, Date birthday, Address address) {
+		customerManagement.updateUser(user, name, firstName, birthday, address);
+	}
 }
