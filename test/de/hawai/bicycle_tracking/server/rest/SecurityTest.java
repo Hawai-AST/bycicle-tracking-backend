@@ -6,9 +6,11 @@ import de.hawai.bicycle_tracking.server.DBFixuresConfig;
 import de.hawai.bicycle_tracking.server.Main;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUserDao;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
+import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.Filter;
+
 import java.util.Base64;
 import java.util.Date;
 
@@ -44,6 +47,9 @@ public class SecurityTest {
 
     @Autowired
     private IUserDao userRepository;
+    
+    @Autowired
+    private Facade facade;
 
     private MockMvc restViewerMockMvc;
 
@@ -51,12 +57,10 @@ public class SecurityTest {
     public void setup() {
         this.restViewerMockMvc = MockMvcBuilders.webAppContextSetup(context).addFilter(springSecurityFilterChain).build();
         this.userRepository.deleteAll();
-        User testUser = new User("Buttington", "Peter", new EMail("peter@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
+        facade.registerUser("Buttington", "Peter", new EMail("peter@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
                 new Date(1), "poop", HawaiAuthority.ADMIN);
-        this.userRepository.save(testUser);
-        User testUser2 = new User("Buttington", "Peter", new EMail("peter2@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
+        facade.registerUser("Buttington", "Peter", new EMail("peter2@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
                 new Date(1), "poop", HawaiAuthority.USER);
-        this.userRepository.save(testUser2);
     }
 
     @Test
