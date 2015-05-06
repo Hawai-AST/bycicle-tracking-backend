@@ -102,7 +102,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void updateUser_ValidInfor_Success() throws Exception {
+    public void updateUser_ValidInput_Success() throws Exception {
         UserDTO userDTO = new UserDTO();
         userDTO.setAddress(NEW_ADDRESS);
         userDTO.setBirthdate(NEW_BIRTHDAY);
