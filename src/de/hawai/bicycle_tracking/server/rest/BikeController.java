@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -67,8 +66,8 @@ public class BikeController {
         BikeDTO response = new BikeDTO();
         response.setId(facade.getIdOfBike(created));
         response.setFrameNumber(created.getFrameNumber().getNumber());
-        response.setNextMaintenance(mDateFormat.format(created.getNextMaintenanceDate()));
-        response.setPurchaseDate(mDateFormat.format(created.getBuyDate()));
+        response.setNextMaintenance(mDateFormat.format(created.getNextMaintenance()));
+        response.setPurchaseDate(mDateFormat.format(created.getPurchaseDate()));
         response.setType(created.getType());
         response.setSalesLocation(created.getSoldLocation() != null ? created.getSoldLocation().getName() : null);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -86,8 +85,8 @@ public class BikeController {
             current = bikes.get(i);
             dto.setId(facade.getIdOfBike(current));
             dto.setFrameNumber(current.getFrameNumber().getNumber());
-            dto.setNextMaintenance(mDateFormat.format(current.getNextMaintenanceDate()));
-            dto.setPurchaseDate(mDateFormat.format(current.getBuyDate()));
+            dto.setNextMaintenance(mDateFormat.format(current.getNextMaintenance()));
+            dto.setPurchaseDate(mDateFormat.format(current.getPurchaseDate()));
             dto.setSalesLocation(current.getSoldLocation() != null ? current.getSoldLocation().getName() : null);
             dto.setType(current.getType());
             dtos[i] = dto;

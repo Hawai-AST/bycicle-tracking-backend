@@ -16,7 +16,7 @@ public class BikeManagement implements IBikeManagement {
 	@Autowired
 	private IBikeDao bikeDao;
 	@Autowired
-	private SellingLocationDao sellingLocationDao;
+	private ISellingLocationDao sellingLocationDao;
 
 	@Override
 	public List<? extends IBike> findBikesBySoldLocation(ISellingLocation inSellingLocation) {
@@ -62,9 +62,9 @@ public class BikeManagement implements IBikeManagement {
 	public void updateBike(IBike inBike, String inType, FrameNumber inFrameNumber, Date inBuyDate,
 						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner) {
 		Bike old = (Bike) inBike;
-		old.setBuyDate(inBuyDate);
+		old.setPurchaseDate(inBuyDate);
 		old.setFrameNumber(inFrameNumber);
-		old.setNextMaintenanceDate(inNextMaintenanceData);
+		old.setNextMaintenance(inNextMaintenanceData);
 		old.setType(inType);
 		old.setOwner(inOwner);
 		old.setSoldLocation(inSellingLocation);
