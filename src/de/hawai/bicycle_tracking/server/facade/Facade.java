@@ -72,4 +72,12 @@ public class Facade {
 						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner) {
 		bikeManagement.updateBike(inBike, inType, inFrameNumber, inBuyDate, inNextMaintenanceData, inSellingLocation, inOwner);
 	}
+
+	public void updatePassword(IUser user, String password) {
+		this.customerManagement.updatePassword(user, password);
+	}
+
+	public void updateUser(IUser user, String name, String firstName, Date birthday, Address address) {
+		customerManagement.updateUser(user, name, firstName, birthday, address);
+	}
 }

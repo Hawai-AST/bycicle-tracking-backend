@@ -14,4 +14,7 @@ public interface ICustomerManagement {
 	public IUser registerUser(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password,
 			  GrantedAuthority authority);
 
+	void updatePassword(IUser user, String password);
+
+	void updateUser(IUser user, String name, String firstName, Date birthday, Address address);
 }

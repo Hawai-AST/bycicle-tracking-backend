@@ -17,7 +17,7 @@ import java.util.Date;
 public class User extends AbstractEntity implements IUser {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8750089196426609433L;
 	private String name;
@@ -86,23 +86,23 @@ public class User extends AbstractEntity implements IUser {
 		this.authority = inAuthority;
 	}
 
-	private void setName(String name) {
+	protected void setName(String name) {
 		this.name = name;
 	}
 
-	private void setFirstName(String firstName) {
+	protected void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	private void setBirthdate(Date birthdate) {
+	protected void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
 	}
 
-	private void setMailAddress(EMail eMailAddress) {
+	protected void setMailAddress(EMail eMailAddress) {
 		this.mailAddress = eMailAddress;
 	}
 
-	private void setAddress(Address address) {
+	protected void setAddress(Address address) {
 		this.address = address;
 	}
 
@@ -112,7 +112,7 @@ public class User extends AbstractEntity implements IUser {
 		return password;
 	}
 
-	private void setPassword(final String inPassword) {
+	protected void setPassword(final String inPassword) {
 		password = inPassword;
 	}
 
