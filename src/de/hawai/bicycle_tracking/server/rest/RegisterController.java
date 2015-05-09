@@ -37,7 +37,7 @@ public class RegisterController {
 					inRegistration.getEmail(),
 					inRegistration.getAddress(),
 					this.mDateFormat.parse(inRegistration.getBirthday()),
-					BCrypt.hashpw(inRegistration.getPassword(), BCrypt.gensalt()),
+					inRegistration.getPassword(),
 					HawaiAuthority.USER);
 		} catch (DataIntegrityViolationException e) {
 			throw new AlreadyExistsException("User already exists");
