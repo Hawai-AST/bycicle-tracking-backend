@@ -261,7 +261,8 @@ public class TourManagementTest extends TestCase {
     }
 
     @Test(expected = UpdateTourFailedException.class)
-    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataTour_ThrowsException() throws AddTourFailedException, UpdateTourFailedException {
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataTour_ThrowsException()
+            throws AddTourFailedException, UpdateTourFailedException {
         ITour tour1 = tourManagement.addTour(
                 "TestTour",
                 bike1,
@@ -290,7 +291,8 @@ public class TourManagementTest extends TestCase {
     }
 
     @Test(expected = UpdateTourFailedException.class)
-    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataName_ThrowsException() throws AddTourFailedException, UpdateTourFailedException {
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataName_ThrowsException()
+            throws AddTourFailedException, UpdateTourFailedException {
         ITour tour1 = tourManagement.addTour(
                 "TestTour",
                 bike1,
@@ -320,7 +322,8 @@ public class TourManagementTest extends TestCase {
     }
 
     @Test(expected = UpdateTourFailedException.class)
-    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataBike_ThrowsException() throws AddTourFailedException, UpdateTourFailedException {
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataBike_ThrowsException()
+            throws AddTourFailedException, UpdateTourFailedException {
         ITour tour1 = tourManagement.addTour(
                 "TestTour",
                 bike1,
@@ -349,7 +352,8 @@ public class TourManagementTest extends TestCase {
     }
 
     @Test(expected = UpdateTourFailedException.class)
-    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataStartAt_ThrowsException() throws Exception {
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataStartAt_ThrowsException()
+            throws Exception {
         ITour tour1 = tourManagement.addTour(
                 "TestTour",
                 bike1,
@@ -378,7 +382,8 @@ public class TourManagementTest extends TestCase {
     }
 
     @Test(expected = UpdateTourFailedException.class)
-    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataFinishedAt_ThrowsException() throws Exception {
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataFinishedAt_ThrowsException()
+            throws Exception {
         ITour tour1 = tourManagement.addTour(
                 "TestTour",
                 bike1,
@@ -407,7 +412,8 @@ public class TourManagementTest extends TestCase {
     }
 
     @Test(expected = UpdateTourFailedException.class)
-    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataWaypoints_ThrowsException() throws Exception {
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataWaypoints_ThrowsException()
+            throws Exception {
         ITour tour1 = tourManagement.addTour(
                 "TestTour",
                 bike1,
