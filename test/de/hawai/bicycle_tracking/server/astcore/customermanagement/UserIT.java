@@ -5,11 +5,11 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 
-import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+import javax.annotation.Resource;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -22,6 +22,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
@@ -40,7 +41,7 @@ public class UserIT {
 	private static final Date BIRTHDATE = new Date(0);
 	private static final String PASSWORD = "TestingPassword";
 
-	@Autowired
+	@Resource(name = "IUserDao")
 	private IUserDao userDao;
 
 	private User user;
@@ -48,13 +49,7 @@ public class UserIT {
 	@Before
 	public void setup() {
 		user = new User(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE, PASSWORD, HawaiAuthority.USER);
-		user = userDao.save(user);
-	}
-
-
-	@Test
-	public void getByName_UserExists_UserCanBeFound() throws Exception {
-		assertThat(user).isEqualTo(userDao.getByName(NAME).get());
+		userDao.save(user);
 	}
 
 	@Test
@@ -86,6 +81,8 @@ public class UserIT {
 	}
 
 	@Test
+//	TODO(fap): unique constraint on email broken?
+//	Besides that, why does this break and "register_ExistingUser_RegistrationFails()" in RegisterControllerTest is working?
 	public void save_UserWithSameMailExists_UserCantBeSaved() throws Exception {
 		try {
 			userDao.save(new User("other name",

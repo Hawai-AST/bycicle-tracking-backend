@@ -1,19 +1,32 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
+import java.util.Date;
+import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.Target;
+import org.springframework.security.core.GrantedAuthority;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.crm.suite.UserDeserializerSuite;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
-import org.hibernate.annotations.Target;
-import org.springframework.security.core.GrantedAuthority;
-
-import javax.persistence.*;
-import java.util.Date;
 
 @Entity
-@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = {"email_address"})})
+@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = { "email_address" }) })
 @SuppressWarnings("unused")
+@JsonDeserialize(using = UserDeserializerSuite.class)
 public class User extends AbstractEntity implements IUser {
 
 	/**
@@ -25,7 +38,6 @@ public class User extends AbstractEntity implements IUser {
 	private Date birthdate;
 	private Address address;
 	private EMail mailAddress;
-	@JsonIgnore
 	private String password;
 	@JsonIgnore
 	private GrantedAuthority authority;
@@ -39,11 +51,16 @@ public class User extends AbstractEntity implements IUser {
 		this.password = password;
 		this.authority = authority;
 	}
+	
+	public User(String name, String firstName, EMail eMailAddress, Address address,
+			Date birthdate, String password, GrantedAuthority authority, UUID id) {
+		this(name, firstName, eMailAddress, address, birthdate, password, authority);
+		this.setId(id);
+	}
 
 	private User() {
 		super();
 	}
-
 
 	@Column(name = "name", length = 30, nullable = false)
 	@Override
@@ -70,7 +87,7 @@ public class User extends AbstractEntity implements IUser {
 		return address;
 	}
 
-	@Embedded()
+	@Embedded
 	@Override
 	public EMail getMailAddress() {
 		return mailAddress;
@@ -120,8 +137,7 @@ public class User extends AbstractEntity implements IUser {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((mailAddress == null) ? 0 : mailAddress.hashCode());
+		result = prime * result + ((mailAddress == null) ? 0 : mailAddress.hashCode());
 		return result;
 	}
 
@@ -142,4 +158,11 @@ public class User extends AbstractEntity implements IUser {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", firstName=" + firstName + ", birthdate=" + birthdate + ", address=" + address + ", mailAddress="
+				+ mailAddress + ", password=" + password + ", id=" + getId() + ", authority=" + authority + "]";
+	}
+	
+	
 }
