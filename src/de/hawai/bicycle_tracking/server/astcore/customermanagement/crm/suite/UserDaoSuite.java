@@ -94,11 +94,7 @@ public class UserDaoSuite implements IUserDao {
 //		todo(fap): inject object mapper
 		ObjectMapper mapper = new ObjectMapper();
 		
-		SimpleModule module = new SimpleModule();
-		module.addSerializer(User.class, new UserSerializerSuite());
-		mapper.registerModule(module);
-		
-		mapper.registerModule(module);
+		addCustomUserSerializer(mapper);
 		
 		retrieveUuidFromSuite(entity);
 		try {
@@ -114,6 +110,14 @@ public class UserDaoSuite implements IUserDao {
 			e.printStackTrace();
 		}
 		return entity;
+	}
+
+	private void addCustomUserSerializer(ObjectMapper mapper) {
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(User.class, new UserSerializerSuite());
+		mapper.registerModule(module);
+		
+		mapper.registerModule(module);
 	}
 
 	private <S extends User> void retrieveUuidFromSuite(S entity) {
