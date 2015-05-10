@@ -41,7 +41,6 @@ public class UserDeserializerSuite extends JsonDeserializer<User> {
 			System.err.println("Searched user doesn't exist.\n");
 			return null;
 		}
-		System.out.println(nameValueList);
 		Date date = null;
 		try {
 			date = new SimpleDateFormat("yyyy-MM-dd").parse(extractTextValueOf(nameValueList, UserSerializationHelperSuite.BIRTHDAY));

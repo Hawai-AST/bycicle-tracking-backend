@@ -73,7 +73,6 @@ public class SuiteCrmConnector {
 		}
 		Object postForObject = restTemplate.postForObject(uri, entity, responseType);
 
-		System.out.println(postForObject);
 		return postForObject;
 
 	}
