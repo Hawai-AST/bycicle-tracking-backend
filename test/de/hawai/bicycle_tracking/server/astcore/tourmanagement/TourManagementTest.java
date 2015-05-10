@@ -11,12 +11,13 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 import de.hawai.bicycle_tracking.server.utility.value.GPS;
 import junit.framework.TestCase;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -27,7 +28,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -115,10 +115,70 @@ public class TourManagementTest extends TestCase {
                 waypoints,
                 15.0
         );
-        ITour tourGet = tourManagement.getTourById(tour.getId());
+        ITour tourGet = tourManagement.getTourById(tour.getId()).get();
         assertEquals(tour, tourGet);
         assertEquals(tour.getBike(), bike1);
         assertEquals(tour.getName(), "TestTour");
+    }
+
+    @Test(expected = AddTourFailedException.class)
+    public void addTour_ParameterNameMissing_ThrowsError() throws AddTourFailedException {
+        tourManagement.addTour(
+                null,
+                bike1,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+    }
+
+    @Test(expected = AddTourFailedException.class)
+    public void addTour_ParameterBikeMissing_ThrowsError() throws AddTourFailedException {
+        tourManagement.addTour(
+                "test",
+                null,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+    }
+
+    @Test(expected = AddTourFailedException.class)
+    public void addTour_ParameterStartAtMissing_ThrowsError() throws AddTourFailedException {
+        tourManagement.addTour(
+                "test",
+                bike1,
+                null,
+                new Date(),
+                waypoints,
+                15.0
+        );
+    }
+
+    @Test(expected = AddTourFailedException.class)
+    public void addTour_ParameterFinishedAtMissing_ThrowsError() throws AddTourFailedException {
+        tourManagement.addTour(
+                "test",
+                bike1,
+                new Date(),
+                null,
+                waypoints,
+                15.0
+        );
+    }
+
+    @Test(expected = AddTourFailedException.class)
+    public void addTour_ParameterWaypointsMissing_ThrowsError() throws AddTourFailedException {
+        tourManagement.addTour(
+                "test",
+                bike1,
+                new Date(),
+                new Date(),
+                null,
+                15.0
+        );
     }
 
     @Test
@@ -144,6 +204,30 @@ public class TourManagementTest extends TestCase {
         List<ITour> tours1 = tourManagement.getToursByUser(user1);
         assertTrue(tours1.size() == 1);
         assertEquals(tours1.get(0), tour1);
+    }
+
+    @Test
+    public void getToursByUser_UserHasNoToursInDataBase_ListsOfUserAssignedToursIsEmpty() throws Exception {
+        ITour tour1 = tourManagement.addTour(
+                "TestTour",
+                bike2,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+
+        ITour tour2 = tourManagement.addTour(
+                "TestTour",
+                bike2,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+
+        List<ITour> tours1 = tourManagement.getToursByUser(user1);
+        assertTrue(tours1.isEmpty());
     }
 
     @Test
@@ -173,24 +257,186 @@ public class TourManagementTest extends TestCase {
                 changedWaypoints,
                 changedLength
         );
-        ITour tour2 = tourManagement.getTourById(tourId);
-        assertEquals(tour2.getName(), changedName);
-        assertEquals(tour2.getBike(), bike2);
-        assertEquals(tour2.getRodeAt(), changedRodeAt);
-        assertEquals(tour2.getFinishedAt(), changedFinishedAt);
-        assertEquals(tour2.getWaypoints().size(), changedWaypoints.size());
-        assertEquals(tour2.getWaypoints().get(0), changedWaypoints.get(0));
-        assertEquals(tour2.getWaypoints().get(1), changedWaypoints.get(1));
-        assertEquals(tour2.getWaypoints().get(2), changedWaypoints.get(2));
-        assertEquals(tour2.getWaypoints().get(3), changedWaypoints.get(3));
-        assertEquals(tour2.getWaypoints().get(4), changedWaypoints.get(4));
-        assertEquals(tour2.getWaypoints().get(5), changedWaypoints.get(5));
-        assertEquals(tour2.getWaypoints(), changedWaypoints);
-        assertEquals(tour2.getLengthInKm(), changedLength);
+
     }
 
-    @Test(expected = JpaObjectRetrievalFailureException.class)
-    public void deleteTour_TourExists_TourIsDeleted(){
+    @Test(expected = UpdateTourFailedException.class)
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataTour_ThrowsException() throws AddTourFailedException, UpdateTourFailedException {
+        ITour tour1 = tourManagement.addTour(
+                "TestTour",
+                bike1,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+
+        long tourId = tour1.getId();
+        String changedName = "Changed";
+        Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
+        Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
+        List<GPS> changedWaypoints = new ArrayList<>(waypoints);
+        changedWaypoints.remove(0);
+        double changedLength = 12;
+        tourManagement.updateTour(
+                null,
+                changedName,
+                bike2,
+                changedRodeAt,
+                changedFinishedAt,
+                changedWaypoints,
+                changedLength
+        );
+    }
+
+    @Test(expected = UpdateTourFailedException.class)
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataName_ThrowsException() throws AddTourFailedException, UpdateTourFailedException {
+        ITour tour1 = tourManagement.addTour(
+                "TestTour",
+                bike1,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+
+
+        long tourId = tour1.getId();
+        String changedName = "Changed";
+        Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
+        Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
+        List<GPS> changedWaypoints = new ArrayList<>(waypoints);
+        changedWaypoints.remove(0);
+        double changedLength = 12;
+        tourManagement.updateTour(
+                tour1,
+                null,
+                bike2,
+                changedRodeAt,
+                changedFinishedAt,
+                changedWaypoints,
+                changedLength
+        );
+    }
+
+    @Test(expected = UpdateTourFailedException.class)
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataBike_ThrowsException() throws AddTourFailedException, UpdateTourFailedException {
+        ITour tour1 = tourManagement.addTour(
+                "TestTour",
+                bike1,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+
+        long tourId = tour1.getId();
+        String changedName = "Changed";
+        Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
+        Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
+        List<GPS> changedWaypoints = new ArrayList<>(waypoints);
+        changedWaypoints.remove(0);
+        double changedLength = 12;
+        tourManagement.updateTour(
+                tour1,
+                changedName,
+                null,
+                changedRodeAt,
+                changedFinishedAt,
+                changedWaypoints,
+                changedLength
+        );
+    }
+
+    @Test(expected = UpdateTourFailedException.class)
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataStartAt_ThrowsException() throws Exception {
+        ITour tour1 = tourManagement.addTour(
+                "TestTour",
+                bike1,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+
+        long tourId = tour1.getId();
+        String changedName = "Changed";
+        Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
+        Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
+        List<GPS> changedWaypoints = new ArrayList<>(waypoints);
+        changedWaypoints.remove(0);
+        double changedLength = 12;
+        tourManagement.updateTour(
+                tour1,
+                changedName,
+                bike2,
+                null,
+                changedFinishedAt,
+                changedWaypoints,
+                changedLength
+        );
+    }
+
+    @Test(expected = UpdateTourFailedException.class)
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataFinishedAt_ThrowsException() throws Exception {
+        ITour tour1 = tourManagement.addTour(
+                "TestTour",
+                bike1,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+
+        long tourId = tour1.getId();
+        String changedName = "Changed";
+        Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
+        Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
+        List<GPS> changedWaypoints = new ArrayList<>(waypoints);
+        changedWaypoints.remove(0);
+        double changedLength = 12;
+        tourManagement.updateTour(
+                tour1,
+                changedName,
+                bike2,
+                changedRodeAt,
+                null,
+                changedWaypoints,
+                changedLength
+        );
+    }
+
+    @Test(expected = UpdateTourFailedException.class)
+    public void updateTour_OneTourInDatabaseExistsChangesWithMissingDataWaypoints_ThrowsException() throws Exception {
+        ITour tour1 = tourManagement.addTour(
+                "TestTour",
+                bike1,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+
+        long tourId = tour1.getId();
+        String changedName = "Changed";
+        Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
+        Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
+        List<GPS> changedWaypoints = new ArrayList<>(waypoints);
+        changedWaypoints.remove(0);
+        double changedLength = 12;
+        tourManagement.updateTour(
+                tour1,
+                changedName,
+                bike2,
+                changedRodeAt,
+                changedFinishedAt,
+                null,
+                changedLength
+        );
+    }
+
+    @Test
+    public void deleteTour_TourExists_TourIsDeleted() throws AddTourFailedException {
         ITour tour1 = tourManagement.addTour(
                 "TestTour",
                 bike1,
@@ -201,7 +447,23 @@ public class TourManagementTest extends TestCase {
         );
 
         tourManagement.deleteTour(tour1);
-        tourManagement.getTourById(tour1.getId());
+        assertNull(tourManagement.getTourById(tour1.getId()).orElse(null));
+    }
+
+    @Test
+    public void deleteTour_TourDoesntExists_TourIsDeleted() throws AddTourFailedException {
+        ITour tour1 = tourManagement.addTour(
+                "TestTour",
+                bike1,
+                new Date(),
+                new Date(),
+                waypoints,
+                15.0
+        );
+
+        tourManagement.deleteTour(tour1);
+        tourManagement.deleteTour(tour1);
+        //assertNotNull(tourManagement.getTourById(tour1.getId()).get());
     }
 }
 

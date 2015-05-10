@@ -42,7 +42,7 @@ public class BikeManagement implements IBikeManagement {
 	@Override
 	public void updateBikesMileAge(IBike inBike, double mileAgeInKm) {
 		Bike bike = (Bike) inBike;
-		bike.setMileAgeInKm(mileAgeInKm);
+		bike.setMileageInKm(mileAgeInKm);
 		bikeDao.save(bike);
 	}
 }

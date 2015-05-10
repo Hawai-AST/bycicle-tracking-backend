@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class TourManagement implements ITourManagement{
@@ -21,8 +22,8 @@ public class TourManagement implements ITourManagement{
     private IBikeManagement bikeManagement;
 
     @Override
-    public ITour getTourById(long id) {
-        return tourDao.getOne(id);
+    public Optional<ITour> getTourById(long id) {
+        return tourDao.getById(id);
     }
 
     @Override
@@ -35,29 +36,41 @@ public class TourManagement implements ITourManagement{
     }
 
     @Override
-    public ITour addTour(String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm) {
-        Tour tour = new Tour(name, bike, rodeAt, finishedAt, waypoints, lengthInKm);
-        tourDao.save(tour);
-        updateMileageofBike(bike);
-        return tour;
+    public ITour addTour(String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm)
+            throws AddTourFailedException {
+        try {
+            Tour tour = new Tour(name, bike, rodeAt, finishedAt, waypoints, lengthInKm);
+            tourDao.save(tour);
+            updateMileageOfBike(bike);
+            return tour;
+        } catch (RuntimeException e){
+            throw new AddTourFailedException(e.getMessage());
+        }
     }
 
     @Override
-    public void updateTour(ITour inTour, String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm) {
-        Tour tour = (Tour) inTour;
-        tour.setName(name);
-        tour.setBike(bike);
-        tour.setRodeAt(rodeAt);
-        tour.setFinishedAt(finishedAt);
-        tour.updateWay(waypoints, lengthInKm);
-        tour.setUpdatedAt(new Date());
-        tourDao.save(tour);
-        updateMileageofBike(bike);
+    public void updateTour(ITour inTour, String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm)
+            throws UpdateTourFailedException {
+        try {
+            Tour tour = (Tour) inTour;
+            tour.setName(name);
+            tour.setBike(bike);
+            tour.setStartAt(rodeAt);
+            tour.setFinishedAt(finishedAt);
+            tour.updateWay(waypoints, lengthInKm);
+            tour.setUpdatedAt(new Date());
+            tourDao.save(tour);
+            updateMileageOfBike(bike);
+        } catch (RuntimeException e){
+            throw new UpdateTourFailedException(e.getMessage());
+        }
     }
 
     @Override
     public void deleteTour(ITour tour) {
-        tourDao.delete((Tour) tour);
+        try {
+            tourDao.delete((Tour) tour);
+        } catch (RuntimeException e){}
     }
 
     /*
@@ -65,7 +78,7 @@ public class TourManagement implements ITourManagement{
      * Eine einfache addition langt nicht, da das dann nicht ThreadSafe wäre.
      * So ist es auch nicht ganz ThreadSafe, ist aber selbstkorrigierend.
      */
-    private void updateMileageofBike(IBike bike){
+    private void updateMileageOfBike(IBike bike){
         double mileAge = 0.0;
         for (ITour tour: tourDao.findByBike(bike)){
             mileAge += tour.getLengthInKm();

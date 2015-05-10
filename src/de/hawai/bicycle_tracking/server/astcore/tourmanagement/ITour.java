@@ -12,7 +12,7 @@ public interface ITour {
     public Long getId();
     public String getName();
     public IBike getBike();
-    public Date getRodeAt();
+    public Date getStartAt();
     public Date getFinishedAt();
     public Date getCreatedAt();
     public Date getUpdatedAt();
