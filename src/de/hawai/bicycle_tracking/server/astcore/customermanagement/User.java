@@ -9,7 +9,9 @@ import org.hibernate.annotations.Target;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = {"email_address"})})
@@ -58,7 +60,7 @@ public class User extends AbstractEntity implements IUser {
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "birthdate", nullable = false)
+	@Column(name = "birthdate", nullable = true)
 	@Override
 	public Date getBirthdate() {
 		return birthdate;

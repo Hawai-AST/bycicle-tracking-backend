@@ -3,6 +3,7 @@ package de.hawai.bicycle_tracking.server.rest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 
@@ -31,12 +32,16 @@ public class RegisterController {
 	public RegisterResponseV1 registerV1(@RequestBody RegistrationDTO inRegistration)
 			throws ParseException {
 		IUser newUser = null;
+		Date birthdate = null;
+		if (inRegistration.getBirthday() != null && inRegistration.getBirthday().length() > 0) {
+			birthdate = this.mDateFormat.parse(inRegistration.getBirthday());
+		}
 		try	{
 			newUser = facade.registerUser(inRegistration.getName(),
 					inRegistration.getFirstname(),
 					inRegistration.getEmail(),
 					inRegistration.getAddress(),
-					this.mDateFormat.parse(inRegistration.getBirthday()),
+					birthdate,
 					BCrypt.hashpw(inRegistration.getPassword(), BCrypt.gensalt()),
 					HawaiAuthority.USER);
 		} catch (DataIntegrityViolationException e) {

@@ -99,4 +99,12 @@ public class UserIT {
 		}
 	}
 
+	@Test
+	public void save_UserWithoutBirthday_UserCantBeSaved() throws Exception {
+			userDao.save(new User("other name",
+					"other first name", new EMail("somerandom@mail.com"),
+					new Address("A", "B", "C", "D", "E", "F"),
+					null,
+					"Other Password", HawaiAuthority.USER));
+	}
 }
