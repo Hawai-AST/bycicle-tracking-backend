@@ -75,11 +75,13 @@ public class Facade {
 		return tourManagement.getTourById(id);
 	}
 
-	public ITour addTour(String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm) throws AddTourFailedException {
+	public ITour addTour(String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm)
+			throws AddTourFailedException {
 		return tourManagement.addTour(name, bike, rodeAt, finishedAt, waypoints, lengthInKm);
 	}
 
-	public void updateTour(ITour inTour, String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm) throws UpdateTourFailedException {
+	public void updateTour(ITour inTour, String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm)
+			throws UpdateTourFailedException {
 		tourManagement.updateTour(inTour, name, bike, rodeAt, finishedAt, waypoints, lengthInKm);
 	}
 
