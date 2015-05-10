@@ -1,15 +1,12 @@
 package de.hawai.bicycle_tracking.server.astcore.tourmanagement;
 
-import com.sun.corba.se.impl.orb.PropertyOnlyDataCollector;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.Bike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -19,17 +16,17 @@ public class Tour extends AbstractEntity implements ITour {
     private static final long serialVersionUID = -875008919623232323L;
     private String name;
     private IBike bike;
-    private Date rodeAt;
+    private Date startAt;
     private Date finishedAt;
     private Date createdAt;
     private Date updatedAt;
     private List<GPS> waypoints;
     private double lengthInKm;
 
-    protected Tour(String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm){
+    protected Tour(String name, IBike bike, Date startAt, Date finishedAt, List<GPS> waypoints, double lengthInKm){
         this.name = name;
         this.bike = bike;
-        this.rodeAt = rodeAt;
+        this.startAt = startAt;
         this.finishedAt = finishedAt;
         this.waypoints = waypoints;
         this.createdAt = new Date();
@@ -58,14 +55,14 @@ public class Tour extends AbstractEntity implements ITour {
     }
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "rodeAt", nullable = false)
+    @Column(name = "startAt", nullable = false)
     @Override
-    public Date getRodeAt() {
-        return rodeAt;
+    public Date getStartAt() {
+        return startAt;
     }
 
-    protected void setRodeAt(Date rodeAt) {
-        this.rodeAt = rodeAt;
+    protected void setStartAt(Date startAt) {
+        this.startAt = startAt;
     }
 
     @Temporal(TemporalType.DATE)

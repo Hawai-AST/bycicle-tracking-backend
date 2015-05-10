@@ -21,7 +21,7 @@ public class Bike extends AbstractEntity implements IBike {
 	private Date nextMaintenanceDate;
 	private ISellingLocation soldLocation;
 	private IUser owner;
-	private double mileAgeInKm;
+	private double mileageInKm;
 
 	protected Bike(final String inType, final FrameNumber inFrameNumber, final Date inBuyDate, final Date inNextMaintenanceDate,
 			final ISellingLocation inSellingLocation, final IUser inOwner) {
@@ -31,7 +31,7 @@ public class Bike extends AbstractEntity implements IBike {
 		nextMaintenanceDate = inNextMaintenanceDate;
 		soldLocation = inSellingLocation;
 		owner = inOwner;
-		mileAgeInKm = 0.0;
+		mileageInKm = 0.0;
 	}
 
 	@Column(name = "type", length = 50)
@@ -74,8 +74,8 @@ public class Bike extends AbstractEntity implements IBike {
 
 	@Override
 	@Column(name = "mileage")
-	public double getMileAgeInKm() {
-		return mileAgeInKm;
+	public double getMileageInKm() {
+		return mileageInKm;
 	}
 
 	private void setType(final String inType) {
@@ -102,7 +102,7 @@ public class Bike extends AbstractEntity implements IBike {
 		owner = inOwner;
 	}
 
-	public void setMileAgeInKm(double mileAgeInKm) {
-		this.mileAgeInKm = mileAgeInKm;
+	public void setMileageInKm(double mileageInKm) {
+		this.mileageInKm = mileageInKm;
 	}
 }

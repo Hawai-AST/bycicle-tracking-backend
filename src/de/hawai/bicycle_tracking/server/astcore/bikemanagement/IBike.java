@@ -18,5 +18,5 @@ public interface IBike {
 
     public IUser getOwner();
 
-    public double getMileAgeInKm();
+    public double getMileageInKm();
 }
