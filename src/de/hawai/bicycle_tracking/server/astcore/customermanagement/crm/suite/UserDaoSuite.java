@@ -96,17 +96,20 @@ public class UserDaoSuite implements IUserDao {
 		
 		addCustomUserSerializer(mapper);
 		
-		retrieveUuidFromSuite(entity);
+		try {
+			handleFaultyInput(entity);
+		} catch (RegistrationException e1) {
+			e1.printStackTrace();
+			return null;
+		}
 		try {
 			SetEntryResponseToken postSetEntry = (SetEntryResponseToken) connector.postSetEntry(
 					new SetEntryToken(connector.getSessionId(), MODULE,
 							mapper.writeValueAsString(entity)), SetEntryResponseToken.class);
 			entity.setId(UUID.fromString(postSetEntry.getId()));
 		} catch (JsonProcessingException e) {
-			// TODO(fap) Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO(fap) Auto-generated catch block
 			e.printStackTrace();
 		}
 		return entity;
@@ -120,14 +123,26 @@ public class UserDaoSuite implements IUserDao {
 		mapper.registerModule(module);
 	}
 
-	private <S extends User> void retrieveUuidFromSuite(S entity) {
-		UUID uuid = entity.getId();
-		if (null == uuid || UUID.fromString("").equals(uuid)) {
-			Optional<User> userWithId = getByMailAddress(entity.getMailAddress());
+	private <S extends User> S handleFaultyInput(S entity) throws RegistrationException {
+		UUID uuidFromREST = entity.getId();
+		// UUID empty => fill from CRM if email exists
+		Optional<User> userWithId = getByMailAddress(entity.getMailAddress());
+		if (null == uuidFromREST || UUID.fromString("").equals(uuidFromREST)) {
 			if (userWithId.isPresent()) {
 				entity.setId(userWithId.get().getId());
+				return entity;
 			}
 		}
+		User userFromCRM = getOne(entity.getId());
+		// Non existent UUID
+		if (userFromCRM == null) {
+			throw new RegistrationException("No existing Account with this ID.");
+		}
+		// Existent UUI but EMail not matching
+		if (!uuidFromREST.equals(userFromCRM.getId())) {
+			throw new RegistrationException("ID for given EMail doesn't match ID in SuiteCRM.");
+		}
+		return entity;
 	}
 
 	@Override
@@ -157,8 +172,6 @@ public class UserDaoSuite implements IUserDao {
 
 	@Override
 	public Optional<User> getByMailAddress(EMail emailAddress) {
-		;
-
 		int max_results = 1;
 		int returnDeleted = 0;
 		String query = "accounts.id in ( " + "SELECT eabr.bean_id "
@@ -177,7 +190,12 @@ public class UserDaoSuite implements IUserDao {
 
 	@Override
 	public User getOne(UUID id) {
-		throw new NotImplementedException();
+		int max_results = 1;
+		int returnDeleted = 0;
+		String query = "accounts.id = '" + id.toString() + "'";
+		return (User) connector.postGetEntryList(
+				new GetEntryListToken(
+						connector.getSessionId(), MODULE, query, max_results, returnDeleted, SELECT_FIELDS), User.class);
 	}
 
 	@Override
