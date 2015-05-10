@@ -3,12 +3,12 @@ package de.hawai.bicycle_tracking.server.rest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,12 +31,16 @@ public class RegisterController {
 	public RegisterResponseV1 registerV1(@RequestBody RegistrationDTO inRegistration)
 			throws ParseException {
 		IUser newUser = null;
+		Date birthdate = null;
+		if (inRegistration.getBirthday() != null && inRegistration.getBirthday().length() > 0) {
+			birthdate = this.mDateFormat.parse(inRegistration.getBirthday());
+		}
 		try	{
 			newUser = facade.registerUser(inRegistration.getName(),
 					inRegistration.getFirstname(),
 					inRegistration.getEmail(),
 					inRegistration.getAddress(),
-					this.mDateFormat.parse(inRegistration.getBirthday()),
+					birthdate,
 					inRegistration.getPassword(),
 					HawaiAuthority.USER);
 		} catch (DataIntegrityViolationException e) {
