@@ -18,4 +18,6 @@ public interface IBikeManagement {
 
 	public ISellingLocation createSellingLocation(Address inAddress, String inName);
 
+	public void updateBikesMileAge(IBike inBike, double mileAgeInKm);
+
 }

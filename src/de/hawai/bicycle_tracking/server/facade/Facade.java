@@ -5,9 +5,12 @@ import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.ICustomerManagement;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITourManagement;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
+import de.hawai.bicycle_tracking.server.utility.value.GPS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -24,6 +27,9 @@ public class Facade {
 
 	@Autowired
 	private IBikeManagement bikeManagement;
+
+	@Autowired
+	private ITourManagement tourManagement;
 
 	private Facade() {
 		super();
@@ -62,4 +68,25 @@ public class Facade {
 	public void updateUser(IUser user, String name, String firstName, Date birthday, Address address) {
 		customerManagement.updateUser(user, name, firstName, birthday, address);
 	}
+
+	public ITour getTourById(long id) {
+		return tourManagement.getTourById(id);
+	}
+
+	public ITour addTour(String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm) {
+		return tourManagement.addTour(name, bike, rodeAt, finishedAt, waypoints, lengthInKm);
+	}
+
+	public void updateTour(ITour inTour, String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm) {
+		tourManagement.updateTour(inTour, name, bike, rodeAt, finishedAt, waypoints, lengthInKm);
+	}
+
+	public List<ITour> getToursByUser(IUser user) {
+		return tourManagement.getToursByUser(user);
+	}
+
+	public void deleteTour(ITour tour) {
+		tourManagement.deleteTour(tour);
+	}
 }
+
