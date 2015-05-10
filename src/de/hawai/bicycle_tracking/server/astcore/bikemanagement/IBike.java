@@ -17,4 +17,6 @@ public interface IBike {
     public ISellingLocation getSoldLocation();
 
     public IUser getOwner();
+
+    public double getMileAgeInKm();
 }

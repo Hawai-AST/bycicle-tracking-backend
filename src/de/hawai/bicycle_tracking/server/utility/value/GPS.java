@@ -8,10 +8,14 @@ public class GPS {
 
 	private double longitude;
 	private double latitude;
+	private String name;
 
-	public GPS(double longitude, double latitude) {
+	private GPS(){};
+
+	public GPS(double longitude, double latitude, String name) {
 		this.setLongitude(longitude);
 		this.setLatitude(latitude);
+		this.setName(name);
 	}
 
 	@Column(name = "gps_longitude", nullable = false)
@@ -32,34 +36,46 @@ public class GPS {
 		this.latitude = latitude;
 	}
 
+	@Column(name = "gps_name", nullable = false)
+	public String getName() {
+		return name;
+	}
+
+	private void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		GPS gps = (GPS) o;
+
+		if (Double.compare(gps.longitude, longitude) != 0) return false;
+		if (Double.compare(gps.latitude, latitude) != 0) return false;
+		return !(name != null ? !name.equals(gps.name) : gps.name != null);
+
+	}
+
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
+		int result;
 		long temp;
-		temp = Double.doubleToLongBits(latitude);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(longitude);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(latitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (name != null ? name.hashCode() : 0);
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		GPS other = (GPS) obj;
-		if (Double.doubleToLongBits(latitude) != Double
-				.doubleToLongBits(other.latitude))
-			return false;
-		if (Double.doubleToLongBits(longitude) != Double
-				.doubleToLongBits(other.longitude))
-			return false;
-		return true;
+	public String toString() {
+		return "GPS{" +
+				"longitude=" + longitude +
+				", latitude=" + latitude +
+				", name='" + name + '\'' +
+				'}';
 	}
-
 }

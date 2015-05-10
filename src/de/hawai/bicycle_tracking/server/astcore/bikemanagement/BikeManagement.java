@@ -38,4 +38,11 @@ public class BikeManagement implements IBikeManagement {
 	public ISellingLocation createSellingLocation(Address inAddress, String inName) {
 		return sellingLocationDao.save(new SellingLocation(inAddress, inName));
 	}
+
+	@Override
+	public void updateBikesMileAge(IBike inBike, double mileAgeInKm) {
+		Bike bike = (Bike) inBike;
+		bike.setMileAgeInKm(mileAgeInKm);
+		bikeDao.save(bike);
+	}
 }
