@@ -17,8 +17,8 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 public class Bike extends AbstractEntity implements IBike {
 	private String type;
 	private FrameNumber frameNumber;
-	private Date buyDate;
-	private Date nextMaintenanceDate;
+	private Date purchaseDate;
+	private Date nextMaintenance;
 	private ISellingLocation soldLocation;
 	private IUser owner;
 
@@ -26,10 +26,13 @@ public class Bike extends AbstractEntity implements IBike {
 			final ISellingLocation inSellingLocation, final IUser inOwner) {
 		type = inType;
 		frameNumber = inFrameNumber;
-		buyDate = inBuyDate;
-		nextMaintenanceDate = inNextMaintenanceDate;
+		purchaseDate = inBuyDate;
+		nextMaintenance = inNextMaintenanceDate;
 		soldLocation = inSellingLocation;
 		owner = inOwner;
+	}
+
+	protected Bike() {
 	}
 
 	@Column(name = "type", length = 50)
@@ -47,15 +50,15 @@ public class Bike extends AbstractEntity implements IBike {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "buy_date", nullable = false)
 	@Override
-	public Date getBuyDate() {
-		return buyDate;
+	public Date getPurchaseDate() {
+		return purchaseDate;
 	}
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "next_maintenance")
 	@Override
-	public Date getNextMaintenanceDate() {
-		return nextMaintenanceDate;
+	public Date getNextMaintenance() {
+		return nextMaintenance;
 	}
 
 	@ManyToOne(targetEntity = SellingLocation.class)
@@ -70,27 +73,27 @@ public class Bike extends AbstractEntity implements IBike {
 		return this.owner;
 	}
 
-	private void setType(final String inType) {
+	protected void setType(final String inType) {
 		type = inType;
 	}
 
-	private void setFrameNumber(final FrameNumber inFrameNumber) {
+	protected void setFrameNumber(final FrameNumber inFrameNumber) {
 		frameNumber = inFrameNumber;
 	}
 
-	private void setBuyDate(final Date inBuyDate) {
-		buyDate = inBuyDate;
+	protected void setPurchaseDate(final Date inBuyDate) {
+		purchaseDate = inBuyDate;
 	}
 
-	private void setNextMaintenanceDate(final Date inNextMaintenanceDate) {
-		nextMaintenanceDate = inNextMaintenanceDate;
+	protected void setNextMaintenance(final Date inNextMaintenance) {
+		nextMaintenance = inNextMaintenance;
 	}
 
-	private void setSoldLocation(final ISellingLocation inSoldLocation) {
+	protected void setSoldLocation(final ISellingLocation inSoldLocation) {
 		soldLocation = inSoldLocation;
 	}
 
-	private void setOwner(final IUser inOwner) {
+	protected void setOwner(final IUser inOwner) {
 		owner = inOwner;
 	}
 }
