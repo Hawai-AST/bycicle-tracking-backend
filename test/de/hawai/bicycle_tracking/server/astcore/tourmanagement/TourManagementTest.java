@@ -13,8 +13,10 @@ import de.hawai.bicycle_tracking.server.utility.value.GPS;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -25,6 +27,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -186,7 +189,7 @@ public class TourManagementTest extends TestCase {
         assertEquals(tour2.getLengthInKm(), changedLength);
     }
 
-    @Test
+    @Test(expected = JpaObjectRetrievalFailureException.class)
     public void deleteTour_TourExists_TourIsDeleted(){
         ITour tour1 = tourManagement.addTour(
                 "TestTour",
@@ -198,7 +201,7 @@ public class TourManagementTest extends TestCase {
         );
 
         tourManagement.deleteTour(tour1);
-        assertNull(tourManagement.getTourById(tour1.getId()));
+        tourManagement.getTourById(tour1.getId());
     }
 }
 
