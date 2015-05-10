@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +47,7 @@ public class UserIT {
 
 	@Before
 	public void setup() {
-		user = new User(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE, PASSWORD);
+		user = new User(NAME, FIRST_NAME, E_MAIL_ADDRESS, ADDRESS, BIRTHDATE, PASSWORD, HawaiAuthority.USER);
 		user = userDao.save(user);
 	}
 
@@ -91,7 +92,7 @@ public class UserIT {
 					"other first name", E_MAIL_ADDRESS,
 					new Address("A", "B", "C", "D", "E", "F"),
 					new Date(42),
-					"Other Password"));
+					"Other Password", HawaiAuthority.USER));
 			fail("DataIntegrityViolationException expected because test tries to save a user with an already existent email address.");
 		} catch (DataIntegrityViolationException e) {
 			// do nothing
@@ -104,6 +105,6 @@ public class UserIT {
 					"other first name", new EMail("somerandom@mail.com"),
 					new Address("A", "B", "C", "D", "E", "F"),
 					null,
-					"Other Password"));
+					"Other Password", HawaiAuthority.USER));
 	}
 }

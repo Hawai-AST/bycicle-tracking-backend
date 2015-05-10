@@ -1,10 +1,9 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
-import java.util.Date;
-import java.util.List;
-
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
+
+import java.util.Date;
 
 public interface IUser {
 
@@ -19,7 +18,5 @@ public interface IUser {
 	public EMail getMailAddress();
 
 	public String getPassword();
-
-	public List<LoginSession> getLoginSessions();
 
 }
