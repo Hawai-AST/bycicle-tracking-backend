@@ -93,13 +93,13 @@ public class TourManagementTest extends TestCase {
         );
 
         waypoints = new ArrayList<>();
-        waypoints.add(new GPS(11.4,11.5,"pos1"));
-        waypoints.add(new GPS(11.6,11.7,"pos2"));
-        waypoints.add(new GPS(11.8,11.9,"pos3"));
-        waypoints.add(new GPS(12.0,12.1,"pos4"));
-        waypoints.add(new GPS(12.2,12.3,"pos5"));
-        waypoints.add(new GPS(12.4,12.5,"pos6"));
-        waypoints.add(new GPS(12.6,12.7,"pos7"));
+        waypoints.add(new GPS(11.4, 11.5, "pos1"));
+        waypoints.add(new GPS(11.6, 11.7, "pos2"));
+        waypoints.add(new GPS(11.8, 11.9, "pos3"));
+        waypoints.add(new GPS(12.0, 12.1, "pos4"));
+        waypoints.add(new GPS(12.2, 12.3, "pos5"));
+        waypoints.add(new GPS(12.4, 12.5, "pos6"));
+        waypoints.add(new GPS(12.6, 12.7, "pos7"));
     }
 
     @Test
@@ -156,8 +156,8 @@ public class TourManagementTest extends TestCase {
 
         long tourId = tour1.getId();
         String changedName = "Changed";
-        Date changedRodeAt = new Date(System.currentTimeMillis()-10000);
-        Date changedFinishedAt = new Date(System.currentTimeMillis()-9000);
+        Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
+        Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
         List<GPS> changedWaypoints = new ArrayList<>(waypoints);
         changedWaypoints.remove(0);
         double changedLength = 12;
@@ -173,8 +173,8 @@ public class TourManagementTest extends TestCase {
         ITour tour2 = tourManagement.getTourById(tourId);
         assertEquals(tour2.getName(), changedName);
         assertEquals(tour2.getBike(), bike2);
-        assertEquals(tour2.getRodeAt(),changedRodeAt);
-        assertEquals(tour2.getFinishedAt(),changedFinishedAt);
+        assertEquals(tour2.getRodeAt(), changedRodeAt);
+        assertEquals(tour2.getFinishedAt(), changedFinishedAt);
         assertEquals(tour2.getWaypoints().size(), changedWaypoints.size());
         assertEquals(tour2.getWaypoints().get(0), changedWaypoints.get(0));
         assertEquals(tour2.getWaypoints().get(1), changedWaypoints.get(1));
@@ -182,8 +182,8 @@ public class TourManagementTest extends TestCase {
         assertEquals(tour2.getWaypoints().get(3), changedWaypoints.get(3));
         assertEquals(tour2.getWaypoints().get(4), changedWaypoints.get(4));
         assertEquals(tour2.getWaypoints().get(5), changedWaypoints.get(5));
-        assertEquals(tour2.getWaypoints(),changedWaypoints);
-        assertEquals(tour2.getLengthInKm(),changedLength);
+        assertEquals(tour2.getWaypoints(), changedWaypoints);
+        assertEquals(tour2.getLengthInKm(), changedLength);
     }
 
     @Test
@@ -201,3 +201,4 @@ public class TourManagementTest extends TestCase {
         assertNull(tourManagement.getTourById(tour1.getId()));
     }
 }
+
