@@ -54,6 +54,13 @@ public class ErrorHandler {
 		return new ErrorMessage(409, "Already exists", inAlreadyExists.getMessage());
 	}
 
+	@ExceptionHandler(MalformedRequestException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessage onMalformedRequestException(MalformedRequestException inParseException) {
+		return new ErrorMessage(400, "Invalid Input", inParseException.getMessage());
+	}
+
 	@ExceptionHandler(ParseException.class)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -66,5 +73,11 @@ public class ErrorHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorMessage onMalformedRequestException(MalformedRequestException inMalformedRequestException) {
 		return new ErrorMessage(400, "Invalid Input", inMalformedRequestException.getMessage());
+
+	@ExceptionHandler(InvalidAccessException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public ErrorMessage onParseException(InvalidAccessException inInvalidAccessException) {
+		return new ErrorMessage(403, "Forbidden", inInvalidAccessException.getMessage());
 	}
 }

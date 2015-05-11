@@ -11,6 +11,7 @@ import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,6 +62,11 @@ public class SecurityTest {
                 new Date(1), "poop", HawaiAuthority.ADMIN);
         facade.registerUser("Buttington", "Peter", new EMail("peter2@buttington.com"), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
                 new Date(1), "poop", HawaiAuthority.USER);
+    }
+
+    @After
+    public void cleanup() {
+        this.userRepository.deleteAll();
     }
 
     @Test

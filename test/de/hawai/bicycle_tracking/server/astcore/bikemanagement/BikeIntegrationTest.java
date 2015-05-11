@@ -36,7 +36,7 @@ public class BikeIntegrationTest {
 	private IBikeDao bikeRepository;
 
 	@Autowired
-	private SellingLocationDao locationRepository;
+	private ISellingLocationDao locationRepository;
 
 	@Autowired
 	private Facade facade;

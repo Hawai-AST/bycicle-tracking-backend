@@ -46,7 +46,7 @@ public class FacadeIT {
 
 	private static final String BIKE_TYPE = "Bike";
 	private static final FrameNumber BIKE_FRAME_NUMBER = new FrameNumber(101);
-	private static final Date BIKE_BUY_DATE = new Date(1);
+	private static final Date BIKE_PURCHASE_DATE = new Date(1);
 	private static final Date BIKE_NEXT_MAINTENANCE = new Date(2);
 
 	private static final String SELLING_LOCATION_NAME = "NoName";
@@ -67,7 +67,7 @@ public class FacadeIT {
 
 		facade.createSellingLocation(SELLING_LOCATION_ADDRESS, SELLING_LOCATION_NAME);
 
-		bike = facade.createBike(BIKE_TYPE, BIKE_FRAME_NUMBER, BIKE_BUY_DATE, BIKE_NEXT_MAINTENANCE, sellingLocation, user);
+		bike = facade.createBike(BIKE_TYPE, BIKE_FRAME_NUMBER, BIKE_PURCHASE_DATE, BIKE_NEXT_MAINTENANCE, sellingLocation, user);
 	}
 
 	@Test

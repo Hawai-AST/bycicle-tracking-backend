@@ -6,10 +6,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.Collection;
+
 
 @Component
 public class BikeManagement implements IBikeManagement {
@@ -17,7 +21,7 @@ public class BikeManagement implements IBikeManagement {
 	@Autowired
 	private IBikeDao bikeDao;
 	@Autowired
-	private SellingLocationDao sellingLocationDao;
+	private ISellingLocationDao sellingLocationDao;
 
 	@Override
 	public Optional<IBike> getBikeById(long id) {
@@ -50,5 +54,35 @@ public class BikeManagement implements IBikeManagement {
 		Bike bike = (Bike) inBike;
 		bike.setMileageInKm(mileAgeInKm);
 		bikeDao.save(bike);
+
+	public Collection<? extends ISellingLocation> getAllSellingLocations() {
+		return sellingLocationDao.findAll();
+	}
+
+	@Override
+	public long getIdOfBike(IBike inBike) {
+		if (inBike instanceof Bike) {
+			return ((Bike) inBike).getId();
+		} else {
+			return -1;
+		}
+	}
+
+	@Override
+	public IBike getBikeById(long inID) {
+		return bikeDao.findOne(inID);
+	}
+
+	@Override
+	public void updateBike(IBike inBike, String inType, FrameNumber inFrameNumber, Date inBuyDate,
+						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner) {
+		Bike old = (Bike) inBike;
+		old.setPurchaseDate(inBuyDate);
+		old.setFrameNumber(inFrameNumber);
+		old.setNextMaintenance(inNextMaintenanceData);
+		old.setType(inType);
+		old.setOwner(inOwner);
+		old.setSoldLocation(inSellingLocation);
+		bikeDao.save(old);
 	}
 }

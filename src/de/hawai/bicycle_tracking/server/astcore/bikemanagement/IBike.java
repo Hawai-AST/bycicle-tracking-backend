@@ -11,11 +11,11 @@ public interface IBike {
 
     public String getType();
 
-    public Date getBuyDate();
+    public Date getPurchaseDate();
 
     public FrameNumber getFrameNumber();
 
-    public Date getNextMaintenanceDate();
+    public Date getNextMaintenance();
 
     public ISellingLocation getSoldLocation();
 
