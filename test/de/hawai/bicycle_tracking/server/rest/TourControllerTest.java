@@ -585,7 +585,7 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementWrongBikeIdDoesntMatchWithABike_ResonseWithError404() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 5," +
+                "\"bikeID\": 50," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"2015-04-25T12:35:55Z\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +

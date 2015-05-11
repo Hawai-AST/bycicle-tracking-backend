@@ -61,7 +61,7 @@ public class TourController {
                 throw new MalformedRequestException("Unknown Position Name");
             }
         }
-        IBike bike = facade.getBikeById(inTour.bikeID).orElse(null);
+        IBike bike = facade.getBikeById(inTour.bikeID);
         if (bike == null){
             throw new NotFoundException("BikeId does not exists");
         }

@@ -24,11 +24,6 @@ public class BikeManagement implements IBikeManagement {
 	private ISellingLocationDao sellingLocationDao;
 
 	@Override
-	public Optional<IBike> getBikeById(long id) {
-		return bikeDao.getBikeById(id);
-	}
-
-	@Override
 	public List<? extends IBike> findBikesBySoldLocation(ISellingLocation inSellingLocation) {
 		return bikeDao.findBySoldLocation(inSellingLocation);
 	}
@@ -54,6 +49,7 @@ public class BikeManagement implements IBikeManagement {
 		Bike bike = (Bike) inBike;
 		bike.setMileageInKm(mileAgeInKm);
 		bikeDao.save(bike);
+	}
 
 	public Collection<? extends ISellingLocation> getAllSellingLocations() {
 		return sellingLocationDao.findAll();

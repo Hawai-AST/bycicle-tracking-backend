@@ -68,12 +68,6 @@ public class ErrorHandler {
 		return new ErrorMessage(400, "Invalid Input", inParseException.getMessage());
 	}
 
-	@ExceptionHandler(MalformedRequestException.class)
-	@ResponseBody
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorMessage onMalformedRequestException(MalformedRequestException inMalformedRequestException) {
-		return new ErrorMessage(400, "Invalid Input", inMalformedRequestException.getMessage());
-
 	@ExceptionHandler(InvalidAccessException.class)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.FORBIDDEN)
