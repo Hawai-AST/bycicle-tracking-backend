@@ -2,6 +2,7 @@ package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,11 @@ public class BikeManagement implements IBikeManagement {
 	private IBikeDao bikeDao;
 	@Autowired
 	private SellingLocationDao sellingLocationDao;
+
+	@Override
+	public Optional<IBike> getBikeById(long id) {
+		return bikeDao.getBikeById(id);
+	}
 
 	@Override
 	public List<? extends IBike> findBikesBySoldLocation(ISellingLocation inSellingLocation) {

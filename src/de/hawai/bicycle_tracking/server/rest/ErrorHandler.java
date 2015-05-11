@@ -2,16 +2,13 @@ package de.hawai.bicycle_tracking.server.rest;
 
 import java.text.ParseException;
 
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedException;
+import de.hawai.bicycle_tracking.server.rest.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
-import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidClientException;
-import de.hawai.bicycle_tracking.server.rest.exceptions.NotAuthorizedException;
-import de.hawai.bicycle_tracking.server.rest.exceptions.NotFoundException;
 
 @ControllerAdvice
 public class ErrorHandler {
@@ -20,6 +17,13 @@ public class ErrorHandler {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	public ErrorMessage onNotAuthorized(NotAuthorizedException inNotAuthorized) {
 		return new ErrorMessage(401, "Not Authorized", inNotAuthorized.getMessage());
+	}
+
+	@ExceptionHandler(AddTourFailedException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorMessage onAddTourFailedException(AddTourFailedException inAddTourFailedException) {
+		return new ErrorMessage(500, "Server Error", inAddTourFailedException.getMessage());
 	}
 
 	@ExceptionHandler(InternalError.class)
@@ -55,5 +59,12 @@ public class ErrorHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorMessage onParseException(ParseException inParseException) {
 		return new ErrorMessage(400, "Invalid Input", inParseException.getMessage());
+	}
+
+	@ExceptionHandler(MalformedRequestException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessage onMalformedRequestException(MalformedRequestException inMalformedRequestException) {
+		return new ErrorMessage(400, "Invalid Input", inMalformedRequestException.getMessage());
 	}
 }

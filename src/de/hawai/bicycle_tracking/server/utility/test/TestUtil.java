@@ -17,4 +17,13 @@ public class TestUtil {
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		return mapper.writeValueAsBytes(object);
 	}
+	public static <E extends Object> E jsonToObject(Class<E> inClass, String json){
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.readValue(json, inClass);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

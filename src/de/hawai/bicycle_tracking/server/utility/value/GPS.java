@@ -6,9 +6,9 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class GPS {
 
-	private double longitude;
-	private double latitude;
-	private String name;
+	private double longitude = -9000.0;
+	private double latitude = -9000.0;
+	private String name = null;
 
 	private GPS(){};
 

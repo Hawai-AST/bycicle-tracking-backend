@@ -46,6 +46,10 @@ public class Facade {
 		return customerManagement.registerUser(name, firstName, eMailAddress, address, birthdate, password, authority);
 	}
 
+	public Optional<IBike> getBikeById(long id){
+		return bikeManagement.getBikeById(id);
+	}
+
 	public List<? extends IBike> findBikesBySoldLocation(ISellingLocation inLocation) {
 		return this.bikeManagement.findBikesBySoldLocation(inLocation);
 	}
