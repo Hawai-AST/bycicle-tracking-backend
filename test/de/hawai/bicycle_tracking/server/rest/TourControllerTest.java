@@ -5,6 +5,8 @@ package de.hawai.bicycle_tracking.server.rest;
         import de.hawai.bicycle_tracking.server.DBFixuresConfig;
         import de.hawai.bicycle_tracking.server.Main;
         import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+        import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeDao;
+        import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUserDao;
         import de.hawai.bicycle_tracking.server.dto.PasswordDTO;
         import de.hawai.bicycle_tracking.server.dto.TourDTO;
         import de.hawai.bicycle_tracking.server.facade.Facade;
@@ -15,7 +17,7 @@ package de.hawai.bicycle_tracking.server.rest;
         import de.hawai.bicycle_tracking.server.utility.value.EMail;
         import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
         import junit.framework.TestCase;
-        import org.aspectj.lang.annotation.After;
+        import org.junit.After;
         import org.junit.Before;
         import org.junit.Test;
         import org.junit.runner.RunWith;
@@ -112,7 +114,6 @@ public class TourControllerTest extends TestCase {
             "]" +
         "}";
         TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
-        //System.err.println(request);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
