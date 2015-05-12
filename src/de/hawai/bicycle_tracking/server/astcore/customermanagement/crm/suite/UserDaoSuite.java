@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -50,42 +48,42 @@ public class UserDaoSuite implements IUserDao {
 
 	@Override
 	public List<User> findAll() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public List<User> findAll(Sort sort) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public <S extends User> List<S> save(Iterable<S> entities) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void flush() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public <S extends User> S saveAndFlush(S entity) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteInBatch(Iterable<User> entities) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteAllInBatch() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Page<User> findAll(Pageable pageable) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -147,27 +145,27 @@ public class UserDaoSuite implements IUserDao {
 
 	@Override
 	public long count() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void delete(User entity) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void delete(Iterable<? extends User> entities) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteAll() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Optional<User> getByName(String name) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -185,7 +183,7 @@ public class UserDaoSuite implements IUserDao {
 
 	@Override
 	public List<User> findAll(Iterable<UUID> ids) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -200,16 +198,16 @@ public class UserDaoSuite implements IUserDao {
 
 	@Override
 	public User findOne(UUID id) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean exists(UUID id) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void delete(UUID id) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 }

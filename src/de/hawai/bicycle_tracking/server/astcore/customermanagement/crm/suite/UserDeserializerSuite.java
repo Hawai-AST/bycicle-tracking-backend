@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
 import de.hawai.bicycle_tracking.server.crm.suite.JsonParserHelper;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+import de.hawai.bicycle_tracking.server.utility.exception.JsonParseException;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
@@ -28,10 +29,16 @@ public class UserDeserializerSuite extends JsonDeserializer<User> {
 	public User deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 		JsonParserHelper helper = new JsonParserHelper();
 
-		return deserializeFromGetEntryList(jsonParser, helper);
+		try {
+			return deserializeFromGetEntryList(jsonParser, helper);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	private User deserializeFromGetEntryList(JsonParser jsonParser, JsonParserHelper helper) throws IOException, JsonProcessingException {
+	private User deserializeFromGetEntryList(JsonParser jsonParser, JsonParserHelper helper)
+			throws IOException, JsonProcessingException, JsonParseException {
 		JsonNode node = helper.setupTreeparser(jsonParser);
 		JsonNode nameValueList = null;
 		try {
