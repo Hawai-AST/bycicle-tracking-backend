@@ -25,8 +25,10 @@ package de.hawai.bicycle_tracking.server.rest;
         import org.springframework.boot.test.IntegrationTest;
         import org.springframework.boot.test.SpringApplicationConfiguration;
         import org.springframework.security.core.userdetails.UserDetails;
+        import org.springframework.test.context.ContextConfiguration;
         import org.springframework.test.context.TestExecutionListeners;
         import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+        import org.springframework.test.context.support.AnnotationConfigContextLoader;
         import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
         import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
         import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -49,13 +51,20 @@ package de.hawai.bicycle_tracking.server.rest;
         import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
-@WebAppConfiguration
-@IntegrationTest
+//@ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = AppConfig.class)
+@Transactional(noRollbackFor = Exception.class)
 @TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
-@Transactional(noRollbackFor = Exception.class)
+@SpringApplicationConfiguration(classes = { Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+
+//@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@IntegrationTest
+//@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
+//        DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
+//@Transactional(noRollbackFor = Exception.class)
+//@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class TourControllerTest extends TestCase {
 
     private static final String USER_EMAIL = "peter@buttington.com";
@@ -80,6 +89,7 @@ public class TourControllerTest extends TestCase {
     private MockMvc restViewerMockMvc;
 
     private UserDetails user;
+    private IBike bike;
 
     @Before
     public void setup() {
@@ -88,14 +98,14 @@ public class TourControllerTest extends TestCase {
                 new Date(1), "poop", HawaiAuthority.USER);
 
         this.user = authenticationService.loadUserByUsername(USER_EMAIL);
-        facade.createBike("aaa",new FrameNumber(123),new Date(),new Date(), null, facade.getUserBy(new EMail(USER_EMAIL)).get());
+        bike = facade.createBike("aaa", new FrameNumber(123), new Date(), new Date(), null, facade.getUserBy(new EMail(USER_EMAIL)).get());
     }
 
     @Test
     public void addRoute_correctStatement_tourIsSaveAndResponseIsOK() throws Exception {
         String testData = "{" +
             "\"name\": \"RouteXYZ\"," +
-            "\"bikeID\": 1," +
+            "\"bikeID\": "+ bike.getId() + "," +
             "\"lengthInKm\": 123.5," +
             "\"startAt\": \"2015-04-25T12:35:55Z\"," +
             "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
