@@ -85,7 +85,7 @@ public class UserIT {
 //	Besides that, why does this break and "register_ExistingUser_RegistrationFails()" in RegisterControllerTest is working?
 	public void save_UserWithSameMailExists_UserCantBeSaved() throws Exception {
 		try {
-			userDao.save(new User("other name",
+			userDao.saveAndFlush(new User("other name",
 					"other first name", E_MAIL_ADDRESS,
 					new Address("A", "B", "C", "D", "E", "F"),
 					new Date(42),
