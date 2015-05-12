@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.gson.JsonParseException;
+import de.hawai.bicycle_tracking.server.utility.exception.JsonParseException;
 
 //	 example of returned Json:
 //	{
@@ -40,7 +40,7 @@ public class SetEntryResponseToken {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(String id) throws JsonParseException {
 		if (isUuid(id)) {
 			this.id = id;
 		} else {
