@@ -36,10 +36,10 @@ public class TourManagement implements ITourManagement{
     }
 
     @Override
-    public ITour addTour(String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm)
+    public ITour addTour(String name, IBike bike, Date startAt, Date finishedAt, List<GPS> waypoints, double lengthInKm)
             throws AddTourFailedException {
         try {
-            Tour tour = new Tour(name, bike, rodeAt, finishedAt, waypoints, lengthInKm);
+            Tour tour = new Tour(name, bike, startAt, finishedAt, waypoints, lengthInKm);
             tourDao.save(tour);
             updateMileageOfBike(bike);
             return tour;

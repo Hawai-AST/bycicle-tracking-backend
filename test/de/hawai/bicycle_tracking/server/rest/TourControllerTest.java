@@ -147,7 +147,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementNameIsMissing_ResonseWithError400() throws Exception {
+    public void addRoute_statementNameIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 //"\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -181,7 +181,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementBikeIdIsMissing_ResonseWithError400() throws Exception {
+    public void addRoute_statementBikeIdIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 //"\"bikeID\": 1," +
@@ -215,7 +215,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementLengthInKmIsMissing_ResonseWithError400() throws Exception {
+    public void addRoute_statementLengthInKmIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -249,7 +249,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementStartAtIsMissing_ResonseWithError400() throws Exception {
+    public void addRoute_statementStartAtIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -283,7 +283,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementFinishedAtIsMissing_ResonseWithError400() throws Exception {
+    public void addRoute_statementFinishedAtIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -317,7 +317,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementWaypointsIsMissing_ResonseWithError400() throws Exception {
+    public void addRoute_statementWaypointsIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -350,7 +350,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementLatitudeIsMissing_ResonseWithError400() throws Exception {
+    public void addRoute_statementLatitudeIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -384,7 +384,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementLongitudeIsMissing_ResonseWithError400() throws Exception {
+    public void addRoute_statementLongitudeIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -418,7 +418,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementGpsNameIsMissing_ResonseWithError400() throws Exception {
+    public void addRoute_statementGpsNameIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -451,7 +451,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementLongitudeIsNotInCorrectRange_ResonseWithError400() throws Exception {
+    public void addRoute_statementLongitudeIsNotInCorrectRange_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -485,7 +485,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementLatitudeIsNotInCorrectRange_ResonseWithError400() throws Exception {
+    public void addRoute_statementLatitudeIsNotInCorrectRange_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -519,7 +519,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementWrongStartAtDateFormat_ResonseWithError400() throws Exception {
+    public void addRoute_statementWrongStartAtDateFormat_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -553,7 +553,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementWrongFinishedAtDateFormat_ResonseWithError400() throws Exception {
+    public void addRoute_statementWrongFinishedAtDateFormat_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 1," +
@@ -587,7 +587,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void addRoute_statementWrongBikeIdDoesntMatchWithABike_ResonseWithError404() throws Exception {
+    public void addRoute_statementWrongBikeIdDoesntMatchWithABike_ResponseWithError404() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": 50000," +
@@ -731,7 +731,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementNameIsMissing_ResonseWithError400() throws Exception {
+    public void changeRoute_statementNameIsMissing_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -773,7 +773,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementBikeIdIsMissing_ResonseWithError400() throws Exception {
+    public void changeRoute_statementBikeIdIsMissing_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -815,7 +815,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementLengthInKmIsMissing_ResonseWithError400() throws Exception {
+    public void changeRoute_statementLengthInKmIsMissing_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -857,7 +857,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementStartAtIsMissing_ResonseWithError400() throws Exception {
+    public void changeRoute_statementStartAtIsMissing_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -899,7 +899,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementFinishedAtIsMissing_ResonseWithError400() throws Exception {
+    public void changeRoute_statementFinishedAtIsMissing_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -941,7 +941,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementWaypointsIsMissing_ResonseWithError400() throws Exception {
+    public void changeRoute_statementWaypointsIsMissing_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -982,7 +982,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementLatitudeIsMissing_ResonseWithError400() throws Exception {
+    public void changeRoute_statementLatitudeIsMissing_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -1024,7 +1024,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementLongitudeIsMissing_ResonseWithError400() throws Exception {
+    public void changeRoute_statementLongitudeIsMissing_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -1066,7 +1066,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementGpsNameIsMissing_ResonseWithError400() throws Exception {
+    public void changeRoute_statementGpsNameIsMissing_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -1107,7 +1107,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementLongitudeIsNotInCorrectRange_ResonseWithError400() throws Exception {
+    public void changeRoute_statementLongitudeIsNotInCorrectRange_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -1149,7 +1149,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementLatitudeIsNotInCorrectRange_ResonseWithError400() throws Exception {
+    public void changeRoute_statementLatitudeIsNotInCorrectRange_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -1191,7 +1191,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementWrongStartAtDateFormat_ResonseWithError400() throws Exception {
+    public void changeRoute_statementWrongStartAtDateFormat_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -1233,7 +1233,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementWrongFinishedAtDateFormat_ResonseWithError400() throws Exception {
+    public void changeRoute_statementWrongFinishedAtDateFormat_ResponseWithError400() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
@@ -1275,7 +1275,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void changeRoute_statementWrongBikeIdDoesntMatchWithABike_ResonseWithError404() throws Exception {
+    public void changeRoute_statementWrongBikeIdDoesntMatchWithABike_ResponseWithError404() throws Exception {
         ITour tour = facade.addTour(
                 "TestTour",
                 bike,
