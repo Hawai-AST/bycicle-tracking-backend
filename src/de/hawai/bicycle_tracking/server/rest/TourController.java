@@ -8,6 +8,7 @@ import de.hawai.bicycle_tracking.server.dto.TourDTO;
 import de.hawai.bicycle_tracking.server.dto.TourListEntryDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestException;
+import de.hawai.bicycle_tracking.server.rest.exceptions.NotAuthorizedException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.NotFoundException;
 import de.hawai.bicycle_tracking.server.security.SessionService;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -111,10 +112,40 @@ public class TourController {
         return outTour;
     }
 
+    @RequestMapping(value = "/v1/route/{id}", method = RequestMethod.GET,
+            consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+    @ResponseStatus(HttpStatus.OK)
+    public TourDTO getRoute(@PathVariable long id){
+        IUser user = facade.getUserBy(new EMail(sessionService.getCurrentlyLoggedinUser())).orElse(null);
+        if (user == null){
+            throw new NotFoundException("LoggedIn User not found");
+        }
+
+        ITour tour = facade.getTourById(id).orElse(null);
+        if (tour == null){
+            throw new NotFoundException("Could not find Tour " + id);
+        }
+
+        if (tour.getBike().getOwner() != user){
+            throw new NotAuthorizedException("Not allowed to view Routes of other Users");
+        }
+        TourDTO dto = new TourDTO();
+        dto.id = tour.getId();
+        dto.name = tour.getName();
+        dto.bikeID = tour.getBike().getId();
+        dto.startAt = FORMAT.format(tour.getStartAt());
+        dto.finishedAt = FORMAT.format(tour.getFinishedAt());
+        dto.createdAt = FORMAT.format(tour.getCreatedAt());
+        dto.updatedAt = FORMAT.format(tour.getUpdatedAt());
+        dto.lengthInKm = tour.getLengthInKm();
+        dto.waypoints = tour.getWaypoints();
+        return dto;
+    }
+
     @RequestMapping(value = "/v1/route", method = RequestMethod.GET,
             consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     @ResponseStatus(HttpStatus.OK)
-    public List<TourListEntryDTO> getRoute() {
+    public List<TourListEntryDTO> getRoutes() {
         IUser user = facade.getUserBy(new EMail(sessionService.getCurrentlyLoggedinUser())).orElse(null);
         if (user == null){
             throw new NotFoundException("LoggedIn User not found");
