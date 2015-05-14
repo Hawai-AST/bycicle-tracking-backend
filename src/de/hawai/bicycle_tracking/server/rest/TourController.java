@@ -1,13 +1,16 @@
 package de.hawai.bicycle_tracking.server.rest;
 
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedException;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
 import de.hawai.bicycle_tracking.server.dto.TourDTO;
+import de.hawai.bicycle_tracking.server.dto.TourListEntryDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.NotFoundException;
 import de.hawai.bicycle_tracking.server.security.SessionService;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.GPS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -33,7 +38,8 @@ public class TourController {
     @Autowired
     private Facade facade;
 
-    @RequestMapping(value = "/v1/route", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/v1/route", method = RequestMethod.POST,
+            consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     @ResponseStatus(HttpStatus.OK)
     public TourDTO addRoute(@RequestBody TourDTO inTour) throws AddTourFailedException {
 
@@ -103,6 +109,45 @@ public class TourController {
         }
 
         return outTour;
+    }
+
+    @RequestMapping(value = "/v1/route", method = RequestMethod.GET,
+            consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TourListEntryDTO> getRoute() {
+        IUser user = facade.getUserBy(new EMail(sessionService.getCurrentlyLoggedinUser())).orElse(null);
+        if (user == null){
+            throw new NotFoundException("LoggedIn User not found");
+        }
+        List<ITour> tours = facade.getToursByUser(user);
+        if (tours == null){
+            throw new NotFoundException("User does not exists");
+        }
+        List<TourListEntryDTO> tourList = new ArrayList<>();
+        for (ITour tour: tours){
+            TourListEntryDTO dto = new TourListEntryDTO();
+            dto.id = tour.getId();
+            dto.name = tour.getName();
+            dto.lengthInKm = tour.getLengthInKm();
+            dto.bikeID = tour.getBike().getId();
+            dto.startAt = FORMAT.format(tour.getStartAt());
+            dto.finishedAt = FORMAT.format(tour.getFinishedAt());
+            tourList.add(dto);
+        }
+        return tourList;
+
+    }
+
+    @RequestMapping(value = "/v1/route/{id}", method = RequestMethod.DELETE,
+            consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteRoute(@PathVariable long id) {
+        ITour tour = facade.getTourById(id).orElse(null);
+        if (tour == null){
+            throw new NotFoundException("Bike does not exists");
+        }
+        facade.deleteTour(tour);
+
     }
 }
 

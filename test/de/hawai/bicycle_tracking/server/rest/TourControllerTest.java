@@ -1,35 +1,33 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-        import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.AppConfig;
         import de.hawai.bicycle_tracking.server.DBConfig;
         import de.hawai.bicycle_tracking.server.DBFixuresConfig;
         import de.hawai.bicycle_tracking.server.Main;
         import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
-        import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeDao;
-        import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUserDao;
-        import de.hawai.bicycle_tracking.server.dto.PasswordDTO;
-        import de.hawai.bicycle_tracking.server.dto.TourDTO;
-        import de.hawai.bicycle_tracking.server.facade.Facade;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
+import de.hawai.bicycle_tracking.server.dto.TourDTO;
+import de.hawai.bicycle_tracking.server.dto.TourListEntryDTO;
+import de.hawai.bicycle_tracking.server.facade.Facade;
         import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
         import de.hawai.bicycle_tracking.server.security.UserSecurityService;
         import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
         import de.hawai.bicycle_tracking.server.utility.value.Address;
         import de.hawai.bicycle_tracking.server.utility.value.EMail;
         import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
-        import junit.framework.TestCase;
-        import org.junit.After;
-        import org.junit.Before;
+import de.hawai.bicycle_tracking.server.utility.value.GPS;
+import junit.framework.TestCase;
+import org.junit.Before;
         import org.junit.Test;
         import org.junit.runner.RunWith;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.boot.test.IntegrationTest;
         import org.springframework.boot.test.SpringApplicationConfiguration;
         import org.springframework.security.core.userdetails.UserDetails;
-        import org.springframework.test.context.ContextConfiguration;
-        import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.TestExecutionListeners;
         import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-        import org.springframework.test.context.support.AnnotationConfigContextLoader;
-        import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
         import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
         import org.springframework.test.context.transaction.TransactionConfiguration;
         import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
@@ -44,27 +42,26 @@ package de.hawai.bicycle_tracking.server.rest;
 
         import java.text.DateFormat;
         import java.text.SimpleDateFormat;
-        import java.util.Date;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-        import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-        import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static de.hawai.bicycle_tracking.server.utility.test.TestUtil.jsonToObject;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
         import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = AppConfig.class)
 @Transactional(noRollbackFor = Exception.class)
 @TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
 @SpringApplicationConfiguration(classes = { Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
-
-//@RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @IntegrationTest
-//@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
-//        DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
-//@Transactional(noRollbackFor = Exception.class)
-//@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+
 public class TourControllerTest extends TestCase {
 
     private static final String USER_EMAIL = "peter@buttington.com";
@@ -75,7 +72,7 @@ public class TourControllerTest extends TestCase {
     private static final String NEW_BIRTHDAY = "1999-01-01";
     private static final Address NEW_ADDRESS = new Address("bb", "dd", "aa", "zz", "dd", "awwsd");
 
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     @Autowired
     private WebApplicationContext context;
@@ -105,7 +102,7 @@ public class TourControllerTest extends TestCase {
     public void addRoute_correctStatement_tourIsSaveAndResponseIsOK() throws Exception {
         String testData = "{" +
             "\"name\": \"RouteXYZ\"," +
-            "\"bikeID\": "+ bike.getId() + "," +
+            "\"bikeID\": " + bike.getId() + "," +
             "\"lengthInKm\": 123.5," +
             "\"startAt\": \"2015-04-25T12:35:55Z\"," +
             "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
@@ -123,7 +120,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
             "]" +
         "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -131,7 +128,7 @@ public class TourControllerTest extends TestCase {
             @Override
             public void handle(MvcResult result) throws Exception {
                 assertEquals(200, result.getResponse().getStatus());
-                TourDTO response = TestUtil.jsonToObject(TourDTO.class, result.getResponse().getContentAsString());
+                TourDTO response = jsonToObject(TourDTO.class, result.getResponse().getContentAsString());
                 assertNotNull(response);
                 assertNotNull(response.id);
                 assertNotNull(response.bikeID);
@@ -172,7 +169,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -206,7 +203,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -240,7 +237,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -274,7 +271,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -308,7 +305,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -342,7 +339,7 @@ public class TourControllerTest extends TestCase {
 //                "}" +
 //                "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -376,7 +373,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -410,7 +407,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -444,7 +441,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -478,7 +475,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class, testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -512,7 +509,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -546,7 +543,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class, testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -580,7 +577,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -591,11 +588,12 @@ public class TourControllerTest extends TestCase {
             }
         });
     }
+
     @Test
     public void addRoute_statementWrongBikeIdDoesntMatchWithABike_ResonseWithError404() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 50," +
+                "\"bikeID\": 50000," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"2015-04-25T12:35:55Z\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
@@ -613,7 +611,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = TestUtil.jsonToObject(TourDTO.class,testData);
+        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -623,6 +621,174 @@ public class TourControllerTest extends TestCase {
                 assertEquals(404, result.getResponse().getStatus());
             }
         });
+    }
+
+    @Test
+    public void getRoute_UserHasTours_CorrectListOfTours() throws Exception {
+        String expectedTourName1 = "Test1";
+        String expectedTourName2 = "Test2";
+        IBike expectedBike1 = this.bike;
+        IBike expectedBike2 = facade.createBike(
+                "TestBike99",
+                new FrameNumber(5456),
+                new Date(), new Date(),
+                null,
+                facade.getUserBy(new EMail(USER_EMAIL)).get()
+        );
+        Date expectedStartAt1 = new Date();
+        Date expectedStartAt2 = new Date();
+        Date expectedFinishedAt1 = new Date();
+        Date expectedFinishedAt2 = new Date();
+        List<GPS> expectedWayPoints1 = new ArrayList<>();
+        List<GPS> expectedWayPoints2 = new ArrayList<>();
+        expectedWayPoints1.add(new GPS(12, 13, "Test1"));
+        expectedWayPoints1.add(new GPS(13, 14, "Test2"));
+        expectedWayPoints1.add(new GPS(14, 15, "Test3"));
+        expectedWayPoints2.add(new GPS(15, 16, "Test3"));
+        expectedWayPoints2.add(new GPS(16, 17, "Test3"));
+        expectedWayPoints2.add(new GPS(17, 18, "Test3"));
+        double expectedLenghtInKm1 = 15;
+        double expectedLenghtInKm2 = 16;
+
+        ITour tour1 = facade.addTour(
+                expectedTourName1,
+                expectedBike1,
+                expectedStartAt1,
+                expectedFinishedAt1,
+                expectedWayPoints1,
+                expectedLenghtInKm1
+        );
+
+        ITour tour2 = facade.addTour(
+                expectedTourName2,
+                expectedBike2,
+                expectedStartAt2,
+                expectedFinishedAt2,
+                expectedWayPoints2,
+                expectedLenghtInKm2
+        );
+
+        ResultActions actions = restViewerMockMvc.perform(get("/api/v1/route").
+                        contentType(TestUtil.APPLICATION_JSON_UTF8).
+                        with(user(user))
+        );
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(200, result.getResponse().getStatus());
+                TourListEntryDTO tourList[] = TestUtil.jsonToObject(TourListEntryDTO[].class, result.getResponse().getContentAsString());
+                assertEquals(2, tourList.length);
+                assertEquals(expectedTourName1, tourList[0].name);
+                assertEquals(expectedBike1.getId(), tourList[0].bikeID);
+                assertEquals(FORMAT.format(expectedStartAt1), tourList[0].startAt);
+                assertEquals(FORMAT.format(expectedFinishedAt1), tourList[0].finishedAt);
+                assertEquals(expectedLenghtInKm1, tourList[0].lengthInKm);
+                assertEquals(expectedTourName2, tourList[1].name);
+                assertEquals(expectedBike2.getId(), tourList[1].bikeID);
+                assertEquals(FORMAT.format(expectedStartAt2), tourList[1].startAt);
+                assertEquals(FORMAT.format(expectedFinishedAt2), tourList[1].finishedAt);
+                assertEquals(expectedLenghtInKm2, tourList[1].lengthInKm);
+            }
+        });
+
+    }
+
+    @Test
+    public void getRoute_UserHasNoTours_EmptyList() throws Exception {
+        IUser user2 = facade.registerUser(
+                "testUser2",
+                "dsfdsf",
+                new EMail("test@test432.de"),
+                new Address(
+                        "lkdsfsdfjösd",
+                        "11",
+                        "HH",
+                        "SH",
+                        "21521",
+                        "DE"
+                ),
+                new Date(),
+                "TestPw",
+                HawaiAuthority.USER
+        );
+        UserDetails user2Details = authenticationService.loadUserByUsername("test@test432.de");
+        String expectedTourName1 = "Test1";
+        String expectedTourName2 = "Test2";
+        IBike expectedBike1 = this.bike;
+        IBike expectedBike2 = facade.createBike(
+                "TestBike99",
+                new FrameNumber(5456),
+                new Date(), new Date(),
+                null,
+                facade.getUserBy(new EMail(USER_EMAIL)).get()
+        );
+        Date expectedStartAt1 = new Date();
+        Date expectedStartAt2 = new Date();
+        Date expectedFinishedAt1 = new Date();
+        Date expectedFinishedAt2 = new Date();
+        List<GPS> expectedWayPoints1 = new ArrayList<>();
+        List<GPS> expectedWayPoints2 = new ArrayList<>();
+        expectedWayPoints1.add(new GPS(12, 13, "Test1"));
+        expectedWayPoints1.add(new GPS(13, 14, "Test2"));
+        expectedWayPoints1.add(new GPS(14, 15, "Test3"));
+        expectedWayPoints2.add(new GPS(15, 16, "Test3"));
+        expectedWayPoints2.add(new GPS(16, 17, "Test3"));
+        expectedWayPoints2.add(new GPS(17, 18, "Test3"));
+        double expectedLenghtInKm1 = 15;
+        double expectedLenghtInKm2 = 16;
+
+        ITour tour1 = facade.addTour(
+                expectedTourName1,
+                expectedBike1,
+                expectedStartAt1,
+                expectedFinishedAt1,
+                expectedWayPoints1,
+                expectedLenghtInKm1
+        );
+
+        ITour tour2 = facade.addTour(
+                expectedTourName2,
+                expectedBike2,
+                expectedStartAt2,
+                expectedFinishedAt2,
+                expectedWayPoints2,
+                expectedLenghtInKm2
+        );
+
+        ResultActions actions = restViewerMockMvc.perform(get("/api/v1/route").
+                        contentType(TestUtil.APPLICATION_JSON_UTF8).
+                        with(user(user2Details))
+        );
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(200, result.getResponse().getStatus());
+                TourListEntryDTO tourList[] = TestUtil.jsonToObject(TourListEntryDTO[].class, result.getResponse().getContentAsString());
+                assertEquals(0, tourList.length);
+            }
+        });
+
+    }
+
+    @Test
+    public void deleteRoute_CorrectId_TourIsDeleted() throws Exception {
+        List<GPS> waypoints = new ArrayList<>();
+        ITour tour = facade.addTour("Test", bike, new Date(), new Date(), waypoints, 15);
+        ResultActions actions = restViewerMockMvc.perform(
+                delete("/api/v1/route/" + tour.getId()).
+                        contentType(TestUtil.APPLICATION_JSON_UTF8).
+                        with(user(user))
+        ).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void deleteRoute_IncorrectId_ResonseWithError404() throws Exception {
+        ResultActions actions = restViewerMockMvc.perform(
+                delete("/api/v1/route/" + 458).
+                        contentType(TestUtil.APPLICATION_JSON_UTF8).
+                        with(user(user))
+        ).andExpect(status().isNotFound());
     }
 }
 
