@@ -49,10 +49,8 @@ import java.util.List;
 
 import static de.hawai.bicycle_tracking.server.utility.test.TestUtil.jsonToObject;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional(noRollbackFor = Exception.class)
@@ -612,6 +610,702 @@ public class TourControllerTest extends TestCase {
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(404, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_correctStatement_tourIsSaveAndResponseIsOK() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": " + bike.getId() + "," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(200, result.getResponse().getStatus());
+                TourDTO response = jsonToObject(TourDTO.class, result.getResponse().getContentAsString());
+                assertNotNull(response);
+                assertNotNull(response.id);
+                assertNotNull(response.bikeID);
+                assertNotNull(response.lengthInKm);
+                assertNotNull(response.startAt);
+                assertNotNull(response.finishedAt);
+                assertNotNull(response.createdAt);
+                assertNotNull(response.updatedAt);
+                assertNotNull(response.waypoints);
+                assertEquals(request.bikeID, response.bikeID);
+                assertEquals(request.lengthInKm, response.lengthInKm);
+                assertEquals(request.startAt, response.startAt);
+                assertEquals(request.finishedAt, response.finishedAt);
+                assertEquals(request.waypoints, response.waypoints);
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_correctStatementButUserDoesNotOwnTheRoute_ErrorNotAuthorized() throws Exception {
+        IUser user2 = facade.registerUser(
+                "testUser2",
+                "dsfdsf",
+                new EMail("test@test432.de"),
+                new Address(
+                        "lkdsfsdfjösd",
+                        "11",
+                        "HH",
+                        "SH",
+                        "21521",
+                        "DE"
+                ),
+                new Date(),
+                "TestPw",
+                HawaiAuthority.USER
+        );
+        UserDetails user2Details = authenticationService.loadUserByUsername("test@test432.de");
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": " + bike.getId() + "," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user2Details))
+                .content(testData)).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void changeRoute_statementNameIsMissing_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                //"\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementBikeIdIsMissing_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                //"\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementLengthInKmIsMissing_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                //"\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementStartAtIsMissing_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                //"\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementFinishedAtIsMissing_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                //"\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementWaypointsIsMissing_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+//                "\"waypoints\": [" +
+//                "{" +
+//                "\"latitude\": 53.55705300904082," +
+//                "\"longitude\": 10.022841095924377," +
+//                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+//                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+//                "}," +
+//                "{" +
+//                "\"latitude\": 53.557301561749455," +
+//                "\"longitude\": 10.020703375339508," +
+//                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+//                "}" +
+//                "]" +
+                "}";
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementLatitudeIsMissing_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                //"\"latitude\": 53.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementLongitudeIsMissing_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                //"\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementGpsNameIsMissing_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                //"\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                //"Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementLongitudeIsNotInCorrectRange_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                "\"longitude\": 510.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementLatitudeIsNotInCorrectRange_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 553.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementWrongStartAtDateFormat_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"201-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 553.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementWrongFinishedAtDateFormat_ResonseWithError400() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 1," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 553.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+                .content(testData));
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(400, result.getResponse().getStatus());
+            }
+        });
+    }
+
+    @Test
+    public void changeRoute_statementWrongBikeIdDoesntMatchWithABike_ResonseWithError404() throws Exception {
+        ITour tour = facade.addTour(
+                "TestTour",
+                bike,
+                new Date(),
+                new Date(),
+                new ArrayList<GPS>(),
+                2
+        );
+        String testData = "{" +
+                "\"name\": \"RouteXYZ\"," +
+                "\"bikeID\": 50000," +
+                "\"lengthInKm\": 123.5," +
+                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
+                "\"waypoints\": [" +
+                "{" +
+                "\"latitude\": 53.55705300904082," +
+                "\"longitude\": 10.022841095924377," +
+                "\"name\": \"Hochschule für Angewandte Wissenschaften Campus Berliner Tor, 5-21, " +
+                "Berliner Tor, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}," +
+                "{" +
+                "\"latitude\": 53.557301561749455," +
+                "\"longitude\": 10.020703375339508," +
+                "\"name\": \"1, Lübeckertordamm, St. Georg, Hamburg-Mitte, Hamburg, 20099, Deutschland\"" +
+                "}" +
+                "]" +
+                "}";
+        TourDTO request = jsonToObject(TourDTO.class, testData);
+        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {

@@ -4,6 +4,7 @@ import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedException;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.UpdateTourFailedException;
 import de.hawai.bicycle_tracking.server.dto.TourDTO;
 import de.hawai.bicycle_tracking.server.dto.TourListEntryDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
@@ -107,6 +108,97 @@ public class TourController {
             outTour.waypoints = tour.getWaypoints();
         } catch (AddTourFailedException e) {
             throw new AddTourFailedException("Unable to Save Tour");
+        }
+
+        return outTour;
+    }
+
+
+    @RequestMapping(value = "/v1/route/{id}", method = RequestMethod.PUT,
+            consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+    @ResponseStatus(HttpStatus.OK)
+    public TourDTO changeRoute(@PathVariable long id, @RequestBody TourDTO inTour) throws AddTourFailedException, UpdateTourFailedException {
+
+        TourDTO outTour = new TourDTO();
+        if (inTour.name == null){
+            throw new MalformedRequestException("Name missing");
+        } else if (id == 0){
+            throw new MalformedRequestException("Id missing");
+        } else if (inTour.bikeID == null){
+            throw new MalformedRequestException("BikeId missing");
+        } else if (inTour.lengthInKm == null){
+            throw new MalformedRequestException("LengthInKm missing");
+        } else if (inTour.startAt == null){
+            throw new MalformedRequestException("StartAt missing");
+        } else if (inTour.finishedAt == null){
+            throw new MalformedRequestException("FinishedAt missing");
+        } else if (inTour.waypoints == null){
+            throw new MalformedRequestException("Waypoints missing");
+        }
+
+        IUser user = facade.getUserBy(new EMail(sessionService.getCurrentlyLoggedinUser())).orElse(null);
+        if (user == null){
+            throw new NotFoundException("LoggedIn User not found");
+        }
+
+        ITour tour = facade.getTourById(id).orElse(null);
+        if (tour == null){
+            throw new NotFoundException("Could not find Tour " + id);
+        }
+
+        if (tour.getBike().getOwner() != user){
+            throw new NotAuthorizedException("Not allowed to alter Routes of other Users");
+        }
+
+        for (GPS gps: inTour.waypoints){
+            if (!(-90.0 <= gps.getLatitude() && gps.getLatitude() <= 90)){
+                throw new MalformedRequestException("Unknown Latitude");
+            } else if (!(-180.0 <= gps.getLongitude() && gps.getLongitude() <= 180)){
+                throw new MalformedRequestException("Unknown Logitude");
+            } else if (gps.getName() == null){
+                throw new MalformedRequestException("Unknown Position Name");
+            }
+        }
+        IBike bike = facade.getBikeById(inTour.bikeID);
+        if (bike == null){
+            throw new NotFoundException("BikeId does not exists");
+        }
+
+        Date startAt = null;
+        try {
+            startAt = FORMAT.parse(inTour.startAt);
+        } catch (ParseException e){
+            throw new MalformedRequestException("StartAt ist not a Date");
+        }
+
+        Date finishedAt = null;
+        try {
+            finishedAt = FORMAT.parse(inTour.finishedAt);
+        } catch (ParseException e){
+            throw new MalformedRequestException("FinishedAt ist not a Date");
+        }
+
+        try {
+            facade.updateTour(
+                    tour,
+                    inTour.name,
+                    bike,
+                    startAt,
+                    finishedAt,
+                    inTour.waypoints,
+                    inTour.lengthInKm
+            );
+            outTour.name = tour.getName();
+            outTour.bikeID = tour.getBike().getId();
+            outTour.createdAt = FORMAT.format(tour.getCreatedAt());
+            outTour.finishedAt = FORMAT.format(tour.getFinishedAt());
+            outTour.startAt = FORMAT.format(tour.getStartAt());
+            outTour.updatedAt = FORMAT.format(tour.getUpdatedAt());
+            outTour.lengthInKm = tour.getLengthInKm();
+            outTour.id = tour.getId();
+            outTour.waypoints = tour.getWaypoints();
+        } catch (UpdateTourFailedException e) {
+            throw new UpdateTourFailedException("Unable to Update Tour");
         }
 
         return outTour;
