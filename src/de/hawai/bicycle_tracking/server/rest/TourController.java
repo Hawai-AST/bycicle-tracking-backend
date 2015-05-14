@@ -129,6 +129,7 @@ public class TourController {
         if (tour.getBike().getOwner() != user){
             throw new NotAuthorizedException("Not allowed to view Routes of other Users");
         }
+
         TourDTO dto = new TourDTO();
         dto.id = tour.getId();
         dto.name = tour.getName();

@@ -6,6 +6,7 @@ import de.hawai.bicycle_tracking.server.AppConfig;
         import de.hawai.bicycle_tracking.server.Main;
         import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedException;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
 import de.hawai.bicycle_tracking.server.dto.TourDTO;
 import de.hawai.bicycle_tracking.server.dto.TourListEntryDTO;
@@ -339,7 +340,6 @@ public class TourControllerTest extends TestCase {
 //                "}" +
 //                "]" +
                 "}";
-        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -441,7 +441,6 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        TourDTO request = jsonToObject(TourDTO.class, testData);
         ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
@@ -624,7 +623,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void getRoute_UserHasTours_CorrectListOfTours() throws Exception {
+    public void getRoutes_UserHasTours_CorrectListOfTours() throws Exception {
         String expectedTourName1 = "Test1";
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
@@ -694,7 +693,7 @@ public class TourControllerTest extends TestCase {
     }
 
     @Test
-    public void getRoute_UserHasNoTours_EmptyList() throws Exception {
+    public void getRoutes_UserHasNoTours_EmptyList() throws Exception {
         IUser user2 = facade.registerUser(
                 "testUser2",
                 "dsfdsf",
@@ -768,6 +767,188 @@ public class TourControllerTest extends TestCase {
             }
         });
 
+    }
+
+    @Test
+    public void getRoute_RouteExistsAndUserIsOwner_TourWillBeSent() throws Exception {
+        String expectedTourName1 = "Test1";
+        String expectedTourName2 = "Test2";
+        IBike expectedBike1 = this.bike;
+        IBike expectedBike2 = facade.createBike(
+                "TestBike99",
+                new FrameNumber(5456),
+                new Date(), new Date(),
+                null,
+                facade.getUserBy(new EMail(USER_EMAIL)).get()
+        );
+        Date expectedStartAt1 = new Date();
+        Date expectedStartAt2 = new Date();
+        Date expectedFinishedAt1 = new Date();
+        Date expectedFinishedAt2 = new Date();
+        List<GPS> expectedWayPoints1 = new ArrayList<>();
+        List<GPS> expectedWayPoints2 = new ArrayList<>();
+        expectedWayPoints1.add(new GPS(12, 13, "Test1"));
+        expectedWayPoints1.add(new GPS(13, 14, "Test2"));
+        expectedWayPoints1.add(new GPS(14, 15, "Test3"));
+        expectedWayPoints2.add(new GPS(15, 16, "Test3"));
+        expectedWayPoints2.add(new GPS(16, 17, "Test3"));
+        expectedWayPoints2.add(new GPS(17, 18, "Test3"));
+        double expectedLenghtInKm1 = 15;
+        double expectedLenghtInKm2 = 16;
+
+        ITour tour1 = facade.addTour(
+                expectedTourName1,
+                expectedBike1,
+                expectedStartAt1,
+                expectedFinishedAt1,
+                expectedWayPoints1,
+                expectedLenghtInKm1
+        );
+
+        ITour tour2 = facade.addTour(
+                expectedTourName2,
+                expectedBike2,
+                expectedStartAt2,
+                expectedFinishedAt2,
+                expectedWayPoints2,
+                expectedLenghtInKm2
+        );
+
+        ResultActions actions = restViewerMockMvc.perform(get("/api/v1/route/" + tour1.getId()).
+                        contentType(TestUtil.APPLICATION_JSON_UTF8).
+                        with(user(user))
+        );
+        actions.andDo(new ResultHandler() {
+            @Override
+            public void handle(MvcResult result) throws Exception {
+                assertEquals(200, result.getResponse().getStatus());
+                TourDTO tourDto = TestUtil.jsonToObject(TourDTO.class, result.getResponse().getContentAsString());
+                assertEquals(expectedTourName1, tourDto.name);
+                assertEquals(expectedBike1.getId(), tourDto.bikeID);
+                assertEquals(FORMAT.format(expectedStartAt1), tourDto.startAt);
+                assertEquals(FORMAT.format(expectedFinishedAt1), tourDto.finishedAt);
+                assertEquals(expectedLenghtInKm1, tourDto.lengthInKm);
+            }
+        });
+    }
+
+    @Test
+    public void getRoute_RouteExistsAndUserIsNotOwner_ErrorNotAuthorized() throws Exception {
+        IUser user2 = facade.registerUser(
+                "testUser2",
+                "dsfdsf",
+                new EMail("test@test432.de"),
+                new Address(
+                        "lkdsfsdfjösd",
+                        "11",
+                        "HH",
+                        "SH",
+                        "21521",
+                        "DE"
+                ),
+                new Date(),
+                "TestPw",
+                HawaiAuthority.USER
+        );
+        UserDetails user2Details = authenticationService.loadUserByUsername("test@test432.de");
+        String expectedTourName1 = "Test1";
+        String expectedTourName2 = "Test2";
+        IBike expectedBike1 = this.bike;
+        IBike expectedBike2 = facade.createBike(
+                "TestBike99",
+                new FrameNumber(5456),
+                new Date(), new Date(),
+                null,
+                facade.getUserBy(new EMail(USER_EMAIL)).get()
+        );
+        Date expectedStartAt1 = new Date();
+        Date expectedStartAt2 = new Date();
+        Date expectedFinishedAt1 = new Date();
+        Date expectedFinishedAt2 = new Date();
+        List<GPS> expectedWayPoints1 = new ArrayList<>();
+        List<GPS> expectedWayPoints2 = new ArrayList<>();
+        expectedWayPoints1.add(new GPS(12, 13, "Test1"));
+        expectedWayPoints1.add(new GPS(13, 14, "Test2"));
+        expectedWayPoints1.add(new GPS(14, 15, "Test3"));
+        expectedWayPoints2.add(new GPS(15, 16, "Test3"));
+        expectedWayPoints2.add(new GPS(16, 17, "Test3"));
+        expectedWayPoints2.add(new GPS(17, 18, "Test3"));
+        double expectedLenghtInKm1 = 15;
+        double expectedLenghtInKm2 = 16;
+
+        ITour tour1 = facade.addTour(
+                expectedTourName1,
+                expectedBike1,
+                expectedStartAt1,
+                expectedFinishedAt1,
+                expectedWayPoints1,
+                expectedLenghtInKm1
+        );
+
+        ITour tour2 = facade.addTour(
+                expectedTourName2,
+                expectedBike2,
+                expectedStartAt2,
+                expectedFinishedAt2,
+                expectedWayPoints2,
+                expectedLenghtInKm2
+        );
+
+        ResultActions actions = restViewerMockMvc.perform(get("/api/v1/route/" + tour1.getId()).
+                        contentType(TestUtil.APPLICATION_JSON_UTF8).
+                        with(user(user2Details))
+        ).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void getRoute_RouteDoesNotExits_ErrorNotFound() throws Exception {
+        String expectedTourName1 = "Test1";
+        String expectedTourName2 = "Test2";
+        IBike expectedBike1 = this.bike;
+        IBike expectedBike2 = facade.createBike(
+                "TestBike99",
+                new FrameNumber(5456),
+                new Date(), new Date(),
+                null,
+                facade.getUserBy(new EMail(USER_EMAIL)).get()
+        );
+        Date expectedStartAt1 = new Date();
+        Date expectedStartAt2 = new Date();
+        Date expectedFinishedAt1 = new Date();
+        Date expectedFinishedAt2 = new Date();
+        List<GPS> expectedWayPoints1 = new ArrayList<>();
+        List<GPS> expectedWayPoints2 = new ArrayList<>();
+        expectedWayPoints1.add(new GPS(12, 13, "Test1"));
+        expectedWayPoints1.add(new GPS(13, 14, "Test2"));
+        expectedWayPoints1.add(new GPS(14, 15, "Test3"));
+        expectedWayPoints2.add(new GPS(15, 16, "Test3"));
+        expectedWayPoints2.add(new GPS(16, 17, "Test3"));
+        expectedWayPoints2.add(new GPS(17, 18, "Test3"));
+        double expectedLenghtInKm1 = 15;
+        double expectedLenghtInKm2 = 16;
+
+        ITour tour1 = facade.addTour(
+                expectedTourName1,
+                expectedBike1,
+                expectedStartAt1,
+                expectedFinishedAt1,
+                expectedWayPoints1,
+                expectedLenghtInKm1
+        );
+
+        ITour tour2 = facade.addTour(
+                expectedTourName2,
+                expectedBike2,
+                expectedStartAt2,
+                expectedFinishedAt2,
+                expectedWayPoints2,
+                expectedLenghtInKm2
+        );
+
+        ResultActions actions = restViewerMockMvc.perform(get("/api/v1/route/" + 999999).
+                        contentType(TestUtil.APPLICATION_JSON_UTF8).
+                        with(user(user))
+        ).andExpect(status().isNotFound());
     }
 
     @Test
