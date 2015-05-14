@@ -65,7 +65,7 @@ public class SecurityTest {
     }
 
     @After
-    public void cleanup() {
+    public void teardown() {
         this.userRepository.deleteAll();
     }
 
