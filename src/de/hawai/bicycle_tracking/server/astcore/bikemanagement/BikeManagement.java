@@ -1,14 +1,17 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+
 
 @Component
 public class BikeManagement implements IBikeManagement {
@@ -40,6 +43,12 @@ public class BikeManagement implements IBikeManagement {
 	}
 
 	@Override
+	public void updateBikesMileAge(IBike inBike, double mileAgeInKm) {
+		Bike bike = (Bike) inBike;
+		bike.setMileageInKm(mileAgeInKm);
+		bikeDao.save(bike);
+	}
+
 	public Collection<? extends ISellingLocation> getAllSellingLocations() {
 		return sellingLocationDao.findAll();
 	}

@@ -2,6 +2,8 @@ package de.hawai.bicycle_tracking.server.rest;
 
 import java.text.ParseException;
 
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedException;
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.UpdateTourFailedException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,6 +18,19 @@ public class ErrorHandler {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	public ErrorMessage onNotAuthorized(NotAuthorizedException inNotAuthorized) {
 		return new ErrorMessage(401, "Not Authorized", inNotAuthorized.getMessage());
+	}
+
+	@ExceptionHandler(AddTourFailedException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorMessage onAddTourFailedException(AddTourFailedException inAddTourFailedException) {
+		return new ErrorMessage(500, "Server Error", inAddTourFailedException.getMessage());
+	}
+	@ExceptionHandler(UpdateTourFailedException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorMessage onUpdateTourFailedException(AddTourFailedException inUpdateTourFailedException) {
+		return new ErrorMessage(500, "Server Error", inUpdateTourFailedException.getMessage());
 	}
 
 	@ExceptionHandler(InternalError.class)
