@@ -49,13 +49,13 @@ public class TourManagement implements ITourManagement{
     }
 
     @Override
-    public void updateTour(ITour inTour, String name, IBike bike, Date rodeAt, Date finishedAt, List<GPS> waypoints, double lengthInKm)
+    public void updateTour(ITour inTour, String name, IBike bike, Date startAt, Date finishedAt, List<GPS> waypoints, double lengthInKm)
             throws UpdateTourFailedException {
         try {
             Tour tour = (Tour) inTour;
             tour.setName(name);
             tour.setBike(bike);
-            tour.setStartAt(rodeAt);
+            tour.setStartAt(startAt);
             tour.setFinishedAt(finishedAt);
             tour.updateWay(waypoints, lengthInKm);
             tour.setUpdatedAt(new Date());
