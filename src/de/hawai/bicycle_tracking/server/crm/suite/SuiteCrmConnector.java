@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -30,7 +31,8 @@ import de.hawai.bicycle_tracking.server.crm.suite.token.Token;
 @Component
 public class SuiteCrmConnector {
 
-	private static final String CRM_URI = "http://141.22.29.121/suitecrm/service/v4_1/rest.php";
+	@Value("${suite.url}")
+	private String CRM_URI = "http://141.22.29.121/suitecrm/service/v4_1/rest.php";
 
 	private ObjectMapper mapper;
 
