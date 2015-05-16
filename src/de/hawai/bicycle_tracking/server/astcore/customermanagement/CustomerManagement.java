@@ -18,7 +18,7 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 public class CustomerManagement implements ICustomerManagement {
 
 	@Autowired
-	@Qualifier("beepbeep")
+	@Qualifier("userDAO")
 	private IUserDao userDao;
 
 	@Override
