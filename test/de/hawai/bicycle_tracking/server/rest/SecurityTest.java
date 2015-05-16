@@ -45,7 +45,7 @@ public class SecurityTest {
     @Autowired
     private Filter springSecurityFilterChain;
 
-    @Resource(name = "IUserDao")
+    @Resource(name = "userDAO")
     private IUserDao userRepository;
     
     @Autowired
