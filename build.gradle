@@ -92,7 +92,7 @@ dependencies {
     compile('com.fasterxml.jackson.core:jackson-core:2.5.3')
     compile('org.springframework:spring-beans:4.1.6.RELEASE')
     compile('joda-time:joda-time:2.7')
-    compile('joda-time:joda-time-hibernate:1.4')
+    compile('org.jadira.usertype:usertype.core:3.2.0.GA')
 
     runtime fileTree(dir: 'lib', include: '*.jar')
     testCompile('org.springframework.boot:spring-boot-starter-test:1.1.9.RELEASE')
