@@ -119,8 +119,6 @@ public class UserDaoSuite implements IUserDao {
 		SimpleModule module = new SimpleModule();
 		module.addSerializer(User.class, new UserSerializerSuite());
 		mapper.registerModule(module);
-		
-		mapper.registerModule(module);
 	}
 
 	private <S extends User> S handleFaultyInput(S entity) throws RegistrationException {
