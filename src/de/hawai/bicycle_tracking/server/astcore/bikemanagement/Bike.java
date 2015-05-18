@@ -18,23 +18,18 @@ public class Bike extends AbstractEntity implements IBike {
 	private String type;
 	private FrameNumber frameNumber;
 	private Date purchaseDate;
-	private Date nextMaintenance;
+	private Date nextMaintenanceDate;
 	private ISellingLocation soldLocation;
 	private IUser owner;
-	private double mileageInKm;
 
 	protected Bike(final String inType, final FrameNumber inFrameNumber, final Date inBuyDate, final Date inNextMaintenanceDate,
 			final ISellingLocation inSellingLocation, final IUser inOwner) {
 		type = inType;
 		frameNumber = inFrameNumber;
-		purchaseDate = inBuyDate;
-		nextMaintenance = inNextMaintenanceDate;
+		purchaseDate = inPurchaseDate;
+		nextMaintenanceDate = inNextMaintenanceDate;
 		soldLocation = inSellingLocation;
 		owner = inOwner;
-		mileageInKm = 0.0;
-	}
-
-	protected Bike() {
 	}
 
 	@Column(name = "type", length = 50)
@@ -52,15 +47,15 @@ public class Bike extends AbstractEntity implements IBike {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "buy_date", nullable = false)
 	@Override
-	public Date getPurchaseDate() {
-		return purchaseDate;
+	public Date getBuyDate() {
+		return buyDate;
 	}
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "next_maintenance")
 	@Override
-	public Date getNextMaintenance() {
-		return nextMaintenance;
+	public Date getNextMaintenanceDate() {
+		return nextMaintenanceDate;
 	}
 
 	@ManyToOne(targetEntity = SellingLocation.class)
@@ -81,31 +76,27 @@ public class Bike extends AbstractEntity implements IBike {
 		return mileageInKm;
 	}
 
-	protected void setType(final String inType) {
+	private void setType(final BikeType inType) {
 		type = inType;
 	}
 
-	protected void setFrameNumber(final FrameNumber inFrameNumber) {
+	private void setFrameNumber(final FrameNumber inFrameNumber) {
 		frameNumber = inFrameNumber;
 	}
 
-	protected void setPurchaseDate(final Date inBuyDate) {
-		purchaseDate = inBuyDate;
+	private void setPurchaseDate(final Date inPurchaseDate) {
+		purchaseDate = inPurchaseDate;
 	}
 
-	protected void setNextMaintenance(final Date inNextMaintenance) {
-		nextMaintenance = inNextMaintenance;
+	private void setNextMaintenanceDate(final Date inNextMaintenanceDate) {
+		nextMaintenanceDate = inNextMaintenanceDate;
 	}
 
-	protected void setSoldLocation(final ISellingLocation inSoldLocation) {
+	private void setSoldLocation(final ISellingLocation inSoldLocation) {
 		soldLocation = inSoldLocation;
 	}
 
-	protected void setOwner(final IUser inOwner) {
+	private void setOwner(final IUser inOwner) {
 		owner = inOwner;
-	}
-
-	public void setMileageInKm(double mileageInKm) {
-		this.mileageInKm = mileageInKm;
 	}
 }
