@@ -1,16 +1,18 @@
 package de.hawai.bicycle_tracking.server.astcore.tourmanagement;
 
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
-import de.hawai.bicycle_tracking.server.utility.value.GPS;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
 @Component
 public class TourManagement implements ITourManagement{
@@ -22,7 +24,7 @@ public class TourManagement implements ITourManagement{
     private IBikeManagement bikeManagement;
 
     @Override
-    public Optional<ITour> getTourById(long id) {
+    public Optional<ITour> getTourById(UUID id) {
         return tourDao.getById(id);
     }
 

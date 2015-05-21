@@ -1,12 +1,14 @@
 package de.hawai.bicycle_tracking.server.dto;
 
+import java.util.UUID;
+
 /**
  * Created by torben on 12.05.15.
  */
 public class TourListEntryDTO {
-    public Long id = null;
+    public UUID id = null;
     public String name = null;
-    public Long bikeID = null;
+    public UUID bikeID = null;
     public Double lengthInKm = null;
     public String startAt = null;
     public String finishedAt = null;

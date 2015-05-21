@@ -1,56 +1,61 @@
 package de.hawai.bicycle_tracking.server.rest;
 
+import static de.hawai.bicycle_tracking.server.utility.test.TestUtil.jsonToObject;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultHandler;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
+
 import de.hawai.bicycle_tracking.server.AppConfig;
-        import de.hawai.bicycle_tracking.server.DBConfig;
-        import de.hawai.bicycle_tracking.server.DBFixuresConfig;
-        import de.hawai.bicycle_tracking.server.Main;
-        import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.DBConfig;
+import de.hawai.bicycle_tracking.server.DBFixuresConfig;
+import de.hawai.bicycle_tracking.server.Main;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
-import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedException;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
 import de.hawai.bicycle_tracking.server.dto.TourDTO;
 import de.hawai.bicycle_tracking.server.dto.TourListEntryDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
-        import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
-        import de.hawai.bicycle_tracking.server.security.UserSecurityService;
-        import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
-        import de.hawai.bicycle_tracking.server.utility.value.Address;
-        import de.hawai.bicycle_tracking.server.utility.value.EMail;
-        import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+import de.hawai.bicycle_tracking.server.security.UserSecurityService;
+import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 import de.hawai.bicycle_tracking.server.utility.value.GPS;
-import junit.framework.TestCase;
-import org.junit.Before;
-        import org.junit.Test;
-        import org.junit.runner.RunWith;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.boot.test.IntegrationTest;
-        import org.springframework.boot.test.SpringApplicationConfiguration;
-        import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.context.TestExecutionListeners;
-        import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-        import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-        import org.springframework.test.context.transaction.TransactionConfiguration;
-        import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-        import org.springframework.test.context.web.WebAppConfiguration;
-        import org.springframework.test.web.servlet.MockMvc;
-        import org.springframework.test.web.servlet.MvcResult;
-        import org.springframework.test.web.servlet.ResultActions;
-        import org.springframework.test.web.servlet.ResultHandler;
-        import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-        import org.springframework.transaction.annotation.Transactional;
-        import org.springframework.web.context.WebApplicationContext;
-
-        import java.text.DateFormat;
-        import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static de.hawai.bicycle_tracking.server.utility.test.TestUtil.jsonToObject;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional(noRollbackFor = Exception.class)
@@ -101,7 +106,7 @@ public class TourControllerTest extends TestCase {
     public void addRoute_correctStatement_tourIsSaveAndResponseIsOK() throws Exception {
         String testData = "{" +
             "\"name\": \"RouteXYZ\"," +
-            "\"bikeID\": " + bike.getId() + "," +
+            "\"bikeID\": \"" + bike.getId() + "\"," +
             "\"lengthInKm\": 123.5," +
             "\"startAt\": \"2015-04-25T12:35:55Z\"," +
             "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
@@ -150,7 +155,7 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementNameIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 //"\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+                "\"bikeID\": \"" + UUID.randomUUID() + "\"," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"2015-04-25T12:35:55Z\"," +
                 "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
@@ -590,7 +595,7 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementWrongBikeIdDoesntMatchWithABike_ResponseWithError404() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 50000," +
+                "\"bikeID\": \"" + UUID.randomUUID() + "\"," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"2015-04-25T12:35:55Z\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
@@ -632,7 +637,7 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": " + bike.getId() + "," +
+                "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"2015-04-25T12:35:55Z\"," +
                 "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
@@ -706,7 +711,7 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": " + bike.getId() + "," +
+                "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"2015-04-25T12:35:55Z\"," +
                 "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
@@ -1286,7 +1291,7 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 50000," +
+                "\"bikeID\": \"" + UUID.randomUUID() + "\"," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"2015-04-25T12:35:55Z\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
@@ -1639,7 +1644,7 @@ public class TourControllerTest extends TestCase {
                 expectedLenghtInKm2
         );
 
-        ResultActions actions = restViewerMockMvc.perform(get("/api/v1/route/" + 999999).
+        ResultActions actions = restViewerMockMvc.perform(get("/api/v1/route/" + UUID.randomUUID()).
                         contentType(TestUtil.APPLICATION_JSON_UTF8).
                         with(user(user))
         ).andExpect(status().isNotFound());
@@ -1660,7 +1665,7 @@ public class TourControllerTest extends TestCase {
     @Test
     public void deleteRoute_IncorrectId_ResonseWithError404() throws Exception {
         ResultActions actions = restViewerMockMvc.perform(
-                delete("/api/v1/route/" + 458).
+                delete("/api/v1/route/" + UUID.randomUUID()).
                         contentType(TestUtil.APPLICATION_JSON_UTF8).
                         with(user(user))
         ).andExpect(status().isNotFound());
