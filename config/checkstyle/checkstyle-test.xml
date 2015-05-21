@@ -102,7 +102,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
       <!-- Validates identifiers for method names against the
       supplied expression "((^[a-z][a-zA-Z0-9]*_[a-zA-Z0-9]+_[a-zA-Z0-9]+)|(setup(_[a-zA-Z0-9]+)*)|(teardown(_[a-zA-Z0-9]+)*)|(initTest(_[a-zA-Z0-9]+)*))$". -->
       <metadata name="altname" value="MethodName"/>
-      <property name="format" value="((^[a-z][a-zA-Z0-9]*_[a-zA-Z0-9]+_[a-zA-Z0-9]+)|(setup(_[a-zA-Z0-9]+)*)|(teardown(_[a-zA-Z0-9]+)*)|(initTest(_[a-zA-Z0-9]+)*))$"/>
+      <property name="format" value="((^[a-z][a-zA-Z0-9]*_[a-zA-Z0-9]+_[a-zA-Z0-9]+)|(setup(_[a-zA-Z0-9]+)*)|(teardown(_[a-zA-Z0-9]+)*)|(initTest(_[a-zA-Z0-9]+)*)|(handle))$"/>
       <property name="severity" value="error"/>
     </module>
 

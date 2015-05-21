@@ -75,7 +75,7 @@ public class User extends AbstractEntity implements IUser {
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "birthdate", nullable = false)
+	@Column(name = "birthdate", nullable = true)
 	@Override
 	public Date getBirthdate() {
 		return birthdate;
