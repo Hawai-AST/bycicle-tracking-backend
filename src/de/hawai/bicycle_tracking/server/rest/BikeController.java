@@ -1,5 +1,24 @@
 package de.hawai.bicycle_tracking.server.rest;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.validation.ConstraintViolationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
@@ -11,17 +30,6 @@ import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestExceptio
 import de.hawai.bicycle_tracking.server.security.SessionService;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.ConstraintViolationException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -98,15 +106,15 @@ public class BikeController {
     }
 
     @RequestMapping(value = "/v1/bike/{id}", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<BikeDTO> updateBike(@PathVariable long id, @RequestBody BikeDTO inNew) {
-        IBike old = facade.getBikeById(id);
-        if (old == null) {
+    public ResponseEntity<BikeDTO> updateBike(@PathVariable UUID id, @RequestBody BikeDTO inNew) {
+        Optional<IBike> old = facade.getBikeById(id);
+        if (!old.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         String email = this.sessionService.getCurrentlyLoggedinUser();
         IUser owner = facade.getUserBy(new EMail(email)).get();
-        if (!old.getOwner().equals(owner)) {
+        if (!old.get().getOwner().equals(owner)) {
             throw new InvalidAccessException("This bike does not belong to you.");
         }
 
@@ -120,7 +128,7 @@ public class BikeController {
             throw new MalformedRequestException("Invalid date detected");
         }
 
-        facade.updateBike(old, inNew.getType(), new FrameNumber(inNew.getFrameNumber()), purchaseDate, maintenanceDate, null, owner);
+        facade.updateBike(old.get(), inNew.getType(), new FrameNumber(inNew.getFrameNumber()), purchaseDate, maintenanceDate, null, owner);
         inNew.setId(id);
         return new ResponseEntity<>(inNew, HttpStatus.OK);
     }

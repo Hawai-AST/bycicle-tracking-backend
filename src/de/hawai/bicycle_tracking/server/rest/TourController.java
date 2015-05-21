@@ -1,5 +1,23 @@
 package de.hawai.bicycle_tracking.server.rest;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedException;
@@ -14,16 +32,6 @@ import de.hawai.bicycle_tracking.server.rest.exceptions.NotFoundException;
 import de.hawai.bicycle_tracking.server.security.SessionService;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.GPS;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -69,8 +77,8 @@ public class TourController {
                 throw new MalformedRequestException("Unknown Position Name");
             }
         }
-        IBike bike = facade.getBikeById(inTour.bikeID);
-        if (bike == null){
+        Optional<IBike> bike = facade.getBikeById(inTour.bikeID);
+        if (!bike.isPresent()){
             throw new NotFoundException("BikeId does not exists");
         }
 
@@ -91,7 +99,7 @@ public class TourController {
         try {
             ITour tour = facade.addTour(
                     inTour.name,
-                    bike,
+                    bike.get(),
                     startAt,
                     finishedAt,
                     inTour.waypoints,
@@ -117,12 +125,12 @@ public class TourController {
     @RequestMapping(value = "/v1/route/{id}", method = RequestMethod.PUT,
             consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     @ResponseStatus(HttpStatus.OK)
-    public TourDTO changeRoute(@PathVariable long id, @RequestBody TourDTO inTour) throws AddTourFailedException, UpdateTourFailedException {
+    public TourDTO changeRoute(@PathVariable("id") UUID id, @RequestBody TourDTO inTour) throws AddTourFailedException, UpdateTourFailedException {
 
         TourDTO outTour = new TourDTO();
         if (inTour.name == null){
             throw new MalformedRequestException("Name missing");
-        } else if (id == 0){
+        } else if (id == null){
             throw new MalformedRequestException("Id missing");
         } else if (inTour.bikeID == null){
             throw new MalformedRequestException("BikeId missing");
@@ -159,8 +167,8 @@ public class TourController {
                 throw new MalformedRequestException("Unknown Position Name");
             }
         }
-        IBike bike = facade.getBikeById(inTour.bikeID);
-        if (bike == null){
+        Optional<IBike> bike = facade.getBikeById(inTour.bikeID);
+        if (!bike.isPresent()) {
             throw new NotFoundException("BikeId does not exists");
         }
 
@@ -182,7 +190,7 @@ public class TourController {
             facade.updateTour(
                     tour,
                     inTour.name,
-                    bike,
+                    bike.get(),
                     startAt,
                     finishedAt,
                     inTour.waypoints,
@@ -207,7 +215,7 @@ public class TourController {
     @RequestMapping(value = "/v1/route/{id}", method = RequestMethod.GET,
             consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     @ResponseStatus(HttpStatus.OK)
-    public TourDTO getRoute(@PathVariable long id){
+    public TourDTO getRoute(@PathVariable UUID id){
         IUser user = facade.getUserBy(new EMail(sessionService.getCurrentlyLoggedinUser())).orElse(null);
         if (user == null){
             throw new NotFoundException("LoggedIn User not found");
@@ -265,7 +273,7 @@ public class TourController {
     @RequestMapping(value = "/v1/route/{id}", method = RequestMethod.DELETE,
             consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteRoute(@PathVariable long id) {
+    public void deleteRoute(@PathVariable UUID id) {
         ITour tour = facade.getTourById(id).orElse(null);
         if (tour == null){
             throw new NotFoundException("Bike does not exists");

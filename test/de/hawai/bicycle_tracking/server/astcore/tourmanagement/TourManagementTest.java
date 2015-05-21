@@ -1,23 +1,16 @@
 package de.hawai.bicycle_tracking.server.astcore.tourmanagement;
 
-import de.hawai.bicycle_tracking.server.AppConfig;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.ICustomerManagement;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
-import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
-import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
-import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
-import de.hawai.bicycle_tracking.server.utility.value.GPS;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import junit.framework.TestCase;
-import org.hibernate.exception.ConstraintViolationException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,9 +21,16 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.ICustomerManagement;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
+import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = AppConfig.class)
@@ -241,7 +241,7 @@ public class TourManagementTest extends TestCase {
                 15.0
         );
 
-        long tourId = tour1.getId();
+        UUID tourId = tour1.getId();
         String changedName = "Changed";
         Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
         Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
@@ -272,7 +272,7 @@ public class TourManagementTest extends TestCase {
                 15.0
         );
 
-        long tourId = tour1.getId();
+        UUID tourId = tour1.getId();
         String changedName = "Changed";
         Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
         Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
@@ -303,7 +303,7 @@ public class TourManagementTest extends TestCase {
         );
 
 
-        long tourId = tour1.getId();
+        UUID tourId = tour1.getId();
         String changedName = "Changed";
         Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
         Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
@@ -333,7 +333,7 @@ public class TourManagementTest extends TestCase {
                 15.0
         );
 
-        long tourId = tour1.getId();
+        UUID tourId = tour1.getId();
         String changedName = "Changed";
         Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
         Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
@@ -363,7 +363,7 @@ public class TourManagementTest extends TestCase {
                 15.0
         );
 
-        long tourId = tour1.getId();
+        UUID tourId = tour1.getId();
         String changedName = "Changed";
         Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
         Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
@@ -393,7 +393,7 @@ public class TourManagementTest extends TestCase {
                 15.0
         );
 
-        long tourId = tour1.getId();
+        UUID tourId = tour1.getId();
         String changedName = "Changed";
         Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
         Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);
@@ -423,7 +423,7 @@ public class TourManagementTest extends TestCase {
                 15.0
         );
 
-        long tourId = tour1.getId();
+        UUID tourId = tour1.getId();
         String changedName = "Changed";
         Date changedRodeAt = new Date(System.currentTimeMillis() - 10000);
         Date changedFinishedAt = new Date(System.currentTimeMillis() - 9000);

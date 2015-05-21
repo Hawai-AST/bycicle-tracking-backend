@@ -1,18 +1,20 @@
 package de.hawai.bicycle_tracking.server.dto;
 
+import java.util.UUID;
+
 public class BikeDTO {
-    private long id;
+    private UUID id;
     private long frameNumber;
     private String type;
     private String salesLocation;
     private String purchaseDate;
     private String nextMaintenance;
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

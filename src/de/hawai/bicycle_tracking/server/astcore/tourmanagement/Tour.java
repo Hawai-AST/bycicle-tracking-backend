@@ -1,14 +1,21 @@
 package de.hawai.bicycle_tracking.server.astcore.tourmanagement;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.Bike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.GPS;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "tour")
@@ -138,6 +145,6 @@ public class Tour extends AbstractEntity implements ITour {
 
     @Override
     public int hashCode() {
-        return (int) (getId() ^ (getId() >>> 32));
+        return (int) (getId().hashCode() ^ (getId().hashCode() >>> 32));
     }
 }

@@ -1,19 +1,17 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-import de.hawai.bicycle_tracking.server.AppConfig;
-import de.hawai.bicycle_tracking.server.DBConfig;
-import de.hawai.bicycle_tracking.server.DBFixuresConfig;
-import de.hawai.bicycle_tracking.server.Main;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.ICustomerManagement;
-import de.hawai.bicycle_tracking.server.dto.BikeDTO;
-import de.hawai.bicycle_tracking.server.facade.Facade;
-import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
-import de.hawai.bicycle_tracking.server.security.UserSecurityService;
-import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
-import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
-import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,16 +31,19 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.DBConfig;
+import de.hawai.bicycle_tracking.server.DBFixuresConfig;
+import de.hawai.bicycle_tracking.server.Main;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.dto.BikeDTO;
+import de.hawai.bicycle_tracking.server.facade.Facade;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+import de.hawai.bicycle_tracking.server.security.UserSecurityService;
+import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
@@ -125,7 +126,7 @@ public class BikeControllerTest {
         IBike old = facade.createBike(BIKE_TYPE, new FrameNumber(BIKE_FRAME_NUMBER), dateFormat.parse(BIKE_MAINTENANCE),
                 dateFormat.parse(BIKE_PURCHASE_DATE), null, facade.getUserBy(new EMail(USER_EMAIL)).get());
 
-        long id = facade.getIdOfBike(old);
+        UUID id = facade.getIdOfBike(old);
         BikeDTO newBike = new BikeDTO();
         newBike.setFrameNumber(BIKE_NEW_FRAME_NUMBER);
         newBike.setNextMaintenance(BIKE_MAINTENANCE);
@@ -140,7 +141,8 @@ public class BikeControllerTest {
 
     @Test
     public void updateBike_InvalidBike_NotFound() throws Exception {
-        this.restViewerMockMvc.perform(post("/api/v1/bike/111111")
+    	// this can break randomly, but probably never will ~~
+        this.restViewerMockMvc.perform(post("/api/v1/bike/" + UUID.randomUUID())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(TestUtil.convertObjectToJsonBytes(bike)))
                 .andExpect(status().isNotFound());
@@ -151,7 +153,7 @@ public class BikeControllerTest {
         IBike old = facade.createBike(BIKE_TYPE, new FrameNumber(BIKE_FRAME_NUMBER), dateFormat.parse(BIKE_MAINTENANCE),
                 dateFormat.parse(BIKE_PURCHASE_DATE), null, facade.getUserBy(new EMail(OTHER_USER_EMAIL)).get());
 
-        long id = facade.getIdOfBike(old);
+        UUID id = facade.getIdOfBike(old);
         BikeDTO newBike = new BikeDTO();
         newBike.setFrameNumber(BIKE_NEW_FRAME_NUMBER);
         newBike.setNextMaintenance(BIKE_MAINTENANCE);

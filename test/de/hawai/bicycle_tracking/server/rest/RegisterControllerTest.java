@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import javax.annotation.Resource;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -56,7 +58,7 @@ public class RegisterControllerTest {
 	@Autowired
 	private WebApplicationContext context;
 
-	@Autowired
+	@Resource(name = "IUserDao")
 	private IUserDao userRepository;
 
 	private RegistrationDTO registration;

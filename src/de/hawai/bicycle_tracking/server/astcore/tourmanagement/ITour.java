@@ -1,15 +1,14 @@
 package de.hawai.bicycle_tracking.server.astcore.tourmanagement;
 
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
-import de.hawai.bicycle_tracking.server.utility.Entity;
-import de.hawai.bicycle_tracking.server.utility.value.GPS;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
 public interface ITour {
-    public Long getId();
+    public UUID getId();
     public String getName();
     public IBike getBike();
     public Date getStartAt();

@@ -1,20 +1,21 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement;
 
-import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import java.util.Date;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.Optional;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @Component
 public class CustomerManagement implements ICustomerManagement {
 
-	@Autowired
+	@Resource(name = "IUserDao")
 	private IUserDao userDao;
 
 	@Override

@@ -1,5 +1,15 @@
 package de.hawai.bicycle_tracking.server.facade;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
+
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
@@ -13,14 +23,6 @@ import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 import de.hawai.bicycle_tracking.server.utility.value.GPS;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class Facade {
@@ -68,11 +70,11 @@ public class Facade {
 		return bikeManagement.getAllSellingLocations();
 	}
 
-	public long getIdOfBike(IBike inBike) {
+	public UUID getIdOfBike(IBike inBike) {
 		return bikeManagement.getIdOfBike(inBike);
 	}
 
-	public IBike getBikeById(long inID) {
+	public Optional<IBike> getBikeById(UUID inID) {
 		return bikeManagement.getBikeById(inID);
 	}
 
@@ -89,7 +91,7 @@ public class Facade {
 		customerManagement.updateUser(user, name, firstName, birthday, address);
 	}
 
-	public Optional<ITour> getTourById(long id) {
+	public Optional<ITour> getTourById(UUID id) {
 		return tourManagement.getTourById(id);
 	}
 

@@ -1,15 +1,14 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-import de.hawai.bicycle_tracking.server.AppConfig;
-import de.hawai.bicycle_tracking.server.DBConfig;
-import de.hawai.bicycle_tracking.server.DBFixuresConfig;
-import de.hawai.bicycle_tracking.server.Main;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUserDao;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
-import de.hawai.bicycle_tracking.server.facade.Facade;
-import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
-import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Base64;
+import java.util.Date;
+
+import javax.annotation.Resource;
+import javax.servlet.Filter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -25,14 +24,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.servlet.Filter;
-
-import java.util.Base64;
-import java.util.Date;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.DBConfig;
+import de.hawai.bicycle_tracking.server.DBFixuresConfig;
+import de.hawai.bicycle_tracking.server.Main;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUserDao;
+import de.hawai.bicycle_tracking.server.facade.Facade;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {  Main.class, AppConfig.class, DBConfig.class, DBFixuresConfig.class })
@@ -46,7 +46,7 @@ public class SecurityTest {
     @Autowired
     private Filter springSecurityFilterChain;
 
-    @Autowired
+    @Resource(name = "IUserDao")
     private IUserDao userRepository;
     
     @Autowired

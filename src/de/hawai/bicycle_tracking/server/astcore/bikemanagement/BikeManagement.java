@@ -1,16 +1,17 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
-
-import java.util.Collection;
 
 
 @Component
@@ -54,17 +55,17 @@ public class BikeManagement implements IBikeManagement {
 	}
 
 	@Override
-	public long getIdOfBike(IBike inBike) {
+	public UUID getIdOfBike(IBike inBike) {
 		if (inBike instanceof Bike) {
 			return ((Bike) inBike).getId();
 		} else {
-			return -1;
+			return null;
 		}
 	}
 
 	@Override
-	public IBike getBikeById(long inID) {
-		return bikeDao.findOne(inID);
+	public Optional<IBike> getBikeById(UUID inID) {
+		return bikeDao.getBikeById(inID);
 	}
 
 	@Override

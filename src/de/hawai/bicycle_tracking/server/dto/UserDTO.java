@@ -1,10 +1,12 @@
 package de.hawai.bicycle_tracking.server.dto;
 
+import java.util.UUID;
+
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 
 public class UserDTO {
     private Address address;
-    private int id;
+    private UUID id;
     private String firstName;
     private String name;
     private String gender;
@@ -18,11 +20,11 @@ public class UserDTO {
         this.address = address;
     }
 
-    public int getCustomerid() {
+    public UUID getCustomerid() {
         return id;
     }
 
-    public void setCustomerid(int id) {
+    public void setCustomerid(UUID id) {
         this.id = id;
     }
 

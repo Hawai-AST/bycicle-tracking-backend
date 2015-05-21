@@ -1,39 +1,42 @@
 package de.hawai.bicycle_tracking.server.utility;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @MappedSuperclass
 public abstract class AbstractEntity implements Entity, Serializable {
 	private static final long serialVersionUID = 1L;
-	private Long id;
+	private UUID id;
 	private Integer version;
 
 	public AbstractEntity() {
 		super();
 	}
 
-	public AbstractEntity(Long id, Integer version) {
+	public AbstractEntity(UUID id, Integer version) {
 		this.id = id;
 		this.version = version;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    @Id
 	@Override
-	public Long getId() {
+	public UUID getId() {
 		return this.id;
 	}
 
 	@Override
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

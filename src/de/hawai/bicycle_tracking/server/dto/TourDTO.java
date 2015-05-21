@@ -1,17 +1,14 @@
 package de.hawai.bicycle_tracking.server.dto;
 
+import java.util.List;
+import java.util.UUID;
+
 import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 public class TourDTO {
-    public Long id = null;
+    public UUID id = null;
     public String name = null;
-    public Long bikeID = null;
+    public UUID bikeID = null;
     public Double lengthInKm = null;
     public String startAt = null;
     public String finishedAt = null;
