@@ -2,5 +2,5 @@ server:
   port: 8081
 
 suite:
-  enabled: false
-  url: http://141.22.29.121/suitecrm/service/v4_1/rest.php
+  enabled: true
+  url: http://localhost/suitecrm/service/v4_1/rest.php
