@@ -30,6 +30,8 @@ public class Tour extends AbstractEntity implements ITour {
     private List<GPS> waypoints;
     private double lengthInKm;
 
+    private Tour(){}
+
     protected Tour(String name, IBike bike, Date startAt, Date finishedAt, List<GPS> waypoints, double lengthInKm){
         this.name = name;
         this.bike = bike;
