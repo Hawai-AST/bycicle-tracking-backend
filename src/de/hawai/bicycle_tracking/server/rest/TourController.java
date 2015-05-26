@@ -36,7 +36,7 @@ import de.hawai.bicycle_tracking.server.utility.value.GPS;
 @RestController
 @RequestMapping("/api")
 public class TourController {
-    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     static {
         FORMAT.setLenient(false);
