@@ -1,4 +1,4 @@
-package de.hawai.bicycle_tracking.server.crm.suite.token;
+package de.hawai.bicycle_tracking.server.crm.suite.token.request;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Hex;
+
+import de.hawai.bicycle_tracking.server.crm.suite.token.Token;
 
 
 public class LoginToken implements Token {

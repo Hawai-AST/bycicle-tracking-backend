@@ -19,7 +19,7 @@ public interface IBikeManagement {
 	public ISellingLocation createSellingLocation(Address inAddress, String inName);
 
 	public IBike createBike(BikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
-			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner);
+			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner, String name);
 
 	public ISellingLocation createSellingLocation(Address inAddress, String inName);
 

@@ -1,13 +1,15 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.Period;
 
-@Embeddable
-public class BikeType {
+import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
+
+@Entity
+public class BikeType extends AbstractEntity {
 	
 	private String name;
 	private String description;
@@ -24,7 +26,7 @@ public class BikeType {
 		this.inspectionInterval = inspectionInterval;
 	}
 
-	@Column(name = "bike_type_name", nullable = false, length = 100)
+	@Column(name = "name", nullable = false, length = 100)
 	public String getName() {
 		return name;
 	}
@@ -33,7 +35,7 @@ public class BikeType {
 		this.name = name;
 	}
 
-	@Column(name = "bike_type_description", nullable = false, length = 250)
+	@Column(name = "description", nullable = false, length = 250)
 	public String getDescription() {
 		return description;
 	}
@@ -42,7 +44,7 @@ public class BikeType {
 		this.description = description;
 	}
 
-	@Column(name = "bike_type_inspection_interval")
+	@Column(name = "inspection_interval")
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentPeriodAsString")
 	public Period getInspectionInterval() {
 		return inspectionInterval;
@@ -100,7 +102,8 @@ public class BikeType {
 
 	@Override
 	public String toString() {
-		return "BikeType [name=" + name + ", description=" + description + ", inspectionInterval=" + inspectionInterval + "]";
+		return "BikeType [id=" + getId() + ", name=" + name + ", description=" + description + 
+				", inspectionInterval=" + inspectionInterval + "]";
 	}
 
 }

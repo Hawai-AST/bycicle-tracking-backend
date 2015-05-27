@@ -12,7 +12,7 @@ public class SellingLocation extends AbstractEntity implements ISellingLocation 
 	private Address address;
 	private String name;
 
-	protected SellingLocation(final Address inAddress, final String inName) {
+	public SellingLocation(final Address inAddress, final String inName) {
 		address = inAddress;
 		name = inName;
 	}

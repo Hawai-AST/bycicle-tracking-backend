@@ -6,7 +6,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 public class SerializerHelper {
 	
-	private SerializerHelper() {
+	public SerializerHelper() {
+		super();
 	}
 	
 	public void addAttribute(JsonGenerator jgen, String entryName, String value) throws IOException {

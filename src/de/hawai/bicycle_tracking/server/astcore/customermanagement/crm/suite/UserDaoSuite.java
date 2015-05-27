@@ -20,9 +20,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUserDao;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
 import de.hawai.bicycle_tracking.server.crm.suite.SuiteCrmConnector;
-import de.hawai.bicycle_tracking.server.crm.suite.token.GetEntryListToken;
-import de.hawai.bicycle_tracking.server.crm.suite.token.SetEntryResponseToken;
-import de.hawai.bicycle_tracking.server.crm.suite.token.SetEntryToken;
+import de.hawai.bicycle_tracking.server.crm.suite.token.request.GetEntryListToken;
+import de.hawai.bicycle_tracking.server.crm.suite.token.request.SetEntryToken;
+import de.hawai.bicycle_tracking.server.crm.suite.token.response.SetEntryResponseToken;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
 @Repository("suiteRepository")
@@ -122,14 +122,12 @@ public class UserDaoSuite implements IUserDao {
 	}
 
 	private <S extends User> S handleFaultyInput(S entity) throws RegistrationException {
-		UUID uuidFromREST = entity.getId();
+		UUID uuidFromFrontend = entity.getId();
 		// UUID empty => fill from CRM if email exists
-		Optional<User> userWithId = getByMailAddress(entity.getMailAddress());
-		if (null == uuidFromREST || UUID.fromString("").equals(uuidFromREST)) {
-			if (userWithId.isPresent()) {
-				entity.setId(userWithId.get().getId());
+		Optional<User> userFromSuite = getByMailAddress(entity.getMailAddress());
+		if (null == uuidFromFrontend && userFromSuite.isPresent()) {
+				entity.setId(userFromSuite.get().getId());
 				return entity;
-			}
 		}
 		User userFromCRM = getOne(entity.getId());
 		// Non existent UUID
@@ -137,7 +135,7 @@ public class UserDaoSuite implements IUserDao {
 			throw new RegistrationException("No existing Account with this ID.");
 		}
 		// Existent UUI but EMail not matching
-		if (!uuidFromREST.equals(userFromCRM.getId())) {
+		if (!uuidFromFrontend.equals(userFromCRM.getId())) {
 			throw new RegistrationException("ID for given EMail doesn't match ID in SuiteCRM.");
 		}
 		return entity;

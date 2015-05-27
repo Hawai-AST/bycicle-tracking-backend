@@ -2,8 +2,11 @@ package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -15,26 +18,33 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
 @Entity
 public class Bike extends AbstractEntity implements IBike {
-	private String type;
+	private BikeType type;
 	private FrameNumber frameNumber;
 	private Date purchaseDate;
 	private Date nextMaintenanceDate;
 	private ISellingLocation soldLocation;
 	private IUser owner;
+	private String name;
 
-	protected Bike(final String inType, final FrameNumber inFrameNumber, final Date inBuyDate, final Date inNextMaintenanceDate,
-			final ISellingLocation inSellingLocation, final IUser inOwner) {
+	public Bike(final BikeType inType, final FrameNumber inFrameNumber, final Date inPurchaseDate, final Date inNextMaintenanceDate,
+			final ISellingLocation inSellingLocation, final IUser inOwner, final String inName) {
 		type = inType;
 		frameNumber = inFrameNumber;
 		purchaseDate = inPurchaseDate;
 		nextMaintenanceDate = inNextMaintenanceDate;
 		soldLocation = inSellingLocation;
 		owner = inOwner;
+		name = inName;
+	}
+	
+	private Bike() {
+		super();
 	}
 
-	@Column(name = "type", length = 50)
+	@ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bike_type_id")
 	@Override
-	public String getType() {
+	public BikeType getType() {
 		return type;
 	}
 
@@ -45,10 +55,10 @@ public class Bike extends AbstractEntity implements IBike {
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "buy_date", nullable = false)
+	@Column(name = "purchase_date", nullable = false)
 	@Override
-	public Date getBuyDate() {
-		return buyDate;
+	public Date getPurchaseDate() {
+		return purchaseDate;
 	}
 
 	@Temporal(TemporalType.DATE)
@@ -69,14 +79,13 @@ public class Bike extends AbstractEntity implements IBike {
 	public IUser getOwner() {
 		return this.owner;
 	}
-
-	@Override
-	@Column(name = "mileage")
-	public double getMileageInKm() {
-		return mileageInKm;
+	
+	@Column(name = "name", length = 30, nullable = false)
+	public String getName() {
+		return name;
 	}
 
-	private void setType(final BikeType inType) {
+	public void setType(final BikeType inType) {
 		type = inType;
 	}
 
@@ -96,7 +105,19 @@ public class Bike extends AbstractEntity implements IBike {
 		soldLocation = inSoldLocation;
 	}
 
-	private void setOwner(final IUser inOwner) {
+	public void setOwner(final IUser inOwner) {
 		owner = inOwner;
 	}
+
+	private void setName(String name) {
+		this.name = name;
+	}
+	
+	@Override
+	public String toString() {
+		return "Bike [id=" + getId() + ", type=" + type + ", frameNumber=" + frameNumber +
+				", purchaseDate=" + purchaseDate + ", nextMaintenanceDate="
+				+ nextMaintenanceDate + ", soldLocation=" + soldLocation + ", owner=" + owner + "]";
+	}
+
 }

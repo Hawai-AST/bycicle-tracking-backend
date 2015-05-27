@@ -1,9 +1,10 @@
-package de.hawai.bicycle_tracking.server.crm.suite.token;
+package de.hawai.bicycle_tracking.server.crm.suite.token.response;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.hawai.bicycle_tracking.server.crm.suite.token.Token;
 import de.hawai.bicycle_tracking.server.utility.exception.JsonParseException;
 
 //	 example of returned Json:
@@ -21,7 +22,7 @@ import de.hawai.bicycle_tracking.server.utility.exception.JsonParseException;
 //		  }
 //		}
 
-public class SetEntryResponseToken {
+public class SetEntryResponseToken implements Token {
 	
 	private static final String UUID_REGEX_SUITE = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 	

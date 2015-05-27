@@ -11,12 +11,11 @@ import org.springframework.stereotype.Repository;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 
 @Repository
-public interface IBikeDao extends JpaRepository<Bike, Long> {
-
-    Optional<IBike> getBikeById(UUID id);
-
+public interface IBikeDao extends JpaRepository<Bike, UUID> {
     List<IBike> findByOwner(IUser inCustomer);
 
     @Query("SELECT bike from Bike bike WHERE bike.soldLocation = ?")
     List<IBike> findBySoldLocation(ISellingLocation inSellingLocation);
+    
+    public Bike findOne(UUID id);
 }

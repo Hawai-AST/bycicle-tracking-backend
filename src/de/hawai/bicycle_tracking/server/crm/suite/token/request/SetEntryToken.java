@@ -1,6 +1,8 @@
-package de.hawai.bicycle_tracking.server.crm.suite.token;
+package de.hawai.bicycle_tracking.server.crm.suite.token.request;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
+
+import de.hawai.bicycle_tracking.server.crm.suite.token.Token;
 
 
 public class SetEntryToken implements Token {

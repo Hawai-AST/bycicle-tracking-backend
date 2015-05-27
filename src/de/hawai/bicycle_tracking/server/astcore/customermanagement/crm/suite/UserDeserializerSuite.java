@@ -50,28 +50,26 @@ public class UserDeserializerSuite extends JsonDeserializer<User> {
 		}
 		Date date = null;
 		try {
-			date = new SimpleDateFormat("yyyy-MM-dd").parse(extractTextValueOf(nameValueList, UserSerializationHelperSuite.BIRTHDAY));
+			date = new SimpleDateFormat("yyyy-MM-dd").parse(
+					helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.BIRTHDAY));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		User user = new User(extractTextValueOf(nameValueList, UserSerializationHelperSuite.NAME),
-				extractTextValueOf(nameValueList, UserSerializationHelperSuite.FIRSTNAME),
-				new EMail(extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL)),
+		User user = new User(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.NAME),
+				helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.FIRSTNAME),
+				new EMail(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL)),
 				new Address(
-						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STREET),
+						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STREET),
 						"",
-						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_CITY),
-						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STATE),
-						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_POSTCODE),
-						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_COUNTRY)),
+						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_CITY),
+						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STATE),
+						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_POSTCODE),
+						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_COUNTRY)),
 				date,
-				extractTextValueOf(nameValueList, UserSerializationHelperSuite.PASSWORD),
-				new HawaiAuthority(extractTextValueOf(nameValueList, UserSerializationHelperSuite.AUTHORITY)),
-				UUID.fromString(extractTextValueOf(nameValueList, UserSerializationHelperSuite.UUID)));
+				helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.PASSWORD),
+				new HawaiAuthority(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.AUTHORITY)),
+				UUID.fromString(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.UUID)));
 		return user;
 	}
-
-	private String extractTextValueOf(JsonNode nameValueList, String key) {
-		return nameValueList.get(key).get("value").textValue();
-	}
+	
 }

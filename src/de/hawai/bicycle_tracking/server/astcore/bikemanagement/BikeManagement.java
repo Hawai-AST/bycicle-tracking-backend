@@ -29,8 +29,8 @@ public class BikeManagement implements IBikeManagement {
 
 	@Override
 	public IBike createBike(BikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
-			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner) {
-		return bikeDao.save(new Bike(inType, inFrameNumber, inBuyDate, inNextMaintenanceDate, inSellingLocation, inOwner));
+			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner, String name) {
+		return bikeDao.save(new Bike(inType, inFrameNumber, inBuyDate, inNextMaintenanceDate, inSellingLocation, inOwner, name));
 	}
 
 	@Override

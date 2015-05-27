@@ -9,5 +9,7 @@ public class SuiteCrmMethods {
 	public static final String LOGIN = "login";
 
 	public static final String SET_ENTRY = "set_entry";
+	
+	public static final String GET_RELATIONSHIPS = "get_relationships";
 
 }

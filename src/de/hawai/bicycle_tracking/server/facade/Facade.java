@@ -15,10 +15,6 @@ import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.ICustomerManagement;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
-import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedException;
-import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
-import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITourManagement;
-import de.hawai.bicycle_tracking.server.astcore.tourmanagement.UpdateTourFailedException;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
@@ -32,9 +28,6 @@ public class Facade {
 
 	@Autowired
 	private IBikeManagement bikeManagement;
-
-	@Autowired
-	private ITourManagement tourManagement;
 
 	private Facade() {
 		super();
@@ -53,9 +46,9 @@ public class Facade {
 		return this.bikeManagement.findBikesBySoldLocation(inLocation);
 	}
 
-	public IBike createBike(String inType, FrameNumber inFrameNumber, Date inBuyDate,
-			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner) {
-		return this.bikeManagement.createBike(inType, inFrameNumber, inBuyDate, inNextMaintenanceDate, inSellingLocation, inOwner);
+	public IBike createBike(BikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
+			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner, String name) {
+		return this.bikeManagement.createBike(inType, inFrameNumber, inBuyDate, inNextMaintenanceDate, inSellingLocation, inOwner, name);
 	}
 
 	public List<? extends IBike> findByOwner(IUser inOwner) {

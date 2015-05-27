@@ -103,7 +103,7 @@ public class User extends AbstractEntity implements IUser {
 		this.authority = inAuthority;
 	}
 
-	protected void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 

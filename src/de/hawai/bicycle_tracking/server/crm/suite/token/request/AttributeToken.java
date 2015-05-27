@@ -1,6 +1,8 @@
-package de.hawai.bicycle_tracking.server.crm.suite.token;
+package de.hawai.bicycle_tracking.server.crm.suite.token.request;
 
-public class AttributeToken {
+import de.hawai.bicycle_tracking.server.crm.suite.token.Token;
+
+public class AttributeToken implements Token {
 	
     private final String name;
     private final String value;

@@ -1,7 +1,9 @@
-package de.hawai.bicycle_tracking.server.crm.suite.token;
+package de.hawai.bicycle_tracking.server.crm.suite.token.request;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hawai.bicycle_tracking.server.crm.suite.token.Token;
 
 public class GetEntryListToken implements Token {
 

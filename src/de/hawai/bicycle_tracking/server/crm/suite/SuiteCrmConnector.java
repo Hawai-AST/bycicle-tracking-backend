@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -23,10 +24,11 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.hawai.bicycle_tracking.server.crm.suite.token.GetEntryListToken;
-import de.hawai.bicycle_tracking.server.crm.suite.token.LoginToken;
-import de.hawai.bicycle_tracking.server.crm.suite.token.SetEntryToken;
 import de.hawai.bicycle_tracking.server.crm.suite.token.Token;
+import de.hawai.bicycle_tracking.server.crm.suite.token.request.GetEntryListToken;
+import de.hawai.bicycle_tracking.server.crm.suite.token.request.GetRelationshipsToken;
+import de.hawai.bicycle_tracking.server.crm.suite.token.request.LoginToken;
+import de.hawai.bicycle_tracking.server.crm.suite.token.request.SetEntryToken;
 
 @Component
 public class SuiteCrmConnector {
@@ -60,6 +62,7 @@ public class SuiteCrmConnector {
 		List<HttpMessageConverter<?>> list = new ArrayList<HttpMessageConverter<?>>();
 		list.add(new FormHttpMessageConverter());
 		list.add(new MappingJackson2HttpMessageConverter());
+		list.add(new StringHttpMessageConverter());
 		restTemplate.setMessageConverters(list);
 
 		request.add("input_type", "JSON");
@@ -103,6 +106,13 @@ public class SuiteCrmConnector {
 		request.add(METHOD, SuiteCrmMethods.SET_ENTRY);
 		addTokenToRequest(setEntryToken, request);
         return postToCrm(request, responseType);
+    }
+    
+    public Object postGetRelationships(GetRelationshipsToken getRelationshipsToken, Class<?> responseType) {
+    	MultiValueMap<String, String> request = new LinkedMultiValueMap<String, String>();
+		request.add(METHOD, SuiteCrmMethods.GET_RELATIONSHIPS);
+		addTokenToRequest(getRelationshipsToken, request);
+		return postToCrm(request, responseType);
     }
 
 	private void addTokenToRequest(Token token, MultiValueMap<String, String> request) {

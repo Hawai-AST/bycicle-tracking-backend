@@ -61,7 +61,7 @@ public class BikeIntegrationTest {
 	@Test
 	public void findBySoldLocation_LocationWithExistingBike_BikeIsFound() {
 		Bike bike = new Bike(new BikeType("Stadt", "", Period.months(1)), new FrameNumber(101),
-				new Date(1), new Date(), sellingLocation, user);
+				new Date(1), new Date(), sellingLocation, user, "My Bike");
 		this.bikeRepository.save(bike);
 
 		Assert.assertEquals(this.bikeRepository.findBySoldLocation(sellingLocation).size(), 1);
@@ -70,7 +70,7 @@ public class BikeIntegrationTest {
 	@Test
 	public void findByOwner_OwnerWithExistingBike_BikeIsFound() {
 		Bike bike = new Bike(new BikeType("Cross", "", Period.months(1)),
-				new FrameNumber(101), new Date(1), new Date(), sellingLocation, user);
+				new FrameNumber(101), new Date(1), new Date(), sellingLocation, user, "My Bike");
 		this.bikeRepository.save(bike);
 
 		Assert.assertEquals(this.bikeRepository.findByOwner(user).size(), 1);
