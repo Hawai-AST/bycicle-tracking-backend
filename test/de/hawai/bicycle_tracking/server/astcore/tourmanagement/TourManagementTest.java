@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import junit.framework.TestCase;
 
+import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +23,10 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.BikeType;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeTypeDao;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.ICustomerManagement;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
@@ -40,7 +43,9 @@ import de.hawai.bicycle_tracking.server.utility.value.GPS;
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class TourManagementTest extends TestCase {
 
-    @Autowired
+    private static final String BIKE_NAME = "mae byke";
+
+	@Autowired
     private ITourManagement tourManagement;
 
     @Autowired
@@ -48,15 +53,24 @@ public class TourManagementTest extends TestCase {
 
     @Autowired
     private IBikeManagement bikeManagement;
+    
+    @Autowired
+    private IBikeTypeDao bikeTypeRepository;
 
     private IUser user1;
     private IUser user2;
     private IBike bike1;
     private IBike bike2;
     private List<GPS> waypoints;
+	private BikeType bikeType1;
+	private BikeType bikeType2;
     
     @Before
     public void setup(){
+    	
+    	bikeType1 = bikeTypeRepository.save(new BikeType("City Bike", "for the city", Period.weeks(4)));
+    	bikeType2 = bikeTypeRepository.save(new BikeType("Cross Bike", "for the cross", Period.weeks(2)));
+    	
          user1 = customerManagement.registerUser(
                  "Mustermann",
                  "Max",
@@ -78,21 +92,23 @@ public class TourManagementTest extends TestCase {
         );
 
         bike2 = bikeManagement.createBike(
-                "TestType",
+                bikeType1,
                 new FrameNumber(1234),
                 new Date(),
                 new Date(),
                 null,
-                user2
+                user2,
+                BIKE_NAME
         );
 
         bike1 = bikeManagement.createBike(
-                "TestType2",
+                bikeType2,
                 new FrameNumber(4321),
                 new Date(),
                 new Date(),
                 null,
-                user1
+                user1,
+                BIKE_NAME
         );
 
         waypoints = new ArrayList<>();

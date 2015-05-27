@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,6 +23,7 @@ public class Bike extends AbstractEntity implements IBike {
 	private Date nextMaintenanceDate;
 	private ISellingLocation soldLocation;
 	private IUser owner;
+	private double mileageInKm;
 	private String name;
 
 	public Bike(final BikeType inType, final FrameNumber inFrameNumber, final Date inPurchaseDate, final Date inNextMaintenanceDate,
@@ -34,6 +34,7 @@ public class Bike extends AbstractEntity implements IBike {
 		nextMaintenanceDate = inNextMaintenanceDate;
 		soldLocation = inSellingLocation;
 		owner = inOwner;
+		mileageInKm = 0.0;
 		name = inName;
 	}
 	
@@ -80,6 +81,13 @@ public class Bike extends AbstractEntity implements IBike {
 		return this.owner;
 	}
 	
+	@Override
+	@Column(name = "mileage")
+	public double getMileageInKm() {
+		return mileageInKm;
+	}
+	
+	@Override
 	@Column(name = "name", length = 30, nullable = false)
 	public String getName() {
 		return name;
@@ -89,27 +97,31 @@ public class Bike extends AbstractEntity implements IBike {
 		type = inType;
 	}
 
-	private void setFrameNumber(final FrameNumber inFrameNumber) {
+	protected void setFrameNumber(final FrameNumber inFrameNumber) {
 		frameNumber = inFrameNumber;
 	}
 
-	private void setPurchaseDate(final Date inPurchaseDate) {
+	protected void setPurchaseDate(final Date inPurchaseDate) {
 		purchaseDate = inPurchaseDate;
 	}
 
-	private void setNextMaintenanceDate(final Date inNextMaintenanceDate) {
+	protected void setNextMaintenanceDate(final Date inNextMaintenanceDate) {
 		nextMaintenanceDate = inNextMaintenanceDate;
 	}
 
-	private void setSoldLocation(final ISellingLocation inSoldLocation) {
+	protected void setSoldLocation(final ISellingLocation inSoldLocation) {
 		soldLocation = inSoldLocation;
 	}
 
 	public void setOwner(final IUser inOwner) {
 		owner = inOwner;
 	}
+	
+	public void setMileageInKm(double mileageInKm) {
+		this.mileageInKm = mileageInKm;
+	}
 
-	private void setName(String name) {
+	protected void setName(String name) {
 		this.name = name;
 	}
 	

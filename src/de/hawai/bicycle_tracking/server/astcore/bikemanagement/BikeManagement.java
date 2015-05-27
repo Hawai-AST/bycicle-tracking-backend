@@ -28,9 +28,9 @@ public class BikeManagement implements IBikeManagement {
 	}
 
 	@Override
-	public IBike createBike(BikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
+	public IBike createBike(BikeType inType, FrameNumber inFrameNumber, Date inPurchaseDate,
 			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner, String name) {
-		return bikeDao.save(new Bike(inType, inFrameNumber, inBuyDate, inNextMaintenanceDate, inSellingLocation, inOwner, name));
+		return bikeDao.save(new Bike(inType, inFrameNumber, inPurchaseDate, inNextMaintenanceDate, inSellingLocation, inOwner, name));
 	}
 
 	@Override
@@ -65,19 +65,20 @@ public class BikeManagement implements IBikeManagement {
 
 	@Override
 	public Optional<IBike> getBikeById(UUID inID) {
-		return bikeDao.getBikeById(inID);
+		return Optional.ofNullable(bikeDao.findOne(inID));
 	}
 
 	@Override
-	public void updateBike(IBike inBike, String inType, FrameNumber inFrameNumber, Date inBuyDate,
-						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner) {
+	public void updateBike(IBike inBike, BikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
+						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner, String inName) {
 		Bike old = (Bike) inBike;
 		old.setPurchaseDate(inBuyDate);
 		old.setFrameNumber(inFrameNumber);
-		old.setNextMaintenance(inNextMaintenanceData);
+		old.setNextMaintenanceDate(inNextMaintenanceData);
 		old.setType(inType);
 		old.setOwner(inOwner);
 		old.setSoldLocation(inSellingLocation);
+		old.setName(inName);
 		bikeDao.save(old);
 	}
 }

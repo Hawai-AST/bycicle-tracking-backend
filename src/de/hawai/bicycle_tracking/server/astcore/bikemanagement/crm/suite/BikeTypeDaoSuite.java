@@ -1,6 +1,7 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement.crm.suite;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,7 +36,7 @@ public class BikeTypeDaoSuite implements IBikeTypeDao {
 	}
 
 	@Override
-	public List<BikeType> findAll(Iterable<Long> ids) {
+	public List<BikeType> findAll(Iterable<UUID> ids) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -65,7 +66,7 @@ public class BikeTypeDaoSuite implements IBikeTypeDao {
 	}
 
 	@Override
-	public BikeType getOne(Long id) {
+	public BikeType getOne(UUID id) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -80,12 +81,12 @@ public class BikeTypeDaoSuite implements IBikeTypeDao {
 	}
 
 	@Override
-	public BikeType findOne(Long id) {
+	public BikeType findOne(UUID id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean exists(Long id) {
+	public boolean exists(UUID id) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -95,7 +96,7 @@ public class BikeTypeDaoSuite implements IBikeTypeDao {
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void delete(UUID id) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import junit.framework.TestCase;
 
+import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,9 @@ import de.hawai.bicycle_tracking.server.AppConfig;
 import de.hawai.bicycle_tracking.server.DBConfig;
 import de.hawai.bicycle_tracking.server.DBFixuresConfig;
 import de.hawai.bicycle_tracking.server.Main;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.BikeType;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeTypeDao;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
 import de.hawai.bicycle_tracking.server.dto.TourDTO;
@@ -68,7 +71,9 @@ import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
 public class TourControllerTest extends TestCase {
 
-    private static final String USER_EMAIL = "peter@buttington.com";
+    private static final String BIKE_NAME = "expected bike";
+
+	private static final String USER_EMAIL = "peter@buttington.com";
 
     private static final String NEW_PASSWORD = "butts";
     private static final String NEW_NAME = "Poopy";
@@ -77,12 +82,17 @@ public class TourControllerTest extends TestCase {
     private static final Address NEW_ADDRESS = new Address("bb", "dd", "aa", "zz", "dd", "awwsd");
 
     private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    
+    private BikeType bikeType;
 
     @Autowired
     private WebApplicationContext context;
 
     @Autowired
     private UserSecurityService authenticationService;
+    
+    @Autowired
+    private IBikeTypeDao bikeTypeRepository;
 
     @Autowired
     private Facade facade;
@@ -97,9 +107,12 @@ public class TourControllerTest extends TestCase {
         this.restViewerMockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         facade.registerUser("Buttington", "Peter", new EMail(USER_EMAIL), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
                 new Date(1), "poop", HawaiAuthority.USER);
+        
+        bikeType = bikeTypeRepository.save(new BikeType("City Bike", "for the city", Period.weeks(4)));
 
         this.user = authenticationService.loadUserByUsername(USER_EMAIL);
-        bike = facade.createBike("aaa", new FrameNumber(123), new Date(), new Date(), null, facade.getUserBy(new EMail(USER_EMAIL)).get());
+        bike = facade.createBike(bikeType, new FrameNumber(123), new Date(), new Date(), null,
+        		facade.getUserBy(new EMail(USER_EMAIL)).get(), BIKE_NAME);
     }
 
     @Test
@@ -1327,11 +1340,12 @@ public class TourControllerTest extends TestCase {
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
         IBike expectedBike2 = facade.createBike(
-                "TestBike99",
+                bikeType,
                 new FrameNumber(5456),
                 new Date(), new Date(),
                 null,
-                facade.getUserBy(new EMail(USER_EMAIL)).get()
+                facade.getUserBy(new EMail(USER_EMAIL)).get(),
+                BIKE_NAME
         );
         Date expectedStartAt1 = new Date();
         Date expectedStartAt2 = new Date();
@@ -1414,11 +1428,12 @@ public class TourControllerTest extends TestCase {
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
         IBike expectedBike2 = facade.createBike(
-                "TestBike99",
+                bikeType,
                 new FrameNumber(5456),
                 new Date(), new Date(),
                 null,
-                facade.getUserBy(new EMail(USER_EMAIL)).get()
+                facade.getUserBy(new EMail(USER_EMAIL)).get(),
+                BIKE_NAME
         );
         Date expectedStartAt1 = new Date();
         Date expectedStartAt2 = new Date();
@@ -1474,11 +1489,12 @@ public class TourControllerTest extends TestCase {
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
         IBike expectedBike2 = facade.createBike(
-                "TestBike99",
+                bikeType,
                 new FrameNumber(5456),
                 new Date(), new Date(),
                 null,
-                facade.getUserBy(new EMail(USER_EMAIL)).get()
+                facade.getUserBy(new EMail(USER_EMAIL)).get(),
+                BIKE_NAME
         );
         Date expectedStartAt1 = new Date();
         Date expectedStartAt2 = new Date();
@@ -1554,11 +1570,12 @@ public class TourControllerTest extends TestCase {
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
         IBike expectedBike2 = facade.createBike(
-                "TestBike99",
+                bikeType,
                 new FrameNumber(5456),
                 new Date(), new Date(),
                 null,
-                facade.getUserBy(new EMail(USER_EMAIL)).get()
+                facade.getUserBy(new EMail(USER_EMAIL)).get(),
+                BIKE_NAME
         );
         Date expectedStartAt1 = new Date();
         Date expectedStartAt2 = new Date();
@@ -1605,11 +1622,12 @@ public class TourControllerTest extends TestCase {
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
         IBike expectedBike2 = facade.createBike(
-                "TestBike99",
+                bikeType,
                 new FrameNumber(5456),
                 new Date(), new Date(),
                 null,
-                facade.getUserBy(new EMail(USER_EMAIL)).get()
+                facade.getUserBy(new EMail(USER_EMAIL)).get(),
+                BIKE_NAME
         );
         Date expectedStartAt1 = new Date();
         Date expectedStartAt2 = new Date();

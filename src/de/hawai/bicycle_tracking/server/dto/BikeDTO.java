@@ -2,10 +2,13 @@ package de.hawai.bicycle_tracking.server.dto;
 
 import java.util.UUID;
 
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.BikeType;
+
 public class BikeDTO {
     private UUID id;
+    private String name;
     private long frameNumber;
-    private String type;
+    private BikeType type;
     private String salesLocation;
     private String purchaseDate;
     private String nextMaintenance;
@@ -26,11 +29,11 @@ public class BikeDTO {
         this.frameNumber = frameNumber;
     }
 
-    public String getType() {
+    public BikeType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(BikeType type) {
         this.type = type;
     }
 
@@ -57,4 +60,12 @@ public class BikeDTO {
     public void setNextMaintenance(String nextMaintenance) {
         this.nextMaintenance = nextMaintenance;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

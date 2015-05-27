@@ -10,11 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.BikeType;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.ICustomerManagement;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedException;
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITourManagement;
+import de.hawai.bicycle_tracking.server.astcore.tourmanagement.UpdateTourFailedException;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
@@ -28,6 +33,9 @@ public class Facade {
 
 	@Autowired
 	private IBikeManagement bikeManagement;
+	
+	@Autowired
+	private ITourManagement tourManagement;
 
 	private Facade() {
 		super();
@@ -71,9 +79,9 @@ public class Facade {
 		return bikeManagement.getBikeById(inID);
 	}
 
-	public void updateBike(IBike inBike, String inType, FrameNumber inFrameNumber, Date inBuyDate,
-						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner) {
-		bikeManagement.updateBike(inBike, inType, inFrameNumber, inBuyDate, inNextMaintenanceData, inSellingLocation, inOwner);
+	public void updateBike(IBike inBike, BikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
+						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner, String inName) {
+		bikeManagement.updateBike(inBike, inType, inFrameNumber, inBuyDate, inNextMaintenanceData, inSellingLocation, inOwner, inName);
 	}
 
 	public void updatePassword(IUser user, String password) {

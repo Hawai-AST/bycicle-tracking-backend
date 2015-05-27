@@ -15,6 +15,7 @@ public class TestUtil {
 	public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		System.err.println(mapper.writeValueAsString(object) + "\n");
 		return mapper.writeValueAsBytes(object);
 	}
 	public static <E extends Object> E jsonToObject(Class<E> inClass, String json){
