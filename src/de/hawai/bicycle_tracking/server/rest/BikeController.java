@@ -1,6 +1,7 @@
 package de.hawai.bicycle_tracking.server.rest;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -18,12 +19,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.BikeType;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeType;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeTypeDao;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.dto.BikeDTO;
+import de.hawai.bicycle_tracking.server.dto.BikeTypeDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidAccessException;
@@ -49,10 +56,21 @@ public class BikeController {
 
 	@RequestMapping(value = "/v1/biketypes", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
 	public BikeTypesResponse getBikeTypes() {
-		List<BikeType> bikeTypes = bikeTypeRepository.findAll();
+		List<? extends IBikeType> bikeTypes =  bikeTypeRepository.findAll();
 		BikeTypesResponse response = new BikeTypesResponse();
 		response.setAmount(bikeTypes.size());
-		response.setBikeTypes(bikeTypes);
+		List<BikeTypeDTO> bikeTypeDTOs = new ArrayList<>();
+		for (IBikeType bikeType : bikeTypes) {
+			bikeTypeDTOs.add(new BikeTypeDTO(bikeType));
+		}
+		response.setBikeTypes(bikeTypeDTOs);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		try {
+			System.err.println(mapper.writeValueAsString(bikeTypeDTOs));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		return response;
 	}
 
@@ -154,7 +172,7 @@ public class BikeController {
 
 	private static class BikeTypesResponse {
 		private int amount;
-		private List<BikeType> bikeTypes;
+		private List<BikeTypeDTO> bikeTypes;
 
 		public int getAmount() {
 			return amount;
@@ -164,11 +182,11 @@ public class BikeController {
 			this.amount = amount;
 		}
 
-		public List<BikeType> getBikeTypes() {
+		public List<BikeTypeDTO> getBikeTypes() {
 			return bikeTypes;
 		}
 
-		public void setBikeTypes(List<BikeType> bikeTypes) {
+		public void setBikeTypes(List<BikeTypeDTO> bikeTypes) {
 			this.bikeTypes = bikeTypes;
 		}
 	}
