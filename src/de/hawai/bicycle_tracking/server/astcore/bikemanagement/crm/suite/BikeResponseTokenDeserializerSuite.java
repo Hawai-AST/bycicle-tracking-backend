@@ -12,6 +12,7 @@ import de.hawai.bicycle_tracking.server.astcore.bikemanagement.Bike;
 import de.hawai.bicycle_tracking.server.crm.suite.JsonParserHelper;
 import de.hawai.bicycle_tracking.server.crm.suite.token.request.EntryListToken;
 import de.hawai.bicycle_tracking.server.crm.suite.token.response.GetEntryListResponseToken;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
 public class BikeResponseTokenDeserializerSuite {
@@ -31,10 +32,9 @@ public class BikeResponseTokenDeserializerSuite {
 			Date purchaseDate = null;
 			Date nextMaintenanceDate = null;
 			try {
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				purchaseDate = simpleDateFormat.parse(
+				purchaseDate = DateFormatUtil.DEFAULT_FORMAT.parse(
 						helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.PURCHASE_DATE));
-				nextMaintenanceDate = simpleDateFormat.parse(
+				nextMaintenanceDate = DateFormatUtil.DEFAULT_FORMAT.parse(
 						helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.NEXT_MAINTENANCE_DATE));
 			} catch (ParseException e) {
 				e.printStackTrace();

@@ -30,13 +30,14 @@ import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.InvalidAccessException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestException;
 import de.hawai.bicycle_tracking.server.security.SessionService;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
 @RestController
 @RequestMapping("/api")
 public class BikeController {
-    private final DateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateFormat mDateFormat = DateFormatUtil.DEFAULT_FORMAT;
 
     @Autowired
     private Facade facade;

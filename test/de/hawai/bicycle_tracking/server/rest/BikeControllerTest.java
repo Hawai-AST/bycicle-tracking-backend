@@ -43,6 +43,7 @@ import de.hawai.bicycle_tracking.server.dto.BikeDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.security.UserSecurityService;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -69,7 +70,7 @@ public class BikeControllerTest {
     private BikeType bikeNewType;
     private static final int BIKE_NEW_FRAME_NUMBER = 2;
 
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateFormat dateFormat = DateFormatUtil.DEFAULT_FORMAT;
 
     @Autowired
     private WebApplicationContext context;

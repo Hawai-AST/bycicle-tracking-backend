@@ -54,6 +54,7 @@ import de.hawai.bicycle_tracking.server.dto.TourListEntryDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.security.UserSecurityService;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -81,7 +82,7 @@ public class TourControllerTest extends TestCase {
     private static final String NEW_BIRTHDAY = "1999-01-01";
     private static final Address NEW_ADDRESS = new Address("bb", "dd", "aa", "zz", "dd", "awwsd");
 
-    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    private static final DateFormat FORMAT = DateFormatUtil.TOUR_FORMAT;
     
     private BikeType bikeType;
 

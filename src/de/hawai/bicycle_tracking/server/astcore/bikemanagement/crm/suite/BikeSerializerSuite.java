@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.Bike;
 import de.hawai.bicycle_tracking.server.crm.suite.SerializerHelper;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 
 public class BikeSerializerSuite extends JsonSerializer<Bike> {
 	
@@ -36,13 +37,12 @@ public class BikeSerializerSuite extends JsonSerializer<Bike> {
 					String.valueOf(
 							bike.getFrameNumber().getNumber()));
 		}
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		if (null != bike.getNextMaintenanceDate()) {
 			helper.addAttribute(jgen, BikeSerializationHelperSuite.NEXT_MAINTENANCE_DATE,
-					dateFormat.format(bike.getNextMaintenanceDate()));
+					DateFormatUtil.DEFAULT_FORMAT.format(bike.getNextMaintenanceDate()));
 		}
 		if (null != bike.getPurchaseDate()) {
-			helper.addAttribute(jgen, BikeSerializationHelperSuite.PURCHASE_DATE, dateFormat.format(bike.getPurchaseDate()));
+			helper.addAttribute(jgen, BikeSerializationHelperSuite.PURCHASE_DATE, DateFormatUtil.DEFAULT_FORMAT.format(bike.getPurchaseDate()));
 		}
 		if (null != bike.getOwner() && null != bike.getOwner().getId()) {
 			helper.addAttribute(jgen, BikeSerializationHelperSuite.OWNER, bike.getOwner().getId().toString());
