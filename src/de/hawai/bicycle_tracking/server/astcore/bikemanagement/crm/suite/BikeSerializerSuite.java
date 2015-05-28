@@ -1,7 +1,6 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement.crm.suite;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,16 +14,16 @@ import de.hawai.bicycle_tracking.server.crm.suite.SerializerHelper;
 import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 
 public class BikeSerializerSuite extends JsonSerializer<Bike> {
-	
+
 	@Autowired
 	private SerializerHelper helper;
 
 	@Override
 	public void serialize(Bike bike, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
-		
+
 		SerializerHelper helper = new SerializerHelper();
 		jgen.writeStartObject();
-		
+
 		if (null != bike.getId()) {
 			helper.addAttribute(jgen, BikeSerializationHelperSuite.UUID, bike.getId().toString());
 		}
@@ -42,20 +41,22 @@ public class BikeSerializerSuite extends JsonSerializer<Bike> {
 					DateFormatUtil.DEFAULT_FORMAT.format(bike.getNextMaintenanceDate()));
 		}
 		if (null != bike.getPurchaseDate()) {
-			helper.addAttribute(jgen, BikeSerializationHelperSuite.PURCHASE_DATE, DateFormatUtil.DEFAULT_FORMAT.format(bike.getPurchaseDate()));
+			helper.addAttribute(jgen,
+					BikeSerializationHelperSuite.PURCHASE_DATE,
+					DateFormatUtil.DEFAULT_FORMAT.format(bike.getPurchaseDate()));
 		}
 		if (null != bike.getOwner() && null != bike.getOwner().getId()) {
 			helper.addAttribute(jgen, BikeSerializationHelperSuite.OWNER, bike.getOwner().getId().toString());
 		}
-		
+
 		if (null != bike.getType()) {
 			helper.addAttribute(jgen,
 					BikeSerializationHelperSuite.BIKE_TYPE,
 					bike.getType().getId().toString());
 		}
-		
-//		helper.addAttribute(jgen, BikeSerializationHelperSuite.MILEAGE_IN_KM, bike.get);
-		
+
+		//		helper.addAttribute(jgen, BikeSerializationHelperSuite.MILEAGE_IN_KM, bike.get);
+
 		jgen.writeEndObject();
 	}
 
