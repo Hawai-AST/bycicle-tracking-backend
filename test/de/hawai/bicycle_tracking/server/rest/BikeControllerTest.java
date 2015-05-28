@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -54,128 +53,126 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 @WebAppConfiguration
 @IntegrationTest
 @TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
+		DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class})
 @Transactional(noRollbackFor = Exception.class)
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class BikeControllerTest {
-    private static final String USER_EMAIL = "peter@buttingtome.com";
-    private static final String OTHER_USER_EMAIL = "peter2@buttingtome.com";
+	private static final String USER_EMAIL = "peter@buttingtome.com";
+	private static final String OTHER_USER_EMAIL = "peter2@buttingtome.com";
 
-    private static final String BIKE_NAME = "mae byke";
-    private static final int BIKE_FRAME_NUMBER = 1;
-    private BikeType bikeType;
-    private static final String BIKE_MAINTENANCE = "1999-01-01";
-    private static final String BIKE_PURCHASE_DATE = "1990-01-01";
+	private static final String BIKE_NAME = "mae byke";
+	private static final int BIKE_FRAME_NUMBER = 1;
+	private BikeType bikeType;
+	private static final String BIKE_MAINTENANCE = "1999-01-01";
+	private static final String BIKE_PURCHASE_DATE = "1990-01-01";
 
-    private BikeType bikeNewType;
-    private static final int BIKE_NEW_FRAME_NUMBER = 2;
+	private BikeType bikeNewType;
+	private static final int BIKE_NEW_FRAME_NUMBER = 2;
 
-    private final DateFormat dateFormat = DateFormatUtil.DEFAULT_FORMAT;
+	private final DateFormat dateFormat = DateFormatUtil.DEFAULT_FORMAT;
 
-    @Autowired
-    private WebApplicationContext context;
+	@Autowired
+	private WebApplicationContext context;
 
-    @Autowired
-    private UserSecurityService authenticationService;
-    
-    @Autowired
-    private IBikeTypeDao bikeTypeRepository;
+	@Autowired
+	private UserSecurityService authenticationService;
 
-    @Autowired
-    private Facade facade;
+	@Autowired
+	private IBikeTypeDao bikeTypeRepository;
 
-    private MockMvc restViewerMockMvc;
+	@Autowired
+	private Facade facade;
 
-    private BikeDTO bike;
+	private MockMvc restViewerMockMvc;
 
-    private UserDetails user;
+	private BikeDTO bike;
 
-    @Before
-    public void setup() {
-        this.restViewerMockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-        facade.registerUser("Buttington", "Peter", new EMail(USER_EMAIL), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
-                new Date(1), "poop", HawaiAuthority.USER);
+	private UserDetails user;
 
-        facade.registerUser("Buttington", "Peter2", new EMail(OTHER_USER_EMAIL), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
-                new Date(1), "poop", HawaiAuthority.USER);
-        
-        bikeType = bikeTypeRepository.save(new BikeType("City Bike", "for the city", Period.weeks(4)));
-        bikeNewType = bikeTypeRepository.save(new BikeType("City Cross", "for the cross", Period.weeks(2)));
+	@Before
+	public void setup() {
+		this.restViewerMockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+		facade.registerUser("Buttington", "Peter", new EMail(USER_EMAIL), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
+				new Date(1), "poop", HawaiAuthority.USER);
 
-        System.err.println(bikeType + "\n");
-        this.bike = new BikeDTO();
-        this.bike.setFrameNumber(BIKE_FRAME_NUMBER);
-        this.bike.setNextMaintenance(BIKE_MAINTENANCE);
-        this.bike.setPurchaseDate(BIKE_PURCHASE_DATE);
-        this.bike.setType(bikeType);
-        
-        System.err.println(this.bike.getType() + "\n");
-        this.user = authenticationService.loadUserByUsername(USER_EMAIL);
-    }
+		facade.registerUser("Buttington", "Peter2", new EMail(OTHER_USER_EMAIL), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
+				new Date(1), "poop", HawaiAuthority.USER);
 
-    @Test
-    public void saleslocation_LoggedIn_SuccessfulResult() throws Exception {
-        this.restViewerMockMvc.perform(get("/api/v1/saleslocations")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user)))
-                .andExpect(status().isOk()).andExpect(content().string(containsString("amount")));
-    }
+		bikeType = bikeTypeRepository.save(new BikeType("City Bike", "for the city", Period.weeks(4)));
+		bikeNewType = bikeTypeRepository.save(new BikeType("City Cross", "for the cross", Period.weeks(2)));
+		this.bike = new BikeDTO();
+		this.bike.setFrameNumber(BIKE_FRAME_NUMBER);
+		this.bike.setNextMaintenance(BIKE_MAINTENANCE);
+		this.bike.setPurchaseDate(BIKE_PURCHASE_DATE);
+		this.bike.setType(bikeType);
 
-    @Test
-    public void createBike_LoggedIn_BikeCreated() throws Exception {
-        this.restViewerMockMvc.perform(post("/api/v1/bike")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
-                .content(TestUtil.convertObjectToJsonBytes(bike)))
-                .andExpect(status().isOk()).andExpect(content().string(containsString("id")));
-    }
+		System.err.println(this.bike.getType() + "\n");
+		this.user = authenticationService.loadUserByUsername(USER_EMAIL);
+	}
 
-    @Test
-    public void getBikes_LoggedIn_SuccessfulResult() throws Exception {
-        this.restViewerMockMvc.perform(get("/api/v1/bikes")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user)))
-                .andExpect(status().isOk()).andExpect(content().string(containsString("amount")));
-    }
+	@Test
+	public void saleslocation_LoggedIn_SuccessfulResult() throws Exception {
+		this.restViewerMockMvc.perform(get("/api/v1/saleslocations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user)))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("amount")));
+	}
 
-    @Test
-    public void updateBike_OwnBike_SuccessfulResult() throws Exception {
-        IBike old = facade.createBike(bikeType, new FrameNumber(BIKE_FRAME_NUMBER), dateFormat.parse(BIKE_MAINTENANCE),
-                dateFormat.parse(BIKE_PURCHASE_DATE), null, facade.getUserBy(new EMail(USER_EMAIL)).get(), BIKE_NAME);
+	@Test
+	public void createBike_LoggedIn_BikeCreated() throws Exception {
+		this.restViewerMockMvc.perform(post("/api/v1/bike")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+				.content(TestUtil.convertObjectToJsonBytes(bike)))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("id")));
+	}
 
-        UUID id = facade.getIdOfBike(old);
-        BikeDTO newBike = new BikeDTO();
-        newBike.setFrameNumber(BIKE_NEW_FRAME_NUMBER);
-        newBike.setNextMaintenance(BIKE_MAINTENANCE);
-        newBike.setPurchaseDate(BIKE_PURCHASE_DATE);
-        newBike.setType(bikeNewType);
+	@Test
+	public void getBikes_LoggedIn_SuccessfulResult() throws Exception {
+		this.restViewerMockMvc.perform(get("/api/v1/bikes")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user)))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("amount")));
+	}
 
-        this.restViewerMockMvc.perform(post("/api/v1/bike/" + id)
-                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
-                .content(TestUtil.convertObjectToJsonBytes(newBike)))
-                .andExpect(status().isOk()).andExpect(content().string(containsString("id")));
-    }
+	@Test
+	public void updateBike_OwnBike_SuccessfulResult() throws Exception {
+		IBike old = facade.createBike(bikeType, new FrameNumber(BIKE_FRAME_NUMBER), dateFormat.parse(BIKE_MAINTENANCE),
+				dateFormat.parse(BIKE_PURCHASE_DATE), null, facade.getUserBy(new EMail(USER_EMAIL)).get(), BIKE_NAME);
 
-    @Test
-    public void updateBike_InvalidBike_NotFound() throws Exception {
-    	// this can break randomly, but probably never will ~~
-        this.restViewerMockMvc.perform(post("/api/v1/bike/" + UUID.randomUUID())
-                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
-                .content(TestUtil.convertObjectToJsonBytes(bike)))
-                .andExpect(status().isNotFound());
-    }
+		UUID id = facade.getIdOfBike(old);
+		BikeDTO newBike = new BikeDTO();
+		newBike.setFrameNumber(BIKE_NEW_FRAME_NUMBER);
+		newBike.setNextMaintenance(BIKE_MAINTENANCE);
+		newBike.setPurchaseDate(BIKE_PURCHASE_DATE);
+		newBike.setType(bikeNewType);
 
-    @Test
-    public void updateBike_BikeFromOther_Forbidden() throws Exception {
-        IBike old = facade.createBike(bikeType, new FrameNumber(BIKE_FRAME_NUMBER), dateFormat.parse(BIKE_MAINTENANCE),
-                dateFormat.parse(BIKE_PURCHASE_DATE), null, facade.getUserBy(new EMail(OTHER_USER_EMAIL)).get(), BIKE_NAME);
+		this.restViewerMockMvc.perform(post("/api/v1/bike/" + id)
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+				.content(TestUtil.convertObjectToJsonBytes(newBike)))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("id")));
+	}
 
-        UUID id = facade.getIdOfBike(old);
-        BikeDTO newBike = new BikeDTO();
-        newBike.setFrameNumber(BIKE_NEW_FRAME_NUMBER);
-        newBike.setNextMaintenance(BIKE_MAINTENANCE);
-        newBike.setPurchaseDate(BIKE_PURCHASE_DATE);
-        newBike.setType(bikeNewType);
-        this.restViewerMockMvc.perform(post("/api/v1/bike/" + id)
-                .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
-                .content(TestUtil.convertObjectToJsonBytes(newBike)))
-                .andExpect(status().isForbidden());
-    }
+	@Test
+	public void updateBike_InvalidBike_NotFound() throws Exception {
+		// this can break randomly, but probably never will ~~
+		this.restViewerMockMvc.perform(post("/api/v1/bike/" + UUID.randomUUID())
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+				.content(TestUtil.convertObjectToJsonBytes(bike)))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void updateBike_BikeFromOther_Forbidden() throws Exception {
+		IBike old = facade.createBike(bikeType, new FrameNumber(BIKE_FRAME_NUMBER), dateFormat.parse(BIKE_MAINTENANCE),
+				dateFormat.parse(BIKE_PURCHASE_DATE), null, facade.getUserBy(new EMail(OTHER_USER_EMAIL)).get(), BIKE_NAME);
+
+		UUID id = facade.getIdOfBike(old);
+		BikeDTO newBike = new BikeDTO();
+		newBike.setFrameNumber(BIKE_NEW_FRAME_NUMBER);
+		newBike.setNextMaintenance(BIKE_MAINTENANCE);
+		newBike.setPurchaseDate(BIKE_PURCHASE_DATE);
+		newBike.setType(bikeNewType);
+		this.restViewerMockMvc.perform(post("/api/v1/bike/" + id)
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
+				.content(TestUtil.convertObjectToJsonBytes(newBike)))
+				.andExpect(status().isForbidden());
+	}
 }
