@@ -9,12 +9,12 @@ import org.joda.time.Period;
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 
 @Entity
-public class BikeType extends AbstractEntity {
-	
+public class BikeType extends AbstractEntity implements IBikeType  {
+
 	private String name;
 	private String description;
 	private Period inspectionInterval;
-	
+
 	private BikeType() {
 		super();
 	}
@@ -26,6 +26,7 @@ public class BikeType extends AbstractEntity {
 		this.inspectionInterval = inspectionInterval;
 	}
 
+	@Override
 	@Column(name = "name", nullable = false, length = 100)
 	public String getName() {
 		return name;
@@ -35,6 +36,7 @@ public class BikeType extends AbstractEntity {
 		this.name = name;
 	}
 
+	@Override
 	@Column(name = "description", nullable = false, length = 250)
 	public String getDescription() {
 		return description;
@@ -44,6 +46,7 @@ public class BikeType extends AbstractEntity {
 		this.description = description;
 	}
 
+	@Override
 	@Column(name = "inspection_interval")
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentPeriodAsString")
 	public Period getInspectionInterval() {
