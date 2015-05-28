@@ -105,8 +105,6 @@ public class BikeControllerTest {
 		this.bike.setNextMaintenance(BIKE_MAINTENANCE);
 		this.bike.setPurchaseDate(BIKE_PURCHASE_DATE);
 		this.bike.setType(bikeType);
-
-		System.err.println(this.bike.getType() + "\n");
 		this.user = authenticationService.loadUserByUsername(USER_EMAIL);
 	}
 
