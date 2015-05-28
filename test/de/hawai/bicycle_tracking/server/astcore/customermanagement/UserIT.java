@@ -41,7 +41,7 @@ public class UserIT {
 	private static final Date BIRTHDATE = new Date(0);
 	private static final String PASSWORD = "TestingPassword";
 
-	@Resource(name = "IUserDao")
+	@Resource(name = "userDAO")
 	private IUserDao userDao;
 
 	private User user;

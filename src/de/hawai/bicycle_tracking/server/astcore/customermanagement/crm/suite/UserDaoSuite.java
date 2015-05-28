@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,7 +25,7 @@ import de.hawai.bicycle_tracking.server.crm.suite.token.SetEntryResponseToken;
 import de.hawai.bicycle_tracking.server.crm.suite.token.SetEntryToken;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
-@Repository
+@Repository("suiteRepository")
 public class UserDaoSuite implements IUserDao {
 
 	private static final String MODULE = "Accounts";
@@ -41,6 +42,7 @@ public class UserDaoSuite implements IUserDao {
 		super();
 	}
 
+	@Autowired
 	public UserDaoSuite(SuiteCrmConnector connector) {
 		super();
 		this.connector = connector;

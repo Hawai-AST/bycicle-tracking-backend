@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,8 @@ import de.hawai.bicycle_tracking.server.utility.value.EMail;
 @Component
 public class CustomerManagement implements ICustomerManagement {
 
-	@Resource(name = "IUserDao")
+	@Autowired
+	@Qualifier("userDAO")
 	private IUserDao userDao;
 
 	@Override
