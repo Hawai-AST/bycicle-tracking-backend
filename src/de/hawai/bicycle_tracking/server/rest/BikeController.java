@@ -1,7 +1,6 @@
 package de.hawai.bicycle_tracking.server.rest;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -37,152 +36,182 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 @RestController
 @RequestMapping("/api")
 public class BikeController {
-    private final DateFormat mDateFormat = DateFormatUtil.DEFAULT_FORMAT;
+	private final DateFormat mDateFormat = DateFormatUtil.DEFAULT_FORMAT;
 
-    @Autowired
-    private Facade facade;
-    
-    @Autowired
-    private IBikeTypeDao bikeTypeRepository;
+	@Autowired
+	private Facade facade;
 
-    @Autowired
-    private SessionService sessionService;
+	@Autowired
+	private IBikeTypeDao bikeTypeRepository;
 
-    @RequestMapping(value = "/v1/saleslocations", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
-    public SalesLocationsResponse getSalesLocations() {
-        Collection<? extends ISellingLocation> locations = facade.getAllSellingLocations();
-        SalesLocationsResponse response = new SalesLocationsResponse();
-        response.setAmount(locations.size());
-        response.setLocations(locations.toArray(new ISellingLocation[locations.size()]));
-        return response;
-    }
+	@Autowired
+	private SessionService sessionService;
 
-    @RequestMapping(value = "/v1/bike", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<BikeDTO> createBike(@RequestBody BikeDTO inBike) {
-//    	TODO(fap): this is stupid, we only need this because the type that we get in
-//    	is detatched in the hibernate/jpa world.
-//    	Maybe only call this line if crm is off?
-    	BikeType type = bikeTypeRepository.findOne(inBike.getType().getId());
-        Date purchaseDate;
-        Date maintenanceDate;
-        try {
-            purchaseDate = mDateFormat.parse(inBike.getPurchaseDate());
-            maintenanceDate = mDateFormat.parse(inBike.getNextMaintenance());
-        } catch (Exception e) {
-            throw new MalformedRequestException("Invalid date detected");
-        }
+	@RequestMapping(value = "/v1/biketypes", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
+	public BikeTypesResponse getBikeTypes() {
+		List<BikeType> bikeTypes = bikeTypeRepository.findAll();
+		BikeTypesResponse response = new BikeTypesResponse();
+		response.setAmount(bikeTypes.size());
+		response.setBikeTypes(bikeTypes);
+		return response;
+	}
 
-        String email = this.sessionService.getCurrentlyLoggedinUser();
-        IBike created;
-        try {
-            created = facade.createBike(type, new FrameNumber(inBike.getFrameNumber()), purchaseDate, maintenanceDate, null,
-                    facade.getUserBy(new EMail(email)).get(), inBike.getName());
-        } catch (ConstraintViolationException e) {
-            throw new AlreadyExistsException("Bike with the framenumber exists already.");
-        }
+	@RequestMapping(value = "/v1/saleslocations", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
+	public SalesLocationsResponse getSalesLocations() {
+		Collection<? extends ISellingLocation> locations = facade.getAllSellingLocations();
+		SalesLocationsResponse response = new SalesLocationsResponse();
+		response.setAmount(locations.size());
+		response.setLocations(locations.toArray(new ISellingLocation[locations.size()]));
+		return response;
+	}
 
-        BikeDTO response = new BikeDTO();
-        response.setId(facade.getIdOfBike(created));
-        response.setFrameNumber(created.getFrameNumber().getNumber());
-        response.setNextMaintenance(mDateFormat.format(created.getNextMaintenanceDate()));
-        response.setPurchaseDate(mDateFormat.format(created.getPurchaseDate()));
-        response.setType(created.getType());
-        response.setSalesLocation(created.getSoldLocation() != null ? created.getSoldLocation().getName() : null);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+	@RequestMapping(value = "/v1/bike", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	public ResponseEntity<BikeDTO> createBike(@RequestBody BikeDTO inBike) {
+		//    	TODO(fap): this is stupid, we only need this because the type that we get in
+		//    	is detatched in the hibernate/jpa world.
+		//    	Maybe only call this line if crm is off?
+		BikeType type = bikeTypeRepository.findOne(inBike.getType().getId());
+		Date purchaseDate;
+		Date maintenanceDate;
+		try {
+			purchaseDate = mDateFormat.parse(inBike.getPurchaseDate());
+			maintenanceDate = mDateFormat.parse(inBike.getNextMaintenance());
+		} catch (Exception e) {
+			throw new MalformedRequestException("Invalid date detected");
+		}
 
-    @RequestMapping(value = "/v1/bikes", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
-    public BikesResponse getBikes() {
-        String email = this.sessionService.getCurrentlyLoggedinUser();
-        List<? extends IBike> bikes = facade.findByOwner(facade.getUserBy(new EMail(email)).get());
-        BikesResponse response = new BikesResponse();
-        BikeDTO[] dtos = new BikeDTO[bikes.size()];
-        IBike current;
-        for (int i = 0; i < bikes.size(); i++) {
-            BikeDTO dto = new BikeDTO();
-            current = bikes.get(i);
-            dto.setId(facade.getIdOfBike(current));
-            dto.setFrameNumber(current.getFrameNumber().getNumber());
-            dto.setNextMaintenance(mDateFormat.format(current.getNextMaintenanceDate()));
-            dto.setPurchaseDate(mDateFormat.format(current.getPurchaseDate()));
-            dto.setSalesLocation(current.getSoldLocation() != null ? current.getSoldLocation().getName() : null);
-            dto.setType(current.getType());
-            dtos[i] = dto;
-        }
+		String email = this.sessionService.getCurrentlyLoggedinUser();
+		IBike created;
+		try {
+			created = facade.createBike(type, new FrameNumber(inBike.getFrameNumber()), purchaseDate, maintenanceDate, null,
+					facade.getUserBy(new EMail(email)).get(), inBike.getName());
+		} catch (ConstraintViolationException e) {
+			throw new AlreadyExistsException("Bike with the framenumber exists already.");
+		}
 
-        response.setAmount(dtos.length);
-        response.setBikes(dtos);
-        return response;
-    }
+		BikeDTO response = new BikeDTO();
+		response.setId(facade.getIdOfBike(created));
+		response.setFrameNumber(created.getFrameNumber().getNumber());
+		response.setNextMaintenance(mDateFormat.format(created.getNextMaintenanceDate()));
+		response.setPurchaseDate(mDateFormat.format(created.getPurchaseDate()));
+		response.setType(created.getType());
+		response.setSalesLocation(created.getSoldLocation() != null ? created.getSoldLocation().getName() : null);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/v1/bike/{id}", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<BikeDTO> updateBike(@PathVariable UUID id, @RequestBody BikeDTO inNew) {
-        Optional<IBike> old = facade.getBikeById(id);
-        if (!old.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+	@RequestMapping(value = "/v1/bikes", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
+	public BikesResponse getBikes() {
+		String email = this.sessionService.getCurrentlyLoggedinUser();
+		List<? extends IBike> bikes = facade.findByOwner(facade.getUserBy(new EMail(email)).get());
+		BikesResponse response = new BikesResponse();
+		BikeDTO[] dtos = new BikeDTO[bikes.size()];
+		IBike current;
+		for (int i = 0; i < bikes.size(); i++) {
+			BikeDTO dto = new BikeDTO();
+			current = bikes.get(i);
+			dto.setId(facade.getIdOfBike(current));
+			dto.setFrameNumber(current.getFrameNumber().getNumber());
+			dto.setNextMaintenance(mDateFormat.format(current.getNextMaintenanceDate()));
+			dto.setPurchaseDate(mDateFormat.format(current.getPurchaseDate()));
+			dto.setSalesLocation(current.getSoldLocation() != null ? current.getSoldLocation().getName() : null);
+			dto.setType(current.getType());
+			dtos[i] = dto;
+		}
 
-        String email = this.sessionService.getCurrentlyLoggedinUser();
-        IUser owner = facade.getUserBy(new EMail(email)).get();
-        if (!old.get().getOwner().equals(owner)) {
-            throw new InvalidAccessException("This bike does not belong to you.");
-        }
+		response.setAmount(dtos.length);
+		response.setBikes(dtos);
+		return response;
+	}
 
-        Date purchaseDate;
-        Date maintenanceDate;
+	@RequestMapping(value = "/v1/bike/{id}", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	public ResponseEntity<BikeDTO> updateBike(@PathVariable UUID id, @RequestBody BikeDTO inNew) {
+		Optional<IBike> old = facade.getBikeById(id);
+		if (!old.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 
-        try {
-            purchaseDate = mDateFormat.parse(inNew.getPurchaseDate());
-            maintenanceDate = mDateFormat.parse(inNew.getNextMaintenance());
-        } catch (Exception e) {
-            throw new MalformedRequestException("Invalid date detected");
-        }
+		String email = this.sessionService.getCurrentlyLoggedinUser();
+		IUser owner = facade.getUserBy(new EMail(email)).get();
+		if (!old.get().getOwner().equals(owner)) {
+			throw new InvalidAccessException("This bike does not belong to you.");
+		}
 
-        facade.updateBike(old.get(), inNew.getType(),
-        		new FrameNumber(inNew.getFrameNumber()), purchaseDate, maintenanceDate, null, owner, inNew.getName());
-        inNew.setId(id);
-        return new ResponseEntity<>(inNew, HttpStatus.OK);
-    }
+		Date purchaseDate;
+		Date maintenanceDate;
 
-    private static class SalesLocationsResponse {
-        private int amount;
-        private ISellingLocation[] locations;
+		try {
+			purchaseDate = mDateFormat.parse(inNew.getPurchaseDate());
+			maintenanceDate = mDateFormat.parse(inNew.getNextMaintenance());
+		} catch (Exception e) {
+			throw new MalformedRequestException("Invalid date detected");
+		}
 
-        public int getAmount() {
-            return amount;
-        }
+		facade.updateBike(old.get(), inNew.getType(),
+				new FrameNumber(inNew.getFrameNumber()), purchaseDate, maintenanceDate, null, owner, inNew.getName());
+		inNew.setId(id);
+		return new ResponseEntity<>(inNew, HttpStatus.OK);
+	}
 
-        public void setAmount(int amount) {
-            this.amount = amount;
-        }
+	private static class BikeTypesResponse {
+		private int amount;
+		private List<BikeType> bikeTypes;
 
-        public ISellingLocation[] getLocations() {
-            return locations;
-        }
+		public int getAmount() {
+			return amount;
+		}
 
-        public void setLocations(ISellingLocation[] locations) {
-            this.locations = locations;
-        }
-    }
+		public void setAmount(int amount) {
+			this.amount = amount;
+		}
 
-    private static class BikesResponse {
-        private int amount;
-        private BikeDTO[] bikes;
+		public List<BikeType> getBikeTypes() {
+			return bikeTypes;
+		}
 
-        public int getAmount() {
-            return amount;
-        }
+		public void setBikeTypes(List<BikeType> bikeTypes) {
+			this.bikeTypes = bikeTypes;
+		}
+	}
 
-        public void setAmount(int amount) {
-            this.amount = amount;
-        }
+	private static class SalesLocationsResponse {
+		private int amount;
+		private ISellingLocation[] locations;
 
-        public BikeDTO[] getBikes() {
-            return bikes;
-        }
+		public int getAmount() {
+			return amount;
+		}
 
-        public void setBikes(BikeDTO[] bikes) {
-            this.bikes = bikes;
-        }
-    }
+		public void setAmount(int amount) {
+			this.amount = amount;
+		}
+
+		public ISellingLocation[] getLocations() {
+			return locations;
+		}
+
+		public void setLocations(ISellingLocation[] locations) {
+			this.locations = locations;
+		}
+	}
+
+	private static class BikesResponse {
+		private int amount;
+		private BikeDTO[] bikes;
+
+		public int getAmount() {
+			return amount;
+		}
+
+		public void setAmount(int amount) {
+			this.amount = amount;
+		}
+
+		public BikeDTO[] getBikes() {
+			return bikes;
+		}
+
+		public void setBikes(BikeDTO[] bikes) {
+			this.bikes = bikes;
+		}
+	}
 }

@@ -111,6 +111,13 @@ public class BikeControllerTest {
 	}
 
 	@Test
+	public void biketypes_ExistingBikeTypes_GetReturned() throws Exception {
+		this.restViewerMockMvc.perform(get("/api/v1/biketypes")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user)))
+				.andExpect(status().isOk()).andExpect(content().string(containsString(bikeType.getId().toString())));
+	}
+
+	@Test
 	public void saleslocation_LoggedIn_SuccessfulResult() throws Exception {
 		this.restViewerMockMvc.perform(get("/api/v1/saleslocations")
 				.contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user)))
