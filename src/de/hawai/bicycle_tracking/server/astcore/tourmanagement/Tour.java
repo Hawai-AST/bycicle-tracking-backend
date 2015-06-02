@@ -63,7 +63,7 @@ public class Tour extends AbstractEntity implements ITour {
         this.bike = bike;
     }
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "startAt", nullable = false)
     @Override
     public Date getStartAt() {
@@ -74,7 +74,7 @@ public class Tour extends AbstractEntity implements ITour {
         this.startAt = startAt;
     }
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "finshedAt", nullable = false)
     @Override
     public Date getFinishedAt() {
@@ -85,7 +85,7 @@ public class Tour extends AbstractEntity implements ITour {
         this.finishedAt = finishedAt;
     }
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdAt", nullable = false)
     @Override
     public Date getCreatedAt() {
@@ -96,7 +96,7 @@ public class Tour extends AbstractEntity implements ITour {
         this.createdAt = createdAt;
     }
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updatedAt", nullable = false)
     @Override
     public Date getUpdatedAt() {

@@ -8,7 +8,7 @@ public class BikeDTO {
     private UUID id;
     private String name;
     private long frameNumber;
-    private BikeType type;
+    private UUID type;
     private String salesLocation;
     private String purchaseDate;
     private String nextMaintenance;
@@ -29,11 +29,11 @@ public class BikeDTO {
         this.frameNumber = frameNumber;
     }
 
-    public BikeType getType() {
+    public UUID getType() {
         return type;
     }
 
-    public void setType(BikeType type) {
+    public void setType(UUID type) {
         this.type = type;
     }
 

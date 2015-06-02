@@ -88,7 +88,7 @@ public class BikeController {
 		//    	TODO(fap): this is stupid, we only need this because the type that we get in
 		//    	is detatched in the hibernate/jpa world.
 		//    	Maybe only call this line if crm is off?
-		BikeType type = bikeTypeRepository.findOne(inBike.getType().getId());
+		BikeType type = bikeTypeRepository.findOne(inBike.getType());
 		Date purchaseDate;
 		Date maintenanceDate;
 		try {
@@ -112,7 +112,7 @@ public class BikeController {
 		response.setFrameNumber(created.getFrameNumber().getNumber());
 		response.setNextMaintenance(mDateFormat.format(created.getNextMaintenanceDate()));
 		response.setPurchaseDate(mDateFormat.format(created.getPurchaseDate()));
-		response.setType(created.getType());
+		response.setType(created.getType().getId());
 		response.setSalesLocation(created.getSoldLocation() != null ? created.getSoldLocation().getName() : null);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -132,7 +132,7 @@ public class BikeController {
 			dto.setNextMaintenance(mDateFormat.format(current.getNextMaintenanceDate()));
 			dto.setPurchaseDate(mDateFormat.format(current.getPurchaseDate()));
 			dto.setSalesLocation(current.getSoldLocation() != null ? current.getSoldLocation().getName() : null);
-			dto.setType(current.getType());
+			dto.setType(current.getType().getId());
 			dtos[i] = dto;
 		}
 
@@ -164,7 +164,7 @@ public class BikeController {
 			throw new MalformedRequestException("Invalid date detected");
 		}
 
-		facade.updateBike(old.get(), inNew.getType(),
+		facade.updateBike(old.get(), bikeTypeRepository.findOne(inNew.getType()),
 				new FrameNumber(inNew.getFrameNumber()), purchaseDate, maintenanceDate, null, owner, inNew.getName());
 		inNew.setId(id);
 		return new ResponseEntity<>(inNew, HttpStatus.OK);
