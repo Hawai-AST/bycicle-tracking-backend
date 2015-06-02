@@ -104,7 +104,7 @@ public class BikeControllerTest {
 		this.bike.setFrameNumber(BIKE_FRAME_NUMBER);
 		this.bike.setNextMaintenance(BIKE_MAINTENANCE);
 		this.bike.setPurchaseDate(BIKE_PURCHASE_DATE);
-		this.bike.setType(bikeType);
+		this.bike.setType(bikeType.getId());
 		this.user = authenticationService.loadUserByUsername(USER_EMAIL);
 	}
 
@@ -149,7 +149,7 @@ public class BikeControllerTest {
 		newBike.setFrameNumber(BIKE_NEW_FRAME_NUMBER);
 		newBike.setNextMaintenance(BIKE_MAINTENANCE);
 		newBike.setPurchaseDate(BIKE_PURCHASE_DATE);
-		newBike.setType(bikeNewType);
+		newBike.setType(bikeNewType.getId());
 
 		this.restViewerMockMvc.perform(post("/api/v1/bike/" + id)
 				.contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
@@ -176,7 +176,7 @@ public class BikeControllerTest {
 		newBike.setFrameNumber(BIKE_NEW_FRAME_NUMBER);
 		newBike.setNextMaintenance(BIKE_MAINTENANCE);
 		newBike.setPurchaseDate(BIKE_PURCHASE_DATE);
-		newBike.setType(bikeNewType);
+		newBike.setType(bikeNewType.getId());
 		this.restViewerMockMvc.perform(post("/api/v1/bike/" + id)
 				.contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
 				.content(TestUtil.convertObjectToJsonBytes(newBike)))
