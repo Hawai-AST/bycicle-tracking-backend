@@ -7,5 +7,5 @@ public class DateFormatUtil {
 
 	public static final DateFormat DEFAULT_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	
-	public static final DateFormat TOUR_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	public static final DateFormat TOUR_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 }

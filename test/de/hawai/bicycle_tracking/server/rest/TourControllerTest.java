@@ -122,8 +122,8 @@ public class TourControllerTest extends TestCase {
             "\"name\": \"RouteXYZ\"," +
             "\"bikeID\": \"" + bike.getId() + "\"," +
             "\"lengthInKm\": 123.5," +
-            "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-            "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+            "\"startAt\": \"2015-04-25 12:35\"," +
+            "\"finishedAt\": \"2015-04-25 12:35\"," +
             "\"waypoints\": [" +
                 "{" +
                     "\"latitude\": 53.55705300904082," +
@@ -171,8 +171,8 @@ public class TourControllerTest extends TestCase {
                 //"\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": \"" + UUID.randomUUID() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -205,8 +205,8 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 //"\"bikeID\": 1," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -237,10 +237,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementLengthInKmIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 //"\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -271,10 +271,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementStartAtIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+                "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                //"\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                //"\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -305,10 +305,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementFinishedAtIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                //"\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                //"\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -339,10 +339,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementWaypointsIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
 //                "\"waypoints\": [" +
 //                "{" +
 //                "\"latitude\": 53.55705300904082," +
@@ -372,10 +372,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementLatitudeIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 //"\"latitude\": 53.55705300904082," +
@@ -406,10 +406,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementLongitudeIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -440,10 +440,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementGpsNameIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -473,10 +473,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementLongitudeIsNotInCorrectRange_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -507,10 +507,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementLatitudeIsNotInCorrectRange_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 553.55705300904082," +
@@ -541,10 +541,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementWrongStartAtDateFormat_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"201-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 553.55705300904082," +
@@ -575,9 +575,9 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementWrongFinishedAtDateFormat_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
                 "\"waypoints\": [" +
                 "{" +
@@ -611,7 +611,7 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": \"" + UUID.randomUUID() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
                 "\"waypoints\": [" +
                 "{" +
@@ -653,8 +653,8 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -727,8 +727,8 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -761,10 +761,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 //"\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -805,8 +805,8 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 //"\"bikeID\": 1," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -845,10 +845,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 //"\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -887,10 +887,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                //"\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                //"\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -929,10 +929,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                //"\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                //"\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -971,10 +971,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
 //                "\"waypoints\": [" +
 //                "{" +
 //                "\"latitude\": 53.55705300904082," +
@@ -1012,10 +1012,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 //"\"latitude\": 53.55705300904082," +
@@ -1054,10 +1054,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -1096,10 +1096,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -1137,10 +1137,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -1179,10 +1179,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 553.55705300904082," +
@@ -1221,10 +1221,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"201-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 553.55705300904082," +
@@ -1263,9 +1263,9 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
                 "\"waypoints\": [" +
                 "{" +
@@ -1307,7 +1307,7 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": \"" + UUID.randomUUID() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
                 "\"waypoints\": [" +
                 "{" +
