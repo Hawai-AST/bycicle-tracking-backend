@@ -123,7 +123,7 @@ public class TourController {
     }
 
 
-    @RequestMapping(value = "/v1/route/{id}", method = RequestMethod.PUT,
+    @RequestMapping(value = "/v1/route/{id}", method = RequestMethod.POST,
             consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     @ResponseStatus(HttpStatus.OK)
     public TourDTO changeRoute(@PathVariable("id") UUID id, @RequestBody TourDTO inTour) throws AddTourFailedException, UpdateTourFailedException {

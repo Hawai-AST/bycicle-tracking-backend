@@ -670,7 +670,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -744,7 +744,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user2Details))
                 .content(testData)).andExpect(status().isUnauthorized());
     }
@@ -780,7 +780,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -822,7 +822,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -864,7 +864,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -906,7 +906,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -948,7 +948,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -989,7 +989,7 @@ public class TourControllerTest extends TestCase {
 //                "}" +
 //                "]" +
                 "}";
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1031,7 +1031,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1073,7 +1073,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1114,7 +1114,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1156,7 +1156,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1198,7 +1198,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1240,7 +1240,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1282,7 +1282,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1324,7 +1324,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
