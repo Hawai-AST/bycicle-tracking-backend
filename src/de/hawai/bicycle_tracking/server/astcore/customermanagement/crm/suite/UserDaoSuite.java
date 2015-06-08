@@ -97,7 +97,7 @@ public class UserDaoSuite implements IUserDao {
 		addCustomUserSerializer(mapper);
 		
 		try {
-			handleFaultyInput(entity);
+			handleInput(entity);
 		} catch (RegistrationException e1) {
 			e1.printStackTrace();
 			return null;
@@ -121,22 +121,20 @@ public class UserDaoSuite implements IUserDao {
 		mapper.registerModule(module);
 	}
 
-	private <S extends User> S handleFaultyInput(S entity) throws RegistrationException {
+	private <S extends User> S handleInput(S entity) throws RegistrationException {
 		UUID uuidFromFrontend = entity.getId();
-		// UUID empty => fill from CRM if email exists
-		Optional<User> userFromSuite = getByMailAddress(entity.getMailAddress());
-		if (null == uuidFromFrontend && userFromSuite.isPresent()) {
-				entity.setId(userFromSuite.get().getId());
-				return entity;
+		Optional<User> userFromSuiteByEMail = getByMailAddress(entity.getMailAddress());
+		if (null == uuidFromFrontend) {
+			// UUID empty => fill from CRM if email exists
+			if (userFromSuiteByEMail.isPresent()) {
+				entity.setId(userFromSuiteByEMail.get().getId());			
+			}
+			return entity;
 		}
-		User userFromCRM = getOne(entity.getId());
-		// Non existent UUID
+		User userFromCRM = getOne(uuidFromFrontend);
+		// Non existent UUID / Kundennummer
 		if (userFromCRM == null) {
-			throw new RegistrationException("No existing Account with this ID.");
-		}
-		// Existent UUI but EMail not matching
-		if (!uuidFromFrontend.equals(userFromCRM.getId())) {
-			throw new RegistrationException("ID for given EMail doesn't match ID in SuiteCRM.");
+			throw new RegistrationException("No existing Account with given ID: " + uuidFromFrontend);
 		}
 		return entity;
 	}
@@ -186,6 +184,9 @@ public class UserDaoSuite implements IUserDao {
 
 	@Override
 	public User getOne(UUID id) {
+		if (null == id) {
+			return null;
+		}
 		int max_results = 1;
 		int returnDeleted = 0;
 		String query = "accounts.id = '" + id.toString() + "'";

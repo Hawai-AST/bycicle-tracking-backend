@@ -2,7 +2,6 @@ package de.hawai.bicycle_tracking.server.astcore.customermanagement.crm.suite;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -61,6 +60,7 @@ public class UserDeserializerSuite extends JsonDeserializer<User> {
 				new EMail(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL)),
 				new Address(
 						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STREET),
+//						TODO(fap): add house number in crm
 						"",
 						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_CITY),
 						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STATE),

@@ -31,10 +31,15 @@ import de.hawai.bicycle_tracking.server.crm.suite.token.request.LoginToken;
 import de.hawai.bicycle_tracking.server.crm.suite.token.request.SetEntryToken;
 
 @Component
-public class SuiteCrmConnector {
+public class SuiteCrmConnector  {
 
 	@Value("${suite.url}")
 	private String CRM_URI = "http://141.22.29.121/suitecrm/service/v4_1/rest.php";
+	
+	@Value("${suite.user}")
+	private String suiteUser;
+	@Value("${suite.password}")
+	private String plainPWD;
 
 	private ObjectMapper mapper;
 
@@ -82,6 +87,12 @@ public class SuiteCrmConnector {
 
 	}
 
+	private void assureLogin() {
+		if (null == suiteSession) {
+			postLogin(new LoginToken(suiteUser, plainPWD));
+		}
+	}
+
 	public SuiteSession postLogin(LoginToken login) {
 		MultiValueMap<String, String> request = new LinkedMultiValueMap<String, String>();
 		request.add(METHOD, SuiteCrmMethods.LOGIN);
@@ -124,6 +135,7 @@ public class SuiteCrmConnector {
 	}
 
 	public String getSessionId() {
+		assureLogin();
 		return suiteSession.getSessionId();
 	}
 

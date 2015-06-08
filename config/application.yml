@@ -4,3 +4,5 @@ server:
 suite:
   enabled: false
   url: http://141.22.29.121/suitecrm/service/v4_1/rest.php
+  user: admin
+  password: admin
