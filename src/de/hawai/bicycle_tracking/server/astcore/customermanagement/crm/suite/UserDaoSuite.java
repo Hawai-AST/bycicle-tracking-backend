@@ -25,7 +25,7 @@ import de.hawai.bicycle_tracking.server.crm.suite.token.request.SetEntryToken;
 import de.hawai.bicycle_tracking.server.crm.suite.token.response.SetEntryResponseToken;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
-@Repository("suiteRepository")
+@Repository("suiteUserDao")
 public class UserDaoSuite implements IUserDao {
 
 	private static final String MODULE = "Accounts";
