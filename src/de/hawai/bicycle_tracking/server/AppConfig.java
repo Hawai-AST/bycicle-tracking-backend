@@ -28,8 +28,10 @@ public class AppConfig implements BeanDefinitionRegistryPostProcessor, Applicati
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         if (context.getEnvironment().getProperty("suite.enabled", "false").equals("true")) {
             registry.registerAlias("suiteUserDao", "userDAO");
+            registry.registerAlias("suiteBikeDao", "bikeDAO");
         } else {
             registry.registerAlias("databaseUserDao", "userDAO");
+            registry.registerAlias("databaseBikeDao", "bikeDAO");
         }
     }
 

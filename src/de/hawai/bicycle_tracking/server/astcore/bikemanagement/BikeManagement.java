@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
@@ -18,6 +19,7 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 public class BikeManagement implements IBikeManagement {
 
 	@Autowired
+	@Qualifier("bikeDAO")
 	private IBikeDao bikeDao;
 	@Autowired
 	private ISellingLocationDao sellingLocationDao;

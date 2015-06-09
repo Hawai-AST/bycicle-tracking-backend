@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +28,7 @@ import de.hawai.bicycle_tracking.server.crm.suite.token.request.SetEntryToken;
 import de.hawai.bicycle_tracking.server.crm.suite.token.response.GetEntryListResponseToken;
 import de.hawai.bicycle_tracking.server.crm.suite.token.response.SetEntryResponseToken;
 
+@Repository("suiteBikeDao")
 public class BikeDaoSuite implements IBikeDao {
 	
 	private static final String MODULE = "HAWAI_Bikes";
