@@ -82,7 +82,15 @@ public class BikeTypeDaoSuite implements IBikeTypeDao {
 
 	@Override
 	public BikeType findOne(UUID id) {
-		throw new UnsupportedOperationException();
+		int max_results = 1;
+		int returnDeleted = 0;
+		String query = "aos_products.id = '" + id.toString() + "'";
+		GetEntryListResponseToken responseToken = (GetEntryListResponseToken) connector.postGetEntryList(
+				new GetEntryListToken(
+						connector.getSessionId(), MODULE, query, max_results, returnDeleted, SELECT_FIELDS),
+						GetEntryListResponseToken.class);
+		return new BikeTypeResponseTokenDeserializerSuite().deserialize(responseToken)
+						.get(0);
 	}
 
 	@Override
