@@ -132,19 +132,6 @@ public class BikeTypeDaoSuite implements IBikeTypeDao {
 //		maybe module_id can be empty?
 //		http://developer.sugarcrm.com/2012/03/19/howto-avoiding-subqueries-with-our-web-services/
 		String query = "";
-		
-//		write list return type (BikeTypeResponseToken) with List<BikeType>, this should be used for all queries
-//		
-//		better option: GetEntryResponseToken with List<String> that contain the entries of entry_list
-//		then iterate over the entry list with class-specific deserializers
-//		example response:
-//		{"result_count":2,"total_count":"2","next_offset":2,
-//		"entry_list":[{"id":"8fc04b4c-6c35-2079-4daa-555e056af2cb","module_name":"AOS_Products",
-//		"name_value_list":{"id":{"name":"id","value":"8fc04b4c-6c35-2079-4daa-555e056af2cb"},"name":{"name":"name","value":"Cross Bike"}}},
-//		{"id":"d3b44b8d-2e2a-be98-9db7-555de0e52688","module_name":"AOS_Products",
-//		"name_value_list":{"id":{"name":"id","value":"d3b44b8d-2e2a-be98-9db7-555de0e52688"},"name":{"name":"name","value":"City Bike"}}}],
-//		"relationship_list":[]}
-		
 		GetEntryListResponseToken responseToken = (GetEntryListResponseToken) connector.postGetEntryList(
 				new GetEntryListToken(
 						connector.getSessionId(), MODULE,
