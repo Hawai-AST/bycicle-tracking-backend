@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -34,6 +35,7 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class BikeIntegrationTest {
 	@Autowired
+	@Qualifier("bikeDAO")
 	private IBikeDao bikeRepository;
 
 	@Autowired

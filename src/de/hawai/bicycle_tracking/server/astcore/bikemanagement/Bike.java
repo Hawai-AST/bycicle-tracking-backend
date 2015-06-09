@@ -17,7 +17,7 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
 @Entity
 public class Bike extends AbstractEntity implements IBike {
-	private BikeType type;
+	private IBikeType type;
 	private FrameNumber frameNumber;
 	private Date purchaseDate;
 	private Date nextMaintenanceDate;
@@ -26,7 +26,7 @@ public class Bike extends AbstractEntity implements IBike {
 	private double mileageInKm;
 	private String name;
 
-	public Bike(final BikeType inType, final FrameNumber inFrameNumber, final Date inPurchaseDate, final Date inNextMaintenanceDate,
+	public Bike(final IBikeType inType, final FrameNumber inFrameNumber, final Date inPurchaseDate, final Date inNextMaintenanceDate,
 			final ISellingLocation inSellingLocation, final IUser inOwner, final String inName) {
 		type = inType;
 		frameNumber = inFrameNumber;
@@ -42,10 +42,10 @@ public class Bike extends AbstractEntity implements IBike {
 		super();
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(targetEntity = BikeType.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "bike_type_id")
 	@Override
-	public BikeType getType() {
+	public IBikeType getType() {
 		return type;
 	}
 
@@ -93,7 +93,7 @@ public class Bike extends AbstractEntity implements IBike {
 		return name;
 	}
 
-	public void setType(final BikeType inType) {
+	public void setType(final IBikeType inType) {
 		type = inType;
 	}
 

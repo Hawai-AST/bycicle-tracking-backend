@@ -1,5 +1,6 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,8 @@ public class BikeManagement implements IBikeManagement {
 	@Qualifier("bikeDAO")
 	private IBikeDao bikeDao;
 	@Autowired
+	private IBikeTypeDao bikeTypeDao;
+	@Autowired
 	private ISellingLocationDao sellingLocationDao;
 
 	@Override
@@ -30,7 +33,7 @@ public class BikeManagement implements IBikeManagement {
 	}
 
 	@Override
-	public IBike createBike(BikeType inType, FrameNumber inFrameNumber, Date inPurchaseDate,
+	public IBike createBike(IBikeType inType, FrameNumber inFrameNumber, Date inPurchaseDate,
 			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner, String name) {
 		return bikeDao.save(new Bike(inType, inFrameNumber, inPurchaseDate, inNextMaintenanceDate, inSellingLocation, inOwner, name));
 	}
@@ -71,7 +74,7 @@ public class BikeManagement implements IBikeManagement {
 	}
 
 	@Override
-	public void updateBike(IBike inBike, BikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
+	public void updateBike(IBike inBike, IBikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
 						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner, String inName) {
 		Bike old = (Bike) inBike;
 		old.setPurchaseDate(inBuyDate);
@@ -82,5 +85,15 @@ public class BikeManagement implements IBikeManagement {
 		old.setSoldLocation(inSellingLocation);
 		old.setName(inName);
 		bikeDao.save(old);
+	}
+
+	@Override
+	public List<IBikeType> getBikeTypes() {
+		return new ArrayList<IBikeType>(bikeTypeDao.findAll());
+	}
+
+	@Override
+	public Optional<IBikeType> getBikeTypeBy(UUID id) {
+		return Optional.ofNullable((bikeTypeDao.findOne(id)));
 	}
 }

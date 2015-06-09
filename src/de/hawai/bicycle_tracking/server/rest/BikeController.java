@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.common.exceptions.InvalidRequestException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +24,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.BikeType;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeType;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeTypeDao;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.dto.BikeDTO;
@@ -49,14 +48,11 @@ public class BikeController {
 	private Facade facade;
 
 	@Autowired
-	private IBikeTypeDao bikeTypeRepository;
-
-	@Autowired
 	private SessionService sessionService;
 
 	@RequestMapping(value = "/v1/biketypes", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
 	public BikeTypesResponse getBikeTypes() {
-		List<? extends IBikeType> bikeTypes =  bikeTypeRepository.findAll();
+		List<? extends IBikeType> bikeTypes =  facade.getBikeTypes();
 		BikeTypesResponse response = new BikeTypesResponse();
 		response.setAmount(bikeTypes.size());
 		List<BikeTypeDTO> bikeTypeDTOs = new ArrayList<>();
@@ -88,7 +84,7 @@ public class BikeController {
 		//    	TODO(fap): this is stupid, we only need this because the type that we get in
 		//    	is detatched in the hibernate/jpa world.
 		//    	Maybe only call this line if crm is off?
-		BikeType type = bikeTypeRepository.findOne(inBike.getType());
+		Optional<IBikeType> bikeType = facade.getBikeTypeBy(inBike.getType());
 		Date purchaseDate;
 		Date maintenanceDate;
 		try {
@@ -100,8 +96,11 @@ public class BikeController {
 
 		String email = this.sessionService.getCurrentlyLoggedinUser();
 		IBike created;
+		if (!bikeType.isPresent()) {
+			throw new InvalidRequestException("BikeType with id \"" + inBike.getType() + "\" doesn't exist.");
+		}
 		try {
-			created = facade.createBike(type, new FrameNumber(inBike.getFrameNumber()), purchaseDate, maintenanceDate, null,
+			created = facade.createBike(bikeType.get(), new FrameNumber(inBike.getFrameNumber()), purchaseDate, maintenanceDate, null,
 					facade.getUserBy(new EMail(email)).get(), inBike.getName());
 		} catch (ConstraintViolationException e) {
 			throw new AlreadyExistsException("Bike with the framenumber exists already.");
@@ -164,7 +163,11 @@ public class BikeController {
 			throw new MalformedRequestException("Invalid date detected");
 		}
 
-		facade.updateBike(old.get(), bikeTypeRepository.findOne(inNew.getType()),
+		Optional<IBikeType> bikeType = facade.getBikeTypeBy(inNew.getType());
+		if (!bikeType.isPresent()) {
+			throw new InvalidRequestException("BikeType with id \"" + inNew.getType() + "\" doesn't exist.");
+		}
+		facade.updateBike(old.get(), bikeType.get(),
 				new FrameNumber(inNew.getFrameNumber()), purchaseDate, maintenanceDate, null, owner, inNew.getName());
 		inNew.setId(id);
 		return new ResponseEntity<>(inNew, HttpStatus.OK);

@@ -16,7 +16,7 @@ public interface IBikeManagement {
 
 	public List<? extends IBike> findByOwner(IUser inOwner);
 
-	public IBike createBike(BikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
+	public IBike createBike(IBikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
 			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner, String name);
 
 	public ISellingLocation createSellingLocation(Address inAddress, String inName);
@@ -29,7 +29,11 @@ public interface IBikeManagement {
 
 	public Optional<IBike> getBikeById(UUID inID);
 
-	public void updateBike(IBike inBike, BikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
+	public void updateBike(IBike inBike, IBikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
 						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner, String name);
+
+	public List<IBikeType> getBikeTypes();
+
+	public Optional<IBikeType> getBikeTypeBy(UUID id);
 
 }

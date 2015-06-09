@@ -8,7 +8,7 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
 public interface IBike extends Entity {
 
-    public BikeType getType();
+    public IBikeType getType();
 
     public Date getPurchaseDate();
 
