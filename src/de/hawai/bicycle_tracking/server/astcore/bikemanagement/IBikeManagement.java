@@ -25,8 +25,6 @@ public interface IBikeManagement {
 
 	public Collection<? extends ISellingLocation> getAllSellingLocations();
 
-	public UUID getIdOfBike(IBike inBike);
-
 	public Optional<IBike> getBikeById(UUID inID);
 
 	public void updateBike(IBike inBike, IBikeType inType, FrameNumber inFrameNumber, Date inBuyDate,

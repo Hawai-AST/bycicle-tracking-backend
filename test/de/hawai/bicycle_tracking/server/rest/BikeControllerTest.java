@@ -144,7 +144,7 @@ public class BikeControllerTest {
 		IBike old = facade.createBike(bikeType, new FrameNumber(BIKE_FRAME_NUMBER), dateFormat.parse(BIKE_MAINTENANCE),
 				dateFormat.parse(BIKE_PURCHASE_DATE), null, facade.getUserBy(new EMail(USER_EMAIL)).get(), BIKE_NAME);
 
-		UUID id = facade.getIdOfBike(old);
+		UUID id = old.getId();
 		BikeDTO newBike = new BikeDTO();
 		newBike.setFrameNumber(BIKE_NEW_FRAME_NUMBER);
 		newBike.setNextMaintenance(BIKE_MAINTENANCE);
@@ -171,7 +171,7 @@ public class BikeControllerTest {
 		IBike old = facade.createBike(bikeType, new FrameNumber(BIKE_FRAME_NUMBER), dateFormat.parse(BIKE_MAINTENANCE),
 				dateFormat.parse(BIKE_PURCHASE_DATE), null, facade.getUserBy(new EMail(OTHER_USER_EMAIL)).get(), BIKE_NAME);
 
-		UUID id = facade.getIdOfBike(old);
+		UUID id = old.getId();
 		BikeDTO newBike = new BikeDTO();
 		newBike.setFrameNumber(BIKE_NEW_FRAME_NUMBER);
 		newBike.setNextMaintenance(BIKE_MAINTENANCE);

@@ -107,7 +107,7 @@ public class BikeController {
 		}
 
 		BikeDTO response = new BikeDTO();
-		response.setId(facade.getIdOfBike(created));
+		response.setId(created.getId());
 		response.setFrameNumber(created.getFrameNumber().getNumber());
 		response.setNextMaintenance(mDateFormat.format(created.getNextMaintenanceDate()));
 		response.setPurchaseDate(mDateFormat.format(created.getPurchaseDate()));
@@ -126,7 +126,7 @@ public class BikeController {
 		for (int i = 0; i < bikes.size(); i++) {
 			BikeDTO dto = new BikeDTO();
 			current = bikes.get(i);
-			dto.setId(facade.getIdOfBike(current));
+			dto.setId(current.getId());
 			dto.setFrameNumber(current.getFrameNumber().getNumber());
 			dto.setNextMaintenance(mDateFormat.format(current.getNextMaintenanceDate()));
 			dto.setPurchaseDate(mDateFormat.format(current.getPurchaseDate()));

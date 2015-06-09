@@ -71,10 +71,6 @@ public class Facade {
 		return bikeManagement.getAllSellingLocations();
 	}
 
-	public UUID getIdOfBike(IBike inBike) {
-		return bikeManagement.getIdOfBike(inBike);
-	}
-
 	public Optional<IBike> getBikeById(UUID inID) {
 		return bikeManagement.getBikeById(inID);
 	}

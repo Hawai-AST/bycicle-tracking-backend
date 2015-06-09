@@ -60,15 +60,6 @@ public class BikeManagement implements IBikeManagement {
 	}
 
 	@Override
-	public UUID getIdOfBike(IBike inBike) {
-		if (inBike instanceof Bike) {
-			return ((Bike) inBike).getId();
-		} else {
-			return null;
-		}
-	}
-
-	@Override
 	public Optional<IBike> getBikeById(UUID inID) {
 		return Optional.ofNullable(bikeDao.findOne(inID));
 	}
