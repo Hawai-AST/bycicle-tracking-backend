@@ -23,6 +23,7 @@ public class BikeManagement implements IBikeManagement {
 	@Qualifier("bikeDAO")
 	private IBikeDao bikeDao;
 	@Autowired
+	@Qualifier("bikeTypeDAO")
 	private IBikeTypeDao bikeTypeDao;
 	@Autowired
 	private ISellingLocationDao sellingLocationDao;

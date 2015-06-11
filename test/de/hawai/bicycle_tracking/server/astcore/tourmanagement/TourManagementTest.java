@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -55,6 +56,7 @@ public class TourManagementTest extends TestCase {
     private IBikeManagement bikeManagement;
     
     @Autowired
+	@Qualifier("bikeTypeDAO")
     private IBikeTypeDao bikeTypeRepository;
 
     private IUser user1;

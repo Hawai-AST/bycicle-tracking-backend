@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Repository;
 
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.BikeType;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeTypeDao;
@@ -14,6 +15,7 @@ import de.hawai.bicycle_tracking.server.crm.suite.SuiteCrmConnector;
 import de.hawai.bicycle_tracking.server.crm.suite.token.request.GetEntryListToken;
 import de.hawai.bicycle_tracking.server.crm.suite.token.response.GetEntryListResponseToken;
 
+@Repository("suiteBikeTypeDao")
 public class BikeTypeDaoSuite implements IBikeTypeDao {
 	
 	private static final String MODULE = "AOS_Products";
@@ -137,10 +139,6 @@ public class BikeTypeDaoSuite implements IBikeTypeDao {
 						connector.getSessionId(), MODULE,
 						query, max_results, returnDeleted, SELECT_FIELDS),
 						GetEntryListResponseToken.class);
-		
 		return new BikeTypeResponseTokenDeserializerSuite().deserialize(responseToken);
 	}
-
-
-
 }

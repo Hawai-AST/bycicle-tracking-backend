@@ -22,6 +22,7 @@ public class BikeSerializationHelperSuite {
 				FRAME_NUMBER,
 				NAME,
 				UUID,
+				OWNER,
 				BIKE_TYPE);
 	}
 

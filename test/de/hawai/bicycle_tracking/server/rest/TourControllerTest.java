@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -93,6 +94,7 @@ public class TourControllerTest extends TestCase {
     private UserSecurityService authenticationService;
     
     @Autowired
+	@Qualifier("bikeTypeDAO")
     private IBikeTypeDao bikeTypeRepository;
 
     @Autowired

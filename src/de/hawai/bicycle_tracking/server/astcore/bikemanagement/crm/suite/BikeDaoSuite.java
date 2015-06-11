@@ -2,6 +2,8 @@ package de.hawai.bicycle_tracking.server.astcore.bikemanagement.crm.suite;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -136,12 +138,24 @@ public class BikeDaoSuite implements IBikeDao {
 		int max_results = 1;
 		int returnDeleted = 0;
 		String query = "hawai_bikes.id = '" + id.toString() + "'";
+		List<HashMap<String, Object>> getOwnerLinkArray = buildGetOwnerLinkArray();
+		GetEntryListToken getEntryList = new GetEntryListToken(
+				connector.getSessionId(), MODULE, query, max_results, returnDeleted, SELECT_FIELDS);
+		getEntryList.setLinkNameArray(getOwnerLinkArray);
 		GetEntryListResponseToken responseToken = (GetEntryListResponseToken) connector.postGetEntryList(
-				new GetEntryListToken(
-						connector.getSessionId(), MODULE, query, max_results, returnDeleted, SELECT_FIELDS),
+				getEntryList,
 						GetEntryListResponseToken.class);
 		return new BikeResponseTokenDeserializerSuite().deserialize(responseToken)
 						.get(0);
+	}
+
+	private List<HashMap<String, Object>> buildGetOwnerLinkArray() {
+		List<HashMap<String, Object>> arrayList = new ArrayList<HashMap<String, Object>>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("name", "hawai_bikes_accounts");
+		map.put("value", Arrays.asList("name", "id"));
+		arrayList.add(map);
+		return arrayList;
 	}
 
 	@Override

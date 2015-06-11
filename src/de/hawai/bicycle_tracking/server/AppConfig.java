@@ -29,9 +29,11 @@ public class AppConfig implements BeanDefinitionRegistryPostProcessor, Applicati
         if (context.getEnvironment().getProperty("suite.enabled", "false").equals("true")) {
             registry.registerAlias("suiteUserDao", "userDAO");
             registry.registerAlias("suiteBikeDao", "bikeDAO");
+            registry.registerAlias("suiteBikeTypeDao", "bikeTypeDAO");
         } else {
             registry.registerAlias("databaseUserDao", "userDAO");
             registry.registerAlias("databaseBikeDao", "bikeDAO");
+            registry.registerAlias("databaseBikeTypeDao", "bikeTypeDAO");
         }
     }
 

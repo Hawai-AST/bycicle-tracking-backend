@@ -52,7 +52,7 @@ public class GetEntryListResponseToken implements Token {
 	private int total_count;
 	private int next_offset;
 	private ArrayList<EntryListToken> entry_list;
-	private ArrayList<ArrayList<HashMap<String, Object>>> relationship_list;
+	private ArrayList<HashMap<String, Object>> relationship_list;
 	
 	public GetEntryListResponseToken() {
 		super();
@@ -90,11 +90,11 @@ public class GetEntryListResponseToken implements Token {
 		this.entry_list = entry_list;
 	}
 	
-	public ArrayList<ArrayList<HashMap<String, Object>>> getRelationship_list() {
+	public ArrayList<HashMap<String, Object>> getRelationship_list() {
 		return relationship_list;
 	}
 	
-	public void setRelationship_list(ArrayList<ArrayList<HashMap<String, Object>>> relationship_list) {
+	public void setRelationship_list(ArrayList<HashMap<String, Object>> relationship_list) {
 		this.relationship_list = relationship_list;
 	}
 

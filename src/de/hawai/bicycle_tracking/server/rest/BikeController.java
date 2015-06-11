@@ -62,11 +62,6 @@ public class BikeController {
 		response.setBikeTypes(bikeTypeDTOs);
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		try {
-			System.err.println(mapper.writeValueAsString(bikeTypeDTOs));
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
 		return response;
 	}
 
@@ -149,7 +144,7 @@ public class BikeController {
 
 		String email = this.sessionService.getCurrentlyLoggedinUser();
 		IUser owner = facade.getUserBy(new EMail(email)).get();
-		if (!old.get().getOwner().equals(owner)) {
+		if (!old.get().getOwner().getId().equals(owner.getId())) {
 			throw new InvalidAccessException("This bike does not belong to you.");
 		}
 

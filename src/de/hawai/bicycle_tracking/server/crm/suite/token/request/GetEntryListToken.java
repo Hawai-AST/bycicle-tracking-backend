@@ -1,6 +1,8 @@
 package de.hawai.bicycle_tracking.server.crm.suite.token.request;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hawai.bicycle_tracking.server.crm.suite.token.Token;
@@ -13,7 +15,7 @@ public class GetEntryListToken implements Token {
 	private final String order_by;
 	private final int offset;
 	private List<String> select_fields;
-	private final List<String> link_name_to_fields_array;
+	private List<HashMap<String, Object>> link_name_to_fields_array;
 	private final int max_results;
 	private int deleted;
 	private final boolean favorites;
@@ -26,10 +28,15 @@ public class GetEntryListToken implements Token {
 		this.deleted = deleted;
 		this.order_by = "";
 		this.offset = 0;
+
 		this.link_name_to_fields_array = new ArrayList<>();
 		this.max_results = max_results;
 		this.favorites = false;
 		this.select_fields = select_fields;
+	}
+	
+	public void setLinkNameArray(List<HashMap<String, Object>> getOwnerLinkArray) {
+		this.link_name_to_fields_array = getOwnerLinkArray;
 	}
 
 }
