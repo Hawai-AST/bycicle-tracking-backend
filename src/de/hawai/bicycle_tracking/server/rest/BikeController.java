@@ -108,6 +108,7 @@ public class BikeController {
 		response.setPurchaseDate(mDateFormat.format(created.getPurchaseDate()));
 		response.setType(created.getType().getId());
 		response.setSalesLocation(created.getSoldLocation() != null ? created.getSoldLocation().getName() : null);
+		response.setName(created.getName());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
@@ -127,6 +128,7 @@ public class BikeController {
 			dto.setPurchaseDate(mDateFormat.format(current.getPurchaseDate()));
 			dto.setSalesLocation(current.getSoldLocation() != null ? current.getSoldLocation().getName() : null);
 			dto.setType(current.getType().getId());
+			dto.setName(current.getName());
 			dtos[i] = dto;
 		}
 
