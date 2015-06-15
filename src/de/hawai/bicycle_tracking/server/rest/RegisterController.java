@@ -7,6 +7,7 @@ import java.util.Date;
 
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 
+import de.hawai.bicycle_tracking.server.utility.value.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +43,7 @@ public class RegisterController {
 					inRegistration.getAddress(),
 					birthdate,
 					inRegistration.getPassword(),
+					Gender.byValue(inRegistration.getGender()),
 					HawaiAuthority.USER);
 		} catch (DataIntegrityViolationException e) {
 			throw new AlreadyExistsException("User already exists");

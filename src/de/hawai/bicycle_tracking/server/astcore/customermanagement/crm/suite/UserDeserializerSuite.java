@@ -19,6 +19,7 @@ import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.exception.JsonParseException;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import de.hawai.bicycle_tracking.server.utility.value.Gender;
 
 public class UserDeserializerSuite extends JsonDeserializer<User> {
 
@@ -66,6 +67,7 @@ public class UserDeserializerSuite extends JsonDeserializer<User> {
 						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_COUNTRY)),
 				date,
 				extractTextValueOf(nameValueList, UserSerializationHelperSuite.PASSWORD),
+				Gender.byValue(extractTextValueOf(nameValueList, UserSerializationHelperSuite.GENDER)),
 				new HawaiAuthority(extractTextValueOf(nameValueList, UserSerializationHelperSuite.AUTHORITY)),
 				UUID.fromString(extractTextValueOf(nameValueList, UserSerializationHelperSuite.UUID)));
 		return user;

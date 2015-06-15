@@ -11,6 +11,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import de.hawai.bicycle_tracking.server.utility.value.Gender;
 import org.hibernate.annotations.Target;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -39,10 +40,11 @@ public class User extends AbstractEntity implements IUser {
 	private Address address;
 	private EMail mailAddress;
 	private String password;
+	private Gender gender;
 	@JsonIgnore
 	private GrantedAuthority authority;
 
-	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password, GrantedAuthority authority) {
+	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password, Gender gender, GrantedAuthority authority) {
 		this.name = name;
 		this.firstName = firstName;
 		this.birthdate = birthdate;
@@ -50,11 +52,12 @@ public class User extends AbstractEntity implements IUser {
 		this.mailAddress = eMailAddress;
 		this.password = password;
 		this.authority = authority;
+		this.gender = gender;
 	}
 	
 	public User(String name, String firstName, EMail eMailAddress, Address address,
-			Date birthdate, String password, GrantedAuthority authority, UUID id) {
-		this(name, firstName, eMailAddress, address, birthdate, password, authority);
+			Date birthdate, String password, Gender gender, GrantedAuthority authority, UUID id) {
+		this(name, firstName, eMailAddress, address, birthdate, password, gender, authority);
 		this.setId(id);
 	}
 
@@ -134,6 +137,16 @@ public class User extends AbstractEntity implements IUser {
 	}
 
 	@Override
+	@Column(name = "gender", nullable = true)
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -161,7 +174,7 @@ public class User extends AbstractEntity implements IUser {
 	@Override
 	public String toString() {
 		return "User [name=" + name + ", firstName=" + firstName + ", birthdate=" + birthdate + ", address=" + address + ", mailAddress="
-				+ mailAddress + ", password=" + password + ", id=" + getId() + ", authority=" + authority + "]";
+				+ mailAddress + ", password=" + password + ", gender=" + gender + ", id=" + getId() + ", authority=" + authority + "]";
 	}
 	
 	

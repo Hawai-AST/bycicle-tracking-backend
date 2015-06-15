@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import de.hawai.bicycle_tracking.server.utility.value.Gender;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,9 @@ public class CustomerManagement implements ICustomerManagement {
 
 	@Override
 	public IUser registerUser(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password,
-			  GrantedAuthority authority) {
+							  Gender gender, GrantedAuthority authority) {
 		return userDao.save(new User(name, firstName, eMailAddress, address, birthdate, BCrypt.hashpw(password, BCrypt.gensalt()),
-				authority));
+				gender, authority));
 	}
 
 	@Override
