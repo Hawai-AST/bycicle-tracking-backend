@@ -29,7 +29,9 @@ public class UserSerializerSuite extends JsonSerializer<User> {
 		if (uuid != null) {
 			addAttribute(jgen, UserSerializationHelperSuite.UUID, uuid.toString());
 		}
-		addAttribute(jgen, UserSerializationHelperSuite.BIRTHDAY, DateFormatUtil.DEFAULT_FORMAT.format(user.getBirthdate()));
+		if (user.getBirthdate() != null) {
+			addAttribute(jgen, UserSerializationHelperSuite.BIRTHDAY, DateFormatUtil.DEFAULT_FORMAT.format(user.getBirthdate()));
+		}
 		Address address = user.getAddress();
 		if (address != null) {
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_STREET, address.getStreet());

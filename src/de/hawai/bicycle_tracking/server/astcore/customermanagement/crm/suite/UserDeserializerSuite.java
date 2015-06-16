@@ -50,14 +50,22 @@ public class UserDeserializerSuite extends JsonDeserializer<User> {
 		}
 		Date date = null;
 		try {
-			date = DateFormatUtil.DEFAULT_FORMAT.parse(
-					helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.BIRTHDAY));
+			String birthdate = helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.BIRTHDAY);
+			if (null != birthdate) {
+				date = DateFormatUtil.DEFAULT_FORMAT.parse(birthdate);
+			}
 		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		EMail eMailAddress = null;
+		try {
+			eMailAddress = new EMail(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL));
+		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 		User user = new User(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.NAME),
 				helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.FIRSTNAME),
-				new EMail(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL)),
+				eMailAddress,
 				new Address(
 						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STREET),
 //						TODO(fap): add house number in crm

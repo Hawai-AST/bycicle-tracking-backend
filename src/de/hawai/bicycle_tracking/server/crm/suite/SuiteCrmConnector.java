@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
@@ -81,8 +82,13 @@ public class SuiteCrmConnector  {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		Object postForObject = restTemplate.postForObject(uri, entity, responseType);
-
+		Object postForObject = null;
+		try {
+			postForObject = restTemplate.postForObject(uri, entity, responseType);
+		} catch (HttpMessageNotReadableException e) {
+			e.printStackTrace();
+			return null;
+		}
 		return postForObject;
 
 	}

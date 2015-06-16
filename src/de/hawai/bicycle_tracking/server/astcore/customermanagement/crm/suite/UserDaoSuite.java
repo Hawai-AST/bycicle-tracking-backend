@@ -106,7 +106,11 @@ public class UserDaoSuite implements IUserDao {
 			SetEntryResponseToken postSetEntry = (SetEntryResponseToken) connector.postSetEntry(
 					new SetEntryToken(connector.getSessionId(), MODULE,
 							mapper.writeValueAsString(entity)), SetEntryResponseToken.class);
-			entity.setId(UUID.fromString(postSetEntry.getId()));
+			if (null != postSetEntry) {
+				entity.setId(UUID.fromString(postSetEntry.getId()));
+			} else {
+				System.out.println("Couldn't save user: '" + entity + "' to suite crm.");
+			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -166,6 +170,9 @@ public class UserDaoSuite implements IUserDao {
 
 	@Override
 	public Optional<User> getByMailAddress(EMail emailAddress) {
+		if (null == emailAddress) {
+			return Optional.empty();
+		}
 		int max_results = 1;
 		int returnDeleted = 0;
 		String query = "accounts.id in ( " + "SELECT eabr.bean_id "
