@@ -81,10 +81,10 @@ public class BikeController {
 		//    	Maybe only call this line if crm is off?
 		Optional<IBikeType> bikeType = facade.getBikeTypeBy(inBike.getType());
 		Date purchaseDate;
-		Date maintenanceDate;
+		Date nextMaintenance;
 		try {
 			purchaseDate = mDateFormat.parse(inBike.getPurchaseDate());
-			maintenanceDate = mDateFormat.parse(inBike.getNextMaintenance());
+			nextMaintenance = mDateFormat.parse(inBike.getNextMaintenance());
 		} catch (Exception e) {
 			throw new MalformedRequestException("Invalid date detected");
 		}
@@ -95,7 +95,7 @@ public class BikeController {
 			throw new InvalidRequestException("BikeType with id \"" + inBike.getType() + "\" doesn't exist.");
 		}
 		try {
-			created = facade.createBike(bikeType.get(), new FrameNumber(inBike.getFrameNumber()), purchaseDate, maintenanceDate, null,
+			created = facade.createBike(bikeType.get(), new FrameNumber(inBike.getFrameNumber()), purchaseDate, nextMaintenance, null,
 					facade.getUserBy(new EMail(email)).get(), inBike.getName());
 		} catch (ConstraintViolationException e) {
 			throw new AlreadyExistsException("Bike with the framenumber exists already.");
@@ -104,7 +104,7 @@ public class BikeController {
 		BikeDTO response = new BikeDTO();
 		response.setId(created.getId());
 		response.setFrameNumber(created.getFrameNumber().getNumber());
-		response.setNextMaintenance(mDateFormat.format(created.getNextMaintenanceDate()));
+		response.setNextMaintenance(mDateFormat.format(created.getNextMaintenance()));
 		response.setPurchaseDate(mDateFormat.format(created.getPurchaseDate()));
 		response.setType(created.getType().getId());
 		response.setSalesLocation(created.getSoldLocation() != null ? created.getSoldLocation().getName() : null);
@@ -124,7 +124,7 @@ public class BikeController {
 			current = bikes.get(i);
 			dto.setId(current.getId());
 			dto.setFrameNumber(current.getFrameNumber().getNumber());
-			dto.setNextMaintenance(mDateFormat.format(current.getNextMaintenanceDate()));
+			dto.setNextMaintenance(mDateFormat.format(current.getNextMaintenance()));
 			dto.setPurchaseDate(mDateFormat.format(current.getPurchaseDate()));
 			dto.setSalesLocation(current.getSoldLocation() != null ? current.getSoldLocation().getName() : null);
 			dto.setType(current.getType().getId());
@@ -151,11 +151,11 @@ public class BikeController {
 		}
 
 		Date purchaseDate;
-		Date maintenanceDate;
+		Date nextMaintenance;
 
 		try {
 			purchaseDate = mDateFormat.parse(inNew.getPurchaseDate());
-			maintenanceDate = mDateFormat.parse(inNew.getNextMaintenance());
+			nextMaintenance = mDateFormat.parse(inNew.getNextMaintenance());
 		} catch (Exception e) {
 			throw new MalformedRequestException("Invalid date detected");
 		}
@@ -165,7 +165,7 @@ public class BikeController {
 			throw new InvalidRequestException("BikeType with id \"" + inNew.getType() + "\" doesn't exist.");
 		}
 		facade.updateBike(old.get(), bikeType.get(),
-				new FrameNumber(inNew.getFrameNumber()), purchaseDate, maintenanceDate, null, owner, inNew.getName());
+				new FrameNumber(inNew.getFrameNumber()), purchaseDate, nextMaintenance, null, owner, inNew.getName());
 		inNew.setId(id);
 		return new ResponseEntity<>(inNew, HttpStatus.OK);
 	}

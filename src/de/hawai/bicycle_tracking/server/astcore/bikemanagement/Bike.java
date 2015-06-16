@@ -20,18 +20,18 @@ public class Bike extends AbstractEntity implements IBike {
 	private IBikeType type;
 	private FrameNumber frameNumber;
 	private Date purchaseDate;
-	private Date nextMaintenanceDate;
+	private Date nextMaintenance;
 	private ISellingLocation soldLocation;
 	private IUser owner;
 	private double mileageInKm;
 	private String name;
 
-	public Bike(final IBikeType inType, final FrameNumber inFrameNumber, final Date inPurchaseDate, final Date inNextMaintenanceDate,
+	public Bike(final IBikeType inType, final FrameNumber inFrameNumber, final Date inPurchaseDate, final Date inNextMaintenance,
 			final ISellingLocation inSellingLocation, final IUser inOwner, final String inName) {
 		type = inType;
 		frameNumber = inFrameNumber;
 		purchaseDate = inPurchaseDate;
-		nextMaintenanceDate = inNextMaintenanceDate;
+		nextMaintenance = inNextMaintenance;
 		soldLocation = inSellingLocation;
 		owner = inOwner;
 		mileageInKm = 0.0;
@@ -65,8 +65,8 @@ public class Bike extends AbstractEntity implements IBike {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "next_maintenance")
 	@Override
-	public Date getNextMaintenanceDate() {
-		return nextMaintenanceDate;
+	public Date getNextMaintenance() {
+		return nextMaintenance;
 	}
 
 	@ManyToOne(targetEntity = SellingLocation.class)
@@ -105,8 +105,8 @@ public class Bike extends AbstractEntity implements IBike {
 		purchaseDate = inPurchaseDate;
 	}
 
-	protected void setNextMaintenanceDate(final Date inNextMaintenanceDate) {
-		nextMaintenanceDate = inNextMaintenanceDate;
+	protected void setNextMaintenance(final Date inNextMaintenance) {
+		nextMaintenance = inNextMaintenance;
 	}
 
 	protected void setSoldLocation(final ISellingLocation inSoldLocation) {
@@ -128,8 +128,8 @@ public class Bike extends AbstractEntity implements IBike {
 	@Override
 	public String toString() {
 		return "Bike [id=" + getId() + ", type=" + type + ", frameNumber=" + frameNumber +
-				", purchaseDate=" + purchaseDate + ", nextMaintenanceDate="
-				+ nextMaintenanceDate + ", soldLocation=" + soldLocation + ", owner=" + owner + "]";
+				", purchaseDate=" + purchaseDate + ", nextMaintenance="
+				+ nextMaintenance + ", soldLocation=" + soldLocation + ", owner=" + owner + "]";
 	}
 
 }

@@ -35,8 +35,8 @@ public class BikeManagement implements IBikeManagement {
 
 	@Override
 	public IBike createBike(IBikeType inType, FrameNumber inFrameNumber, Date inPurchaseDate,
-			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner, String name) {
-		return bikeDao.save(new Bike(inType, inFrameNumber, inPurchaseDate, inNextMaintenanceDate, inSellingLocation, inOwner, name));
+			Date inNextMaintenance, ISellingLocation inSellingLocation, IUser inOwner, String name) {
+		return bikeDao.save(new Bike(inType, inFrameNumber, inPurchaseDate, inNextMaintenance, inSellingLocation, inOwner, name));
 	}
 
 	@Override
@@ -67,11 +67,11 @@ public class BikeManagement implements IBikeManagement {
 
 	@Override
 	public void updateBike(IBike inBike, IBikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
-						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner, String inName) {
+						   Date inNextMaintenance, ISellingLocation inSellingLocation, IUser inOwner, String inName) {
 		Bike old = (Bike) inBike;
 		old.setPurchaseDate(inBuyDate);
 		old.setFrameNumber(inFrameNumber);
-		old.setNextMaintenanceDate(inNextMaintenanceData);
+		old.setNextMaintenance(inNextMaintenance);
 		old.setType(inType);
 		old.setOwner(inOwner);
 		old.setSoldLocation(inSellingLocation);

@@ -14,7 +14,7 @@ public interface IBike extends Entity {
 
     public FrameNumber getFrameNumber();
 
-    public Date getNextMaintenanceDate();
+    public Date getNextMaintenance();
 
     public ISellingLocation getSoldLocation();
 

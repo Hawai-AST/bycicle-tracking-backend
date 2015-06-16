@@ -36,9 +36,9 @@ public class BikeSerializerSuite extends JsonSerializer<Bike> {
 					String.valueOf(
 							bike.getFrameNumber().getNumber()));
 		}
-		if (null != bike.getNextMaintenanceDate()) {
+		if (null != bike.getNextMaintenance()) {
 			helper.addAttribute(jgen, BikeSerializationHelperSuite.NEXT_MAINTENANCE_DATE,
-					DateFormatUtil.DEFAULT_FORMAT.format(bike.getNextMaintenanceDate()));
+					DateFormatUtil.DEFAULT_FORMAT.format(bike.getNextMaintenance()));
 		}
 		if (null != bike.getPurchaseDate()) {
 			helper.addAttribute(jgen,

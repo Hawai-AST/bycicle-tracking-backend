@@ -33,11 +33,11 @@ public class BikeResponseTokenDeserializerSuite {
 			FrameNumber frameNumber = new FrameNumber(
 					Long.valueOf(helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.FRAME_NUMBER)));
 			Date purchaseDate = null;
-			Date nextMaintenanceDate = null;
+			Date nextMaintenance = null;
 			try {
 				purchaseDate = DateFormatUtil.DEFAULT_FORMAT.parse(
 						helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.PURCHASE_DATE));
-				nextMaintenanceDate = DateFormatUtil.DEFAULT_FORMAT.parse(
+				nextMaintenance = DateFormatUtil.DEFAULT_FORMAT.parse(
 						helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.NEXT_MAINTENANCE_DATE));
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -45,7 +45,7 @@ public class BikeResponseTokenDeserializerSuite {
 			String name = helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.NAME);
 //			int mileage_in_km = Integer.valueOf(helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.MILEAGE_IN_KM));
 			User owner = getOwnerId(responseToken, helper, i);
-			Bike bike = new Bike(null, frameNumber, purchaseDate, nextMaintenanceDate, null, owner, name);
+			Bike bike = new Bike(null, frameNumber, purchaseDate, nextMaintenance, null, owner, name);
 			bike.setId(id);
 			bikes.add(bike);
 		}

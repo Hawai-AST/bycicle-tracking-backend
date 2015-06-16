@@ -55,8 +55,8 @@ public class Facade {
 	}
 
 	public IBike createBike(IBikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
-			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner, String name) {
-		return this.bikeManagement.createBike(inType, inFrameNumber, inBuyDate, inNextMaintenanceDate, inSellingLocation, inOwner, name);
+			Date inNextMaintenance, ISellingLocation inSellingLocation, IUser inOwner, String name) {
+		return this.bikeManagement.createBike(inType, inFrameNumber, inBuyDate, inNextMaintenance, inSellingLocation, inOwner, name);
 	}
 
 	public List<? extends IBike> findByOwner(IUser inOwner) {

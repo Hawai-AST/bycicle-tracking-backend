@@ -17,7 +17,7 @@ public interface IBikeManagement {
 	public List<? extends IBike> findByOwner(IUser inOwner);
 
 	public IBike createBike(IBikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
-			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner, String name);
+			Date inNextMaintenance, ISellingLocation inSellingLocation, IUser inOwner, String name);
 
 	public ISellingLocation createSellingLocation(Address inAddress, String inName);
 
