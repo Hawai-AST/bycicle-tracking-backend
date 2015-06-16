@@ -64,7 +64,7 @@ public class BikeResponseTokenDeserializerSuite {
 											.get("records"))
 											.get(0))
 											.get("link_value");
-			return new User(null, null, null, null, null, null, null, UUID.fromString(helper.extractValueOf(ownerMap, "id")));
+			return new User(null, null, null, null, null, null, null, null, UUID.fromString(helper.extractValueOf(ownerMap, "id")));
 		}
 		return null;
 	}

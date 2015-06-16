@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -19,10 +21,12 @@ import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.exception.JsonParseException;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import de.hawai.bicycle_tracking.server.utility.value.Gender;
 
 public class UserDeserializerSuite extends JsonDeserializer<User> {
 
-	
+	@Autowired
+	private JsonParserHelper parserHelper;
 	private static final String UUID_REGEX_SUITE = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 
 	@Override
@@ -57,21 +61,21 @@ public class UserDeserializerSuite extends JsonDeserializer<User> {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		User user = new User(extractTextValueOf(nameValueList, UserSerializationHelperSuite.NAME),
-				extractTextValueOf(nameValueList, UserSerializationHelperSuite.FIRSTNAME),
-				new EMail(extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL)),
+		User user = new User(parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.NAME),
+				parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.FIRSTNAME),
+				new EMail(parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL)),
 				new Address(
-						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STREET),
+						parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STREET),
 						"",
-						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_CITY),
-						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STATE),
-						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_POSTCODE),
-						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_COUNTRY)),
+						parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_CITY),
+						parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STATE),
+						parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_POSTCODE),
+						parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_COUNTRY)),
 				date,
-				extractTextValueOf(nameValueList, UserSerializationHelperSuite.PASSWORD),
-				Gender.byValue(extractTextValueOf(nameValueList, UserSerializationHelperSuite.GENDER)),
-				new HawaiAuthority(extractTextValueOf(nameValueList, UserSerializationHelperSuite.AUTHORITY)),
-				UUID.fromString(extractTextValueOf(nameValueList, UserSerializationHelperSuite.UUID)));
+				parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.PASSWORD),
+				Gender.byValue(parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.GENDER)),
+				new HawaiAuthority(parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.AUTHORITY)),
+				UUID.fromString(parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.UUID)));
 		return user;
 	}
 	
