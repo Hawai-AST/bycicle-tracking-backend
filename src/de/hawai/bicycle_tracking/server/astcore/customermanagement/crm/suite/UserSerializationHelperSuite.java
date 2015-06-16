@@ -14,5 +14,6 @@ public class UserSerializationHelperSuite {
 	public static final String ADDRESS_COUNTRY = "billing_address_country";
 	public static final String AUTHORITY = "authority_c";
 	public static final String UUID = "id";
+	public static final String GENDER = "sex_c";
 
 }

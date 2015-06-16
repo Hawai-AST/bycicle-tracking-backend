@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import de.hawai.bicycle_tracking.server.utility.value.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -20,10 +21,6 @@ import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedExce
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITourManagement;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.UpdateTourFailedException;
-import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
-import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
-import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
 @Component
 public class Facade {
@@ -46,9 +43,15 @@ public class Facade {
 	}
 
 	public IUser registerUser(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password,
-			  GrantedAuthority authority) {
-		return customerManagement.registerUser(name, firstName, eMailAddress, address, birthdate, password, authority);
+			  Gender gender, GrantedAuthority authority) {
+		return customerManagement.registerUser(name, firstName, eMailAddress, address, birthdate, password, gender, authority);
 	}
+
+	public IUser registerUser(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password,
+							  GrantedAuthority authority) {
+		return this.registerUser(name, firstName, eMailAddress, address, birthdate, password, Gender.NONE, authority);
+	}
+
 
 	public List<? extends IBike> findBikesBySoldLocation(ISellingLocation inLocation) {
 		return this.bikeManagement.findBikesBySoldLocation(inLocation);
