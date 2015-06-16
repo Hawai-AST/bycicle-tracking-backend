@@ -44,7 +44,8 @@ public class User extends AbstractEntity implements IUser {
 	@JsonIgnore
 	private GrantedAuthority authority;
 
-	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password, Gender gender, GrantedAuthority authority) {
+	public User(String name, String firstName, EMail eMailAddress, Address address, Date birthdate, String password, Gender gender,
+				GrantedAuthority authority) {
 		this.name = name;
 		this.firstName = firstName;
 		this.birthdate = birthdate;
@@ -173,8 +174,9 @@ public class User extends AbstractEntity implements IUser {
 
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", firstName=" + firstName + ", birthdate=" + birthdate + ", address=" + address + ", mailAddress="
-				+ mailAddress + ", password=" + password + ", gender=" + gender + ", id=" + getId() + ", authority=" + authority + "]";
+		return "User [name=" + name + ", firstName=" + firstName + ", birthdate=" + birthdate + ", address=" + address +
+				", mailAddress=" + mailAddress + ", password=" + password + ", gender=" + gender + ", id=" + getId() +
+				", authority=" + authority + "]";
 	}
 	
 	
