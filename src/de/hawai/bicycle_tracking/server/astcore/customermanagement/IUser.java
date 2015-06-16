@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import de.hawai.bicycle_tracking.server.utility.value.Gender;
 
 public interface IUser {
 	
@@ -22,4 +23,5 @@ public interface IUser {
 
 	public String getPassword();
 
+	public Gender getGender();
 }

@@ -57,27 +57,21 @@ public class UserDeserializerSuite extends JsonDeserializer<User> {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		EMail eMailAddress = null;
-		try {
-			eMailAddress = new EMail(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL));
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}
-		User user = new User(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.NAME),
-				helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.FIRSTNAME),
-				eMailAddress,
+		User user = new User(extractTextValueOf(nameValueList, UserSerializationHelperSuite.NAME),
+				extractTextValueOf(nameValueList, UserSerializationHelperSuite.FIRSTNAME),
+				new EMail(extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL)),
 				new Address(
-						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STREET),
-//						TODO(fap): add house number in crm
+						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STREET),
 						"",
-						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_CITY),
-						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STATE),
-						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_POSTCODE),
-						helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_COUNTRY)),
+						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_CITY),
+						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STATE),
+						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_POSTCODE),
+						extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_COUNTRY)),
 				date,
-				helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.PASSWORD),
-				new HawaiAuthority(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.AUTHORITY)),
-				UUID.fromString(helper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.UUID)));
+				extractTextValueOf(nameValueList, UserSerializationHelperSuite.PASSWORD),
+				Gender.byValue(extractTextValueOf(nameValueList, UserSerializationHelperSuite.GENDER)),
+				new HawaiAuthority(extractTextValueOf(nameValueList, UserSerializationHelperSuite.AUTHORITY)),
+				UUID.fromString(extractTextValueOf(nameValueList, UserSerializationHelperSuite.UUID)));
 		return user;
 	}
 	

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import de.hawai.bicycle_tracking.server.utility.value.*;
 import junit.framework.TestCase;
 
 import org.joda.time.Period;
@@ -31,10 +32,6 @@ import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeTypeDao;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.ICustomerManagement;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
-import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
-import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
-import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = AppConfig.class)
@@ -80,7 +77,7 @@ public class TourManagementTest extends TestCase {
                  new Address("MusterStraße", "11", "Musterhausen", "MusterState", "01923", "Deutschland"),
                  new Date(),
                  "123456",
-                 HawaiAuthority.USER
+                 Gender.NONE, HawaiAuthority.USER
         );
 
         user2 = customerManagement.registerUser(
@@ -90,7 +87,7 @@ public class TourManagementTest extends TestCase {
                 new Address("MusterStraße", "12", "Musterhausen", "MusterState", "01923", "Deutschland"),
                 new Date(),
                 "1234567",
-                HawaiAuthority.USER
+                Gender.NONE, HawaiAuthority.USER
         );
 
         bike2 = bikeManagement.createBike(

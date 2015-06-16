@@ -41,6 +41,8 @@ public class UserSerializerSuite extends JsonSerializer<User> {
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_STATE, address.getState());
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_COUNTRY, address.getCountry());
 		}
+
+		addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_COUNTRY, user.getGender().getValue());
 		jgen.writeEndObject();
 	}
 
