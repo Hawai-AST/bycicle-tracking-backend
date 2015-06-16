@@ -96,12 +96,7 @@ public class UserDaoSuite implements IUserDao {
 		
 		addCustomUserSerializer(mapper);
 		
-		try {
-			handleInput(entity);
-		} catch (RegistrationException e1) {
-			e1.printStackTrace();
-			return null;
-		}
+		handleInput(entity);
 		try {
 			SetEntryResponseToken postSetEntry = (SetEntryResponseToken) connector.postSetEntry(
 					new SetEntryToken(connector.getSessionId(), MODULE,
@@ -109,12 +104,11 @@ public class UserDaoSuite implements IUserDao {
 			if (null != postSetEntry) {
 				entity.setId(UUID.fromString(postSetEntry.getId()));
 			} else {
-				System.out.println("Couldn't save user: '" + entity + "' to suite crm.");
+				throw new RegistrationException("Couldn't save user: '" + entity + "' to suite crm.");
 			}
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new RegistrationException("Couldn't save user: '" + entity + "' to suite crm.\n");
 		}
 		return entity;
 	}

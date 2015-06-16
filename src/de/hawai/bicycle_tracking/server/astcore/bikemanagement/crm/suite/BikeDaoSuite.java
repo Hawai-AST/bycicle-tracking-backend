@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -103,12 +106,7 @@ public class BikeDaoSuite implements IBikeDao {
 		if (null != entity.getId()) {
 			Bike entityOnSuite = findOne(entity.getId());
 			if (null == entityOnSuite) {
-				try {
-					throw new Exception("Invalid Bike ID: " + entity.getId());
-				} catch (Exception e) {
-					e.printStackTrace();
-					return null;
-				}
+					throw new EntityNotFoundException("Invalid Bike ID: " + entity.getId());
 			}
 		}
 		
@@ -119,10 +117,8 @@ public class BikeDaoSuite implements IBikeDao {
 					new SetEntryToken(connector.getSessionId(), MODULE,
 							mapper.writeValueAsString(entity)), SetEntryResponseToken.class);
 			entity.setId(UUID.fromString(postSetEntry.getId()));
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		}
 		return entity;
 	}
