@@ -6,7 +6,9 @@ import de.hawai.bicycle_tracking.server.dto.UserDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestException;
 import de.hawai.bicycle_tracking.server.security.SessionService;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,6 @@ import java.util.Date;
 @RestController
 @RequestMapping("/api")
 public class CustomerController {
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     private SessionService sessionService;
@@ -40,7 +41,7 @@ public class CustomerController {
 
         try {
             if (inUser.getBirthdate() != null && inUser.getBirthdate().length() > 0) {
-                birthday = dateFormat.parse(inUser.getBirthdate());
+                birthday = DateFormatUtil.DEFAULT_FORMAT.parse(inUser.getBirthdate());
             } else {
                 birthday = null;
             }

@@ -9,8 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
-@Primary
-@Repository
+@Repository("databaseUserDao")
 public interface IUserDao extends JpaRepository<User, UUID> {
 
 	public Optional<User> getByName(String name);

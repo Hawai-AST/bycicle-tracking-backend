@@ -1,7 +1,6 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement.crm.suite;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -10,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
@@ -29,11 +29,13 @@ public class UserSerializerSuite extends JsonSerializer<User> {
 		if (uuid != null) {
 			addAttribute(jgen, UserSerializationHelperSuite.UUID, uuid.toString());
 		}
-//		todo(fap): move date format to environment class
-		addAttribute(jgen, UserSerializationHelperSuite.BIRTHDAY, new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthdate()));
+		if (user.getBirthdate() != null) {
+			addAttribute(jgen, UserSerializationHelperSuite.BIRTHDAY, DateFormatUtil.DEFAULT_FORMAT.format(user.getBirthdate()));
+		}
 		Address address = user.getAddress();
 		if (address != null) {
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_STREET, address.getStreet());
+//			TODO(fap): add house number
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_CITY, address.getCity());
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_POSTCODE, address.getPostcode());
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_STATE, address.getState());

@@ -30,13 +30,14 @@ import de.hawai.bicycle_tracking.server.rest.exceptions.MalformedRequestExceptio
 import de.hawai.bicycle_tracking.server.rest.exceptions.NotAuthorizedException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.NotFoundException;
 import de.hawai.bicycle_tracking.server.security.SessionService;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
 @RestController
 @RequestMapping("/api")
 public class TourController {
-    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private static final DateFormat FORMAT = DateFormatUtil.TOUR_FORMAT;
 
     static {
         FORMAT.setLenient(false);

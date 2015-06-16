@@ -9,9 +9,11 @@ import de.hawai.bicycle_tracking.server.dto.UserDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.security.UserSecurityService;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,8 +61,6 @@ public class AccountControllerTest {
     private static final String NEW_LAST_NAME = "McPoopster";
     private static final String NEW_BIRTHDAY = "1999-01-01";
     private static final Address NEW_ADDRESS = new Address("bb", "dd", "aa", "zz", "dd", "awwsd");
-
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     private WebApplicationContext context;

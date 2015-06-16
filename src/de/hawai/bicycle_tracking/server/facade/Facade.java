@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeManagement;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeType;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.ICustomerManagement;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
@@ -29,7 +30,7 @@ public class Facade {
 
 	@Autowired
 	private IBikeManagement bikeManagement;
-
+	
 	@Autowired
 	private ITourManagement tourManagement;
 
@@ -56,9 +57,9 @@ public class Facade {
 		return this.bikeManagement.findBikesBySoldLocation(inLocation);
 	}
 
-	public IBike createBike(String inType, FrameNumber inFrameNumber, Date inBuyDate,
-			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner) {
-		return this.bikeManagement.createBike(inType, inFrameNumber, inBuyDate, inNextMaintenanceDate, inSellingLocation, inOwner);
+	public IBike createBike(IBikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
+			Date inNextMaintenance, ISellingLocation inSellingLocation, IUser inOwner, String name) {
+		return this.bikeManagement.createBike(inType, inFrameNumber, inBuyDate, inNextMaintenance, inSellingLocation, inOwner, name);
 	}
 
 	public List<? extends IBike> findByOwner(IUser inOwner) {
@@ -73,17 +74,21 @@ public class Facade {
 		return bikeManagement.getAllSellingLocations();
 	}
 
-	public UUID getIdOfBike(IBike inBike) {
-		return bikeManagement.getIdOfBike(inBike);
-	}
-
 	public Optional<IBike> getBikeById(UUID inID) {
 		return bikeManagement.getBikeById(inID);
 	}
 
-	public void updateBike(IBike inBike, String inType, FrameNumber inFrameNumber, Date inBuyDate,
-						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner) {
-		bikeManagement.updateBike(inBike, inType, inFrameNumber, inBuyDate, inNextMaintenanceData, inSellingLocation, inOwner);
+	public void updateBike(IBike inBike, IBikeType iBikeType, FrameNumber inFrameNumber, Date inBuyDate,
+						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner, String inName) {
+		bikeManagement.updateBike(inBike, iBikeType, inFrameNumber, inBuyDate, inNextMaintenanceData, inSellingLocation, inOwner, inName);
+	}
+	
+	public List<IBikeType> getBikeTypes() {
+		return bikeManagement.getBikeTypes();
+	}
+	
+	public Optional<IBikeType> getBikeTypeBy(UUID id) {
+		return bikeManagement.getBikeTypeBy(id);
 	}
 
 	public void updatePassword(IUser user, String password) {

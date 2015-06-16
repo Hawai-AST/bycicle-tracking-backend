@@ -1,6 +1,7 @@
 package de.hawai.bicycle_tracking.server.crm.suite;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,14 @@ public class JsonParserHelper {
 		ObjectCodec oc = jsonParser.getCodec();
 		JsonNode node = oc.readTree(jsonParser);
 		return node;
+	}
+	
+	public String extractTextValueOf(JsonNode nameValueList, String key) {
+		return nameValueList.get(key).get("value").textValue();
+	}
+	
+	public String extractValueOf(HashMap<String, HashMap<String, String>> nameValueList, String name) {
+		return nameValueList.get(name).get("value");
 	}
 
 }

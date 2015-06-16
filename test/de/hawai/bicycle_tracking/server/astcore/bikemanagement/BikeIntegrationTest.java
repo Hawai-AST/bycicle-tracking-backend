@@ -1,10 +1,14 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
+import java.util.Date;
+
+import org.joda.time.Period;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -23,8 +27,6 @@ import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
-import java.util.Date;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = AppConfig.class)
 @Transactional(noRollbackFor = Exception.class)
@@ -33,6 +35,7 @@ import java.util.Date;
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class BikeIntegrationTest {
 	@Autowired
+	@Qualifier("bikeDAO")
 	private IBikeDao bikeRepository;
 
 	@Autowired
@@ -59,7 +62,8 @@ public class BikeIntegrationTest {
 
 	@Test
 	public void findBySoldLocation_LocationWithExistingBike_BikeIsFound() {
-		Bike bike = new Bike("Stadt", new FrameNumber(101), new Date(1), new Date(), sellingLocation, user);
+		Bike bike = new Bike(new BikeType("Stadt", "", Period.months(1)), new FrameNumber(101),
+				new Date(1), new Date(), sellingLocation, user, "My Bike");
 		this.bikeRepository.save(bike);
 
 		Assert.assertEquals(this.bikeRepository.findBySoldLocation(sellingLocation).size(), 1);
@@ -67,7 +71,8 @@ public class BikeIntegrationTest {
 
 	@Test
 	public void findByOwner_OwnerWithExistingBike_BikeIsFound() {
-		Bike bike = new Bike("Cross", new FrameNumber(101), new Date(1), new Date(), sellingLocation, user);
+		Bike bike = new Bike(new BikeType("Cross", "", Period.months(1)),
+				new FrameNumber(101), new Date(1), new Date(), sellingLocation, user, "My Bike");
 		this.bikeRepository.save(bike);
 
 		Assert.assertEquals(this.bikeRepository.findByOwner(user).size(), 1);

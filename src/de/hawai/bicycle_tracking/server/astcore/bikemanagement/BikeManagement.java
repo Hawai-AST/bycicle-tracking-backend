@@ -1,5 +1,6 @@
 package de.hawai.bicycle_tracking.server.astcore.bikemanagement;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
@@ -18,7 +20,11 @@ import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 public class BikeManagement implements IBikeManagement {
 
 	@Autowired
+	@Qualifier("bikeDAO")
 	private IBikeDao bikeDao;
+	@Autowired
+	@Qualifier("bikeTypeDAO")
+	private IBikeTypeDao bikeTypeDao;
 	@Autowired
 	private ISellingLocationDao sellingLocationDao;
 
@@ -28,9 +34,9 @@ public class BikeManagement implements IBikeManagement {
 	}
 
 	@Override
-	public IBike createBike(String inType, FrameNumber inFrameNumber, Date inBuyDate,
-			Date inNextMaintenanceDate, ISellingLocation inSellingLocation, IUser inOwner) {
-		return bikeDao.save(new Bike(inType, inFrameNumber, inBuyDate, inNextMaintenanceDate, inSellingLocation, inOwner));
+	public IBike createBike(IBikeType inType, FrameNumber inFrameNumber, Date inPurchaseDate,
+			Date inNextMaintenance, ISellingLocation inSellingLocation, IUser inOwner, String name) {
+		return bikeDao.save(new Bike(inType, inFrameNumber, inPurchaseDate, inNextMaintenance, inSellingLocation, inOwner, name));
 	}
 
 	@Override
@@ -55,29 +61,31 @@ public class BikeManagement implements IBikeManagement {
 	}
 
 	@Override
-	public UUID getIdOfBike(IBike inBike) {
-		if (inBike instanceof Bike) {
-			return ((Bike) inBike).getId();
-		} else {
-			return null;
-		}
-	}
-
-	@Override
 	public Optional<IBike> getBikeById(UUID inID) {
-		return bikeDao.getBikeById(inID);
+		return Optional.ofNullable(bikeDao.findOne(inID));
 	}
 
 	@Override
-	public void updateBike(IBike inBike, String inType, FrameNumber inFrameNumber, Date inBuyDate,
-						   Date inNextMaintenanceData, ISellingLocation inSellingLocation, IUser inOwner) {
+	public void updateBike(IBike inBike, IBikeType inType, FrameNumber inFrameNumber, Date inBuyDate,
+						   Date inNextMaintenance, ISellingLocation inSellingLocation, IUser inOwner, String inName) {
 		Bike old = (Bike) inBike;
 		old.setPurchaseDate(inBuyDate);
 		old.setFrameNumber(inFrameNumber);
-		old.setNextMaintenance(inNextMaintenanceData);
+		old.setNextMaintenance(inNextMaintenance);
 		old.setType(inType);
 		old.setOwner(inOwner);
 		old.setSoldLocation(inSellingLocation);
+		old.setName(inName);
 		bikeDao.save(old);
+	}
+
+	@Override
+	public List<IBikeType> getBikeTypes() {
+		return new ArrayList<IBikeType>(bikeTypeDao.findAll());
+	}
+
+	@Override
+	public Optional<IBikeType> getBikeTypeBy(UUID id) {
+		return Optional.ofNullable((bikeTypeDao.findOne(id)));
 	}
 }

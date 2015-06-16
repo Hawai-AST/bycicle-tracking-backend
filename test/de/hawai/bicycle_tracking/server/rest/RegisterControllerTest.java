@@ -58,7 +58,7 @@ public class RegisterControllerTest {
 	@Autowired
 	private WebApplicationContext context;
 
-	@Resource(name = "IUserDao")
+	@Resource(name = "userDAO")
 	private IUserDao userRepository;
 
 	private RegistrationDTO registration;

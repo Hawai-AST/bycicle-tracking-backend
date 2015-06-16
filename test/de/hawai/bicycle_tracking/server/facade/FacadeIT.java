@@ -1,17 +1,16 @@
 package de.hawai.bicycle_tracking.server.facade;
 
-import de.hawai.bicycle_tracking.server.AppConfig;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
-import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
-import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
-import de.hawai.bicycle_tracking.server.utility.value.Address;
-import de.hawai.bicycle_tracking.server.utility.value.EMail;
-import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Date;
+import java.util.List;
+
+import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,10 +21,16 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import de.hawai.bicycle_tracking.server.AppConfig;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.BikeType;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeTypeDao;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.ISellingLocation;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
+import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+import de.hawai.bicycle_tracking.server.utility.value.Address;
+import de.hawai.bicycle_tracking.server.utility.value.EMail;
+import de.hawai.bicycle_tracking.server.utility.value.FrameNumber;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,9 +49,10 @@ public class FacadeIT {
 	private static final Date BIRTHDATE = new Date(0);
 	private static final String PASSWORD = "TestingPassword";
 
-	private static final String BIKE_TYPE = "Bike";
+	private static final String BIKE_NAME = "My Byke";
+	private static final BikeType BIKE_TYPE = new BikeType("City", "", Period.weeks(4));
 	private static final FrameNumber BIKE_FRAME_NUMBER = new FrameNumber(101);
-	private static final Date BIKE_PURCHASE_DATE = new Date(1);
+	private static final Date BIKE_BUY_DATE = new Date(1);
 	private static final Date BIKE_NEXT_MAINTENANCE = new Date(2);
 
 	private static final String SELLING_LOCATION_NAME = "NoName";
@@ -54,6 +60,10 @@ public class FacadeIT {
 
 	@Autowired
 	private Facade facade;
+	
+	@Autowired
+	@Qualifier("bikeTypeDAO")
+	private IBikeTypeDao bikeTypeRepository;
 
 	private IUser user;
 
@@ -67,7 +77,9 @@ public class FacadeIT {
 
 		facade.createSellingLocation(SELLING_LOCATION_ADDRESS, SELLING_LOCATION_NAME);
 
-		bike = facade.createBike(BIKE_TYPE, BIKE_FRAME_NUMBER, BIKE_PURCHASE_DATE, BIKE_NEXT_MAINTENANCE, sellingLocation, user);
+		BikeType bikeType = bikeTypeRepository.save(BIKE_TYPE);
+		
+		bike = facade.createBike(bikeType, BIKE_FRAME_NUMBER, BIKE_BUY_DATE, BIKE_NEXT_MAINTENANCE, sellingLocation, user, BIKE_NAME);
 	}
 
 	@Test

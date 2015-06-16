@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 
 import de.hawai.bicycle_tracking.server.utility.value.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,7 @@ import de.hawai.bicycle_tracking.server.rest.exceptions.AlreadyExistsException;
 @RestController
 @RequestMapping("/api")
 public class RegisterController {
-	private final DateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
+	
 	@Autowired
 	private Facade facade;
 
@@ -34,7 +34,7 @@ public class RegisterController {
 		IUser newUser = null;
 		Date birthdate = null;
 		if (inRegistration.getBirthday() != null && inRegistration.getBirthday().length() > 0) {
-			birthdate = this.mDateFormat.parse(inRegistration.getBirthday());
+			birthdate = DateFormatUtil.DEFAULT_FORMAT.parse(inRegistration.getBirthday());
 		}
 		try	{
 			newUser = facade.registerUser(inRegistration.getName(),

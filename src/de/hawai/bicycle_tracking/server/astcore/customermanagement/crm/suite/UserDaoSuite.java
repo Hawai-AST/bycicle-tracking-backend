@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,12 +20,12 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUserDao;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
 import de.hawai.bicycle_tracking.server.crm.suite.SuiteCrmConnector;
-import de.hawai.bicycle_tracking.server.crm.suite.token.GetEntryListToken;
-import de.hawai.bicycle_tracking.server.crm.suite.token.SetEntryResponseToken;
-import de.hawai.bicycle_tracking.server.crm.suite.token.SetEntryToken;
+import de.hawai.bicycle_tracking.server.crm.suite.token.request.GetEntryListToken;
+import de.hawai.bicycle_tracking.server.crm.suite.token.request.SetEntryToken;
+import de.hawai.bicycle_tracking.server.crm.suite.token.response.SetEntryResponseToken;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
 
-@Repository
+@Repository("suiteUserDao")
 public class UserDaoSuite implements IUserDao {
 
 	private static final String MODULE = "Accounts";
@@ -41,6 +42,7 @@ public class UserDaoSuite implements IUserDao {
 		super();
 	}
 
+	@Autowired
 	public UserDaoSuite(SuiteCrmConnector connector) {
 		super();
 		this.connector = connector;
@@ -94,21 +96,19 @@ public class UserDaoSuite implements IUserDao {
 		
 		addCustomUserSerializer(mapper);
 		
-		try {
-			handleFaultyInput(entity);
-		} catch (RegistrationException e1) {
-			e1.printStackTrace();
-			return null;
-		}
+		handleInput(entity);
 		try {
 			SetEntryResponseToken postSetEntry = (SetEntryResponseToken) connector.postSetEntry(
 					new SetEntryToken(connector.getSessionId(), MODULE,
 							mapper.writeValueAsString(entity)), SetEntryResponseToken.class);
-			entity.setId(UUID.fromString(postSetEntry.getId()));
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			if (null != postSetEntry) {
+				entity.setId(UUID.fromString(postSetEntry.getId()));
+			} else {
+				throw new RegistrationException("Couldn't save user: '" + entity + "' to suite crm.");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new RegistrationException("Couldn't save user: '" + entity + "' to suite crm.\n");
 		}
 		return entity;
 	}
@@ -117,28 +117,22 @@ public class UserDaoSuite implements IUserDao {
 		SimpleModule module = new SimpleModule();
 		module.addSerializer(User.class, new UserSerializerSuite());
 		mapper.registerModule(module);
-		
-		mapper.registerModule(module);
 	}
 
-	private <S extends User> S handleFaultyInput(S entity) throws RegistrationException {
-		UUID uuidFromREST = entity.getId();
-		// UUID empty => fill from CRM if email exists
-		Optional<User> userWithId = getByMailAddress(entity.getMailAddress());
-		if (null == uuidFromREST || UUID.fromString("").equals(uuidFromREST)) {
-			if (userWithId.isPresent()) {
-				entity.setId(userWithId.get().getId());
-				return entity;
+	private <S extends User> S handleInput(S entity) throws RegistrationException {
+		UUID uuidFromFrontend = entity.getId();
+		Optional<User> userFromSuiteByEMail = getByMailAddress(entity.getMailAddress());
+		if (null == uuidFromFrontend) {
+			// UUID empty => fill from CRM if email exists
+			if (userFromSuiteByEMail.isPresent()) {
+				entity.setId(userFromSuiteByEMail.get().getId());			
 			}
+			return entity;
 		}
-		User userFromCRM = getOne(entity.getId());
-		// Non existent UUID
+		User userFromCRM = getOne(uuidFromFrontend);
+		// Non existent UUID / Kundennummer
 		if (userFromCRM == null) {
-			throw new RegistrationException("No existing Account with this ID.");
-		}
-		// Existent UUI but EMail not matching
-		if (!uuidFromREST.equals(userFromCRM.getId())) {
-			throw new RegistrationException("ID for given EMail doesn't match ID in SuiteCRM.");
+			throw new RegistrationException("No existing Account with given ID: " + uuidFromFrontend);
 		}
 		return entity;
 	}
@@ -170,6 +164,9 @@ public class UserDaoSuite implements IUserDao {
 
 	@Override
 	public Optional<User> getByMailAddress(EMail emailAddress) {
+		if (null == emailAddress) {
+			return Optional.empty();
+		}
 		int max_results = 1;
 		int returnDeleted = 0;
 		String query = "accounts.id in ( " + "SELECT eabr.bean_id "
@@ -188,6 +185,9 @@ public class UserDaoSuite implements IUserDao {
 
 	@Override
 	public User getOne(UUID id) {
+		if (null == id) {
+			return null;
+		}
 		int max_results = 1;
 		int returnDeleted = 0;
 		String query = "accounts.id = '" + id.toString() + "'";

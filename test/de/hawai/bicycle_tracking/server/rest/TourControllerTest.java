@@ -17,10 +17,12 @@ import java.util.UUID;
 
 import junit.framework.TestCase;
 
+import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,7 +45,9 @@ import de.hawai.bicycle_tracking.server.AppConfig;
 import de.hawai.bicycle_tracking.server.DBConfig;
 import de.hawai.bicycle_tracking.server.DBFixuresConfig;
 import de.hawai.bicycle_tracking.server.Main;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.BikeType;
 import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
+import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBikeTypeDao;
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.ITour;
 import de.hawai.bicycle_tracking.server.dto.TourDTO;
@@ -51,6 +55,7 @@ import de.hawai.bicycle_tracking.server.dto.TourListEntryDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.security.UserSecurityService;
+import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.test.TestUtil;
 import de.hawai.bicycle_tracking.server.utility.value.Address;
 import de.hawai.bicycle_tracking.server.utility.value.EMail;
@@ -68,7 +73,9 @@ import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
 public class TourControllerTest extends TestCase {
 
-    private static final String USER_EMAIL = "peter@buttington.com";
+    private static final String BIKE_NAME = "expected bike";
+
+	private static final String USER_EMAIL = "peter@buttington.com";
 
     private static final String NEW_PASSWORD = "butts";
     private static final String NEW_NAME = "Poopy";
@@ -76,13 +83,19 @@ public class TourControllerTest extends TestCase {
     private static final String NEW_BIRTHDAY = "1999-01-01";
     private static final Address NEW_ADDRESS = new Address("bb", "dd", "aa", "zz", "dd", "awwsd");
 
-    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    private static final DateFormat FORMAT = DateFormatUtil.TOUR_FORMAT;
+    
+    private BikeType bikeType;
 
     @Autowired
     private WebApplicationContext context;
 
     @Autowired
     private UserSecurityService authenticationService;
+    
+    @Autowired
+	@Qualifier("bikeTypeDAO")
+    private IBikeTypeDao bikeTypeRepository;
 
     @Autowired
     private Facade facade;
@@ -97,9 +110,12 @@ public class TourControllerTest extends TestCase {
         this.restViewerMockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         facade.registerUser("Buttington", "Peter", new EMail(USER_EMAIL), new Address("aa", "ds", "asd", "asd", "asd", "asd"),
                 new Date(1), "poop", HawaiAuthority.USER);
+        
+        bikeType = bikeTypeRepository.save(new BikeType("City Bike", "for the city", Period.weeks(4)));
 
         this.user = authenticationService.loadUserByUsername(USER_EMAIL);
-        bike = facade.createBike("aaa", new FrameNumber(123), new Date(), new Date(), null, facade.getUserBy(new EMail(USER_EMAIL)).get());
+        bike = facade.createBike(bikeType, new FrameNumber(123), new Date(), new Date(), null,
+        		facade.getUserBy(new EMail(USER_EMAIL)).get(), BIKE_NAME);
     }
 
     @Test
@@ -108,8 +124,8 @@ public class TourControllerTest extends TestCase {
             "\"name\": \"RouteXYZ\"," +
             "\"bikeID\": \"" + bike.getId() + "\"," +
             "\"lengthInKm\": 123.5," +
-            "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-            "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+            "\"startAt\": \"2015-04-25 12:35\"," +
+            "\"finishedAt\": \"2015-04-25 12:35\"," +
             "\"waypoints\": [" +
                 "{" +
                     "\"latitude\": 53.55705300904082," +
@@ -157,8 +173,8 @@ public class TourControllerTest extends TestCase {
                 //"\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": \"" + UUID.randomUUID() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -191,8 +207,8 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 //"\"bikeID\": 1," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -223,10 +239,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementLengthInKmIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 //"\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -257,10 +273,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementStartAtIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+                "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                //"\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                //"\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -291,10 +307,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementFinishedAtIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                //"\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                //"\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -325,10 +341,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementWaypointsIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
 //                "\"waypoints\": [" +
 //                "{" +
 //                "\"latitude\": 53.55705300904082," +
@@ -358,10 +374,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementLatitudeIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 //"\"latitude\": 53.55705300904082," +
@@ -392,10 +408,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementLongitudeIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -426,10 +442,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementGpsNameIsMissing_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -459,10 +475,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementLongitudeIsNotInCorrectRange_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -493,10 +509,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementLatitudeIsNotInCorrectRange_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 553.55705300904082," +
@@ -527,10 +543,10 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementWrongStartAtDateFormat_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"201-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 553.55705300904082," +
@@ -561,9 +577,9 @@ public class TourControllerTest extends TestCase {
     public void addRoute_statementWrongFinishedAtDateFormat_ResponseWithError400() throws Exception {
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
                 "\"waypoints\": [" +
                 "{" +
@@ -597,7 +613,7 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": \"" + UUID.randomUUID() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
                 "\"waypoints\": [" +
                 "{" +
@@ -639,8 +655,8 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -656,7 +672,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -713,8 +729,8 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -730,7 +746,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user2Details))
                 .content(testData)).andExpect(status().isUnauthorized());
     }
@@ -747,10 +763,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 //"\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -766,7 +782,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -791,8 +807,8 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 //"\"bikeID\": 1," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -808,7 +824,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -831,10 +847,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 //"\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -850,7 +866,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -873,10 +889,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                //"\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                //"\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -892,7 +908,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -915,10 +931,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                //"\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                //"\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -934,7 +950,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -957,10 +973,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
 //                "\"waypoints\": [" +
 //                "{" +
 //                "\"latitude\": 53.55705300904082," +
@@ -975,7 +991,7 @@ public class TourControllerTest extends TestCase {
 //                "}" +
 //                "]" +
                 "}";
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -998,10 +1014,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 //"\"latitude\": 53.55705300904082," +
@@ -1017,7 +1033,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1040,10 +1056,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -1059,7 +1075,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1082,10 +1098,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -1100,7 +1116,7 @@ public class TourControllerTest extends TestCase {
                 "}" +
                 "]" +
                 "}";
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1123,10 +1139,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 53.55705300904082," +
@@ -1142,7 +1158,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1165,10 +1181,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 553.55705300904082," +
@@ -1184,7 +1200,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1207,10 +1223,10 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
                 "\"startAt\": \"201-04-25T12:35:55Z\"," +
-                "\"finishedAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"finishedAt\": \"2015-04-25 12:35\"," +
                 "\"waypoints\": [" +
                 "{" +
                 "\"latitude\": 553.55705300904082," +
@@ -1226,7 +1242,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1249,9 +1265,9 @@ public class TourControllerTest extends TestCase {
         );
         String testData = "{" +
                 "\"name\": \"RouteXYZ\"," +
-                "\"bikeID\": 1," +
+               "\"bikeID\": \"" + bike.getId() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
                 "\"waypoints\": [" +
                 "{" +
@@ -1268,7 +1284,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1293,7 +1309,7 @@ public class TourControllerTest extends TestCase {
                 "\"name\": \"RouteXYZ\"," +
                 "\"bikeID\": \"" + UUID.randomUUID() + "\"," +
                 "\"lengthInKm\": 123.5," +
-                "\"startAt\": \"2015-04-25T12:35:55Z\"," +
+                "\"startAt\": \"2015-04-25 12:35\"," +
                 "\"finishedAt\": \"201-04-25T12:35:55Z\"," +
                 "\"waypoints\": [" +
                 "{" +
@@ -1310,7 +1326,7 @@ public class TourControllerTest extends TestCase {
                 "]" +
                 "}";
         TourDTO request = jsonToObject(TourDTO.class, testData);
-        ResultActions actions = restViewerMockMvc.perform(put("/api/v1/route/" + tour.getId())
+        ResultActions actions = restViewerMockMvc.perform(post("/api/v1/route/" + tour.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8).with(user(user))
                 .content(testData));
         actions.andDo(new ResultHandler() {
@@ -1327,11 +1343,12 @@ public class TourControllerTest extends TestCase {
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
         IBike expectedBike2 = facade.createBike(
-                "TestBike99",
+                bikeType,
                 new FrameNumber(5456),
                 new Date(), new Date(),
                 null,
-                facade.getUserBy(new EMail(USER_EMAIL)).get()
+                facade.getUserBy(new EMail(USER_EMAIL)).get(),
+                BIKE_NAME
         );
         Date expectedStartAt1 = new Date();
         Date expectedStartAt2 = new Date();
@@ -1414,11 +1431,12 @@ public class TourControllerTest extends TestCase {
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
         IBike expectedBike2 = facade.createBike(
-                "TestBike99",
+                bikeType,
                 new FrameNumber(5456),
                 new Date(), new Date(),
                 null,
-                facade.getUserBy(new EMail(USER_EMAIL)).get()
+                facade.getUserBy(new EMail(USER_EMAIL)).get(),
+                BIKE_NAME
         );
         Date expectedStartAt1 = new Date();
         Date expectedStartAt2 = new Date();
@@ -1474,11 +1492,12 @@ public class TourControllerTest extends TestCase {
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
         IBike expectedBike2 = facade.createBike(
-                "TestBike99",
+                bikeType,
                 new FrameNumber(5456),
                 new Date(), new Date(),
                 null,
-                facade.getUserBy(new EMail(USER_EMAIL)).get()
+                facade.getUserBy(new EMail(USER_EMAIL)).get(),
+                BIKE_NAME
         );
         Date expectedStartAt1 = new Date();
         Date expectedStartAt2 = new Date();
@@ -1554,11 +1573,12 @@ public class TourControllerTest extends TestCase {
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
         IBike expectedBike2 = facade.createBike(
-                "TestBike99",
+                bikeType,
                 new FrameNumber(5456),
                 new Date(), new Date(),
                 null,
-                facade.getUserBy(new EMail(USER_EMAIL)).get()
+                facade.getUserBy(new EMail(USER_EMAIL)).get(),
+                BIKE_NAME
         );
         Date expectedStartAt1 = new Date();
         Date expectedStartAt2 = new Date();
@@ -1605,11 +1625,12 @@ public class TourControllerTest extends TestCase {
         String expectedTourName2 = "Test2";
         IBike expectedBike1 = this.bike;
         IBike expectedBike2 = facade.createBike(
-                "TestBike99",
+                bikeType,
                 new FrameNumber(5456),
                 new Date(), new Date(),
                 null,
-                facade.getUserBy(new EMail(USER_EMAIL)).get()
+                facade.getUserBy(new EMail(USER_EMAIL)).get(),
+                BIKE_NAME
         );
         Date expectedStartAt1 = new Date();
         Date expectedStartAt2 = new Date();

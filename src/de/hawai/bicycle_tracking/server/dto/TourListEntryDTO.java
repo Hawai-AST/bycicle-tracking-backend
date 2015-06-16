@@ -20,8 +20,8 @@ public class TourListEntryDTO {
                 ", name='" + name + '\'' +
                 ", bikeID=" + bikeID +
                 ", lengthInKm=" + lengthInKm +
-                ", startAt='" + startAt + '\'' +
-                ", finishedAt='" + finishedAt + '\'' +
+                ", startAt='" + startAt.toString() + '\'' +
+                ", finishedAt='" + finishedAt.toString() + '\'' +
                 '}';
     }
 
