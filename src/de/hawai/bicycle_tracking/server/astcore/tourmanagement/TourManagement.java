@@ -41,11 +41,14 @@ public class TourManagement implements ITourManagement{
     public ITour addTour(String name, IBike bike, Date startAt, Date finishedAt, List<GPS> waypoints, double lengthInKm)
             throws AddTourFailedException {
         try {
-            Tour tour = new Tour(name, bike, startAt, finishedAt, waypoints, lengthInKm);
+            Tour tour = new Tour(name, bike.getId(), startAt, finishedAt, waypoints, lengthInKm);
+            System.out.println("New Tour: " + tour.toString());
             tourDao.save(tour);
+            System.out.println("New Tour after save: " + tour.toString());
             updateMileageOfBike(bike);
             return tour;
         } catch (RuntimeException e){
+            e.printStackTrace();
             throw new AddTourFailedException(e.getMessage());
         }
     }
@@ -56,7 +59,7 @@ public class TourManagement implements ITourManagement{
         try {
             Tour tour = (Tour) inTour;
             tour.setName(name);
-            tour.setBike(bike);
+            tour.setBike(bike.getId());
             tour.setStartAt(startAt);
             tour.setFinishedAt(finishedAt);
             tour.updateWay(waypoints, lengthInKm);

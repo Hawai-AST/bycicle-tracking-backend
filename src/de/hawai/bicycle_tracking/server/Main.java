@@ -1,5 +1,8 @@
 package de.hawai.bicycle_tracking.server;
 
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.crm.suite.UserDaoSuite;
+import de.hawai.bicycle_tracking.server.crm.suite.SuiteCrmConnector;
+import de.hawai.bicycle_tracking.server.crm.suite.token.request.LoginToken;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;

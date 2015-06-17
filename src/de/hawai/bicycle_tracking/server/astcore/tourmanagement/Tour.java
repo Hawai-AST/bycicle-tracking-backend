@@ -3,6 +3,7 @@ package de.hawai.bicycle_tracking.server.astcore.tourmanagement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -12,8 +13,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.Bike;
-import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 import de.hawai.bicycle_tracking.server.utility.AbstractEntity;
 import de.hawai.bicycle_tracking.server.utility.value.GPS;
 
@@ -22,7 +21,7 @@ import de.hawai.bicycle_tracking.server.utility.value.GPS;
 public class Tour extends AbstractEntity implements ITour {
     private static final long serialVersionUID = -875008919623232323L;
     private String name;
-    private IBike bike;
+    private UUID bike;
     private Date startAt;
     private Date finishedAt;
     private Date createdAt;
@@ -32,7 +31,7 @@ public class Tour extends AbstractEntity implements ITour {
 
     private Tour(){}
 
-    protected Tour(String name, IBike bike, Date startAt, Date finishedAt, List<GPS> waypoints, double lengthInKm){
+    protected Tour(String name, UUID bike, Date startAt, Date finishedAt, List<GPS> waypoints, double lengthInKm){
         this.name = name;
         this.bike = bike;
         this.startAt = startAt;
@@ -53,13 +52,12 @@ public class Tour extends AbstractEntity implements ITour {
         this.name = name;
     }
 
-    @ManyToOne(targetEntity = Bike.class)
     @Override
-    public IBike getBike() {
+    public UUID getBike() {
         return bike;
     }
 
-    protected void setBike(IBike bike) {
+    protected void setBike(UUID bike) {
         this.bike = bike;
     }
 
@@ -148,5 +146,19 @@ public class Tour extends AbstractEntity implements ITour {
     @Override
     public int hashCode() {
         return (int) (getId().hashCode() ^ (getId().hashCode() >>> 32));
+    }
+
+    @Override
+    public String toString() {
+        return "Tour{" +
+                "name='" + name + '\'' +
+                ", bike=" + bike +
+                ", startAt=" + startAt +
+                ", finishedAt=" + finishedAt +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", waypoints=" + waypoints +
+                ", lengthInKm=" + lengthInKm +
+                '}';
     }
 }

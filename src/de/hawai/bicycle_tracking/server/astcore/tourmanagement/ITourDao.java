@@ -14,6 +14,6 @@ import de.hawai.bicycle_tracking.server.astcore.bikemanagement.IBike;
 @Repository
 public interface ITourDao extends JpaRepository<Tour, Long> {
     Optional<ITour> getById(UUID id);
-    @Query("SELECT t from Tour t where t.bike.id = :inBikeId")
+    @Query("SELECT t from Tour t where t.bike = :inBikeId")
     List<ITour> findByBikeId(@Param("inBikeId") UUID inBikeId);
 }

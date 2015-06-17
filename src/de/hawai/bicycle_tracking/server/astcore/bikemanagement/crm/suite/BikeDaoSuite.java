@@ -141,8 +141,7 @@ public class BikeDaoSuite implements IBikeDao {
 		GetEntryListResponseToken responseToken = (GetEntryListResponseToken) connector.postGetEntryList(
 				getEntryList,
 						GetEntryListResponseToken.class);
-		return new BikeResponseTokenDeserializerSuite().deserialize(responseToken)
-						.get(0);
+		return addBikeType(new BikeResponseTokenDeserializerSuite().deserialize(responseToken)).get(0);
 	}
 
 	private List<HashMap<String, Object>> buildGetOwnerLinkArray() {

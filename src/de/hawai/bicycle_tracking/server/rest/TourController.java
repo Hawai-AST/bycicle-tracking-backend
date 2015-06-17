@@ -82,6 +82,7 @@ public class TourController {
         if (!bike.isPresent()){
             throw new NotFoundException("BikeId does not exists");
         }
+        System.out.println("Bike: " + bike.get().toString());
 
         Date startAt = null;
         try {
@@ -107,7 +108,7 @@ public class TourController {
                     inTour.lengthInKm
             );
             outTour.name = tour.getName();
-            outTour.bikeID = tour.getBike().getId();
+            outTour.bikeID = tour.getBike();
             outTour.createdAt = FORMAT.format(tour.getCreatedAt());
             outTour.finishedAt = FORMAT.format(tour.getFinishedAt());
             outTour.startAt = FORMAT.format(tour.getStartAt());
@@ -155,8 +156,13 @@ public class TourController {
             throw new NotFoundException("Could not find Tour " + id);
         }
 
-        if (tour.getBike().getOwner() != user){
-            throw new NotAuthorizedException("Not allowed to alter Routes of other Users");
+        Optional<IBike> bike = facade.getBikeById(tour.getBike());
+        if (bike.isPresent()) {
+            if (!bike.get().getOwner().getId().equals(user.getId())) {
+                throw new NotAuthorizedException("Not allowed to alter Routes of other Users");
+            }
+        } else {
+            throw new NotFoundException("Bike not found: " + tour.getBike());
         }
 
         for (GPS gps: inTour.waypoints){
@@ -167,10 +173,6 @@ public class TourController {
             } else if (gps.getName() == null){
                 throw new MalformedRequestException("Unknown Position Name");
             }
-        }
-        Optional<IBike> bike = facade.getBikeById(inTour.bikeID);
-        if (!bike.isPresent()) {
-            throw new NotFoundException("BikeId does not exists");
         }
 
         Date startAt = null;
@@ -198,7 +200,7 @@ public class TourController {
                     inTour.lengthInKm
             );
             outTour.name = tour.getName();
-            outTour.bikeID = tour.getBike().getId();
+            outTour.bikeID = tour.getBike();
             outTour.createdAt = FORMAT.format(tour.getCreatedAt());
             outTour.finishedAt = FORMAT.format(tour.getFinishedAt());
             outTour.startAt = FORMAT.format(tour.getStartAt());
@@ -227,14 +229,18 @@ public class TourController {
             throw new NotFoundException("Could not find Tour " + id);
         }
 
-        if (tour.getBike().getOwner() != user){
-            throw new NotAuthorizedException("Not allowed to view Routes of other Users");
+        Optional<IBike> bike = facade.getBikeById(tour.getBike());
+        if (bike.isPresent()) {
+            if (!bike.get().getOwner().getId().equals(user.getId())) {
+                throw new NotAuthorizedException("Not allowed to alter Routes of other Users");
+            }
+        } else {
+            throw new NotFoundException("Bike not found: " + tour.getBike());
         }
-
         TourDTO dto = new TourDTO();
         dto.id = tour.getId();
         dto.name = tour.getName();
-        dto.bikeID = tour.getBike().getId();
+        dto.bikeID = tour.getBike();
         dto.startAt = FORMAT.format(tour.getStartAt());
         dto.finishedAt = FORMAT.format(tour.getFinishedAt());
         dto.createdAt = FORMAT.format(tour.getCreatedAt());
@@ -262,7 +268,7 @@ public class TourController {
             dto.id = tour.getId();
             dto.name = tour.getName();
             dto.lengthInKm = tour.getLengthInKm();
-            dto.bikeID = tour.getBike().getId();
+            dto.bikeID = tour.getBike();
             dto.startAt = FORMAT.format(tour.getStartAt());
             dto.finishedAt = FORMAT.format(tour.getFinishedAt());
             tourList.add(dto);
