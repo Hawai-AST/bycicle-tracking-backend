@@ -36,7 +36,7 @@ public class UserDaoSuite implements IUserDao {
 			UserSerializationHelperSuite.PASSWORD, UserSerializationHelperSuite.BIRTHDAY, UserSerializationHelperSuite.ADDRESS_STREET,
 			UserSerializationHelperSuite.ADDRESS_CITY, UserSerializationHelperSuite.ADDRESS_STATE,
 			UserSerializationHelperSuite.ADDRESS_POSTCODE, UserSerializationHelperSuite.ADDRESS_COUNTRY,
-			UserSerializationHelperSuite.AUTHORITY, UserSerializationHelperSuite.UUID);
+			UserSerializationHelperSuite.AUTHORITY, UserSerializationHelperSuite.UUID, UserSerializationHelperSuite.GENDER);
 
 	private UserDaoSuite() {
 		super();

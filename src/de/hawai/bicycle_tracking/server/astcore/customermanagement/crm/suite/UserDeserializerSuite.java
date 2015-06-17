@@ -25,7 +25,6 @@ import de.hawai.bicycle_tracking.server.utility.value.Gender;
 
 public class UserDeserializerSuite extends JsonDeserializer<User> {
 
-	@Autowired
 	private JsonParserHelper parserHelper;
 	private static final String UUID_REGEX_SUITE = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 
@@ -61,6 +60,7 @@ public class UserDeserializerSuite extends JsonDeserializer<User> {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		JsonParserHelper parserHelper = new JsonParserHelper();
 		User user = new User(parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.NAME),
 				parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.FIRSTNAME),
 				new EMail(parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL)),
