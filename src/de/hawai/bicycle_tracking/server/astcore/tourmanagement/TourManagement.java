@@ -32,7 +32,7 @@ public class TourManagement implements ITourManagement{
     public List<ITour> getToursByUser(IUser user) {
         List<ITour> tours = new ArrayList<>();
         for (IBike bike: bikeManagement.findByOwner(user)){
-            tours.addAll(tourDao.findByBike(bike));
+            tours.addAll(tourDao.findByBikeId(bike.getId()));
         }
         return tours;
     }
@@ -82,7 +82,7 @@ public class TourManagement implements ITourManagement{
      */
     private void updateMileageOfBike(IBike bike){
         double mileAge = 0.0;
-        for (ITour tour: tourDao.findByBike(bike)){
+        for (ITour tour: tourDao.findByBikeId(bike.getId())) {
             mileAge += tour.getLengthInKm();
         }
         bikeManagement.updateBikesMileAge(bike, mileAge);
