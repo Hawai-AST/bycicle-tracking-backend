@@ -1,7 +1,5 @@
 package de.hawai.bicycle_tracking.server.rest;
 
-import java.text.ParseException;
-
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.AddTourFailedException;
 import de.hawai.bicycle_tracking.server.astcore.tourmanagement.UpdateTourFailedException;
 import de.hawai.bicycle_tracking.server.rest.exceptions.*;
@@ -10,6 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.text.ParseException;
 
 @ControllerAdvice
 public class ErrorHandler {
@@ -29,7 +29,7 @@ public class ErrorHandler {
 	@ExceptionHandler(UpdateTourFailedException.class)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public ErrorMessage onUpdateTourFailedException(AddTourFailedException inUpdateTourFailedException) {
+	public ErrorMessage onUpdateTourFailedException(UpdateTourFailedException inUpdateTourFailedException) {
 		return new ErrorMessage(500, "Server Error", inUpdateTourFailedException.getMessage());
 	}
 
