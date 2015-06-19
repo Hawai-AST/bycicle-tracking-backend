@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import de.hawai.bicycle_tracking.server.astcore.customermanagement.User;
 import de.hawai.bicycle_tracking.server.crm.suite.JsonParserHelper;
+import de.hawai.bicycle_tracking.server.crm.suite.SerializerHelper;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
 import de.hawai.bicycle_tracking.server.utility.DateFormatUtil;
 import de.hawai.bicycle_tracking.server.utility.exception.JsonParseException;
@@ -66,7 +67,7 @@ public class UserDeserializerSuite extends JsonDeserializer<User> {
 				new EMail(parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.EMAIL)),
 				new Address(
 						parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STREET),
-						"",
+						parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_HOUSE_NUMBER),
 						parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_CITY),
 						parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_STATE),
 						parserHelper.extractTextValueOf(nameValueList, UserSerializationHelperSuite.ADDRESS_POSTCODE),

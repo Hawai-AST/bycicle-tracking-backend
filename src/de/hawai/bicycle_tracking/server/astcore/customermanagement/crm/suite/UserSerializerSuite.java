@@ -35,7 +35,7 @@ public class UserSerializerSuite extends JsonSerializer<User> {
 		Address address = user.getAddress();
 		if (address != null) {
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_STREET, address.getStreet());
-//			TODO(fap): add house number
+			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_HOUSE_NUMBER, address.getHouseNumber());
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_CITY, address.getCity());
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_POSTCODE, address.getPostcode());
 			addAttribute(jgen, UserSerializationHelperSuite.ADDRESS_STATE, address.getState());
