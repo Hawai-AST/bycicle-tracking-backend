@@ -31,13 +31,7 @@ public class UserDaoSuite implements IUserDao {
 	private static final String MODULE = "Accounts";
 	private SuiteCrmConnector connector;
 	
-	private static final List<String> SELECT_FIELDS = Arrays.asList(
-			UserSerializationHelperSuite.NAME, UserSerializationHelperSuite.FIRSTNAME, UserSerializationHelperSuite.EMAIL,
-			UserSerializationHelperSuite.PASSWORD, UserSerializationHelperSuite.BIRTHDAY, UserSerializationHelperSuite.ADDRESS_STREET,
-			UserSerializationHelperSuite.ADDRESS_HOUSE_NUMBER,
-			UserSerializationHelperSuite.ADDRESS_CITY, UserSerializationHelperSuite.ADDRESS_STATE,
-			UserSerializationHelperSuite.ADDRESS_POSTCODE, UserSerializationHelperSuite.ADDRESS_COUNTRY,
-			UserSerializationHelperSuite.AUTHORITY, UserSerializationHelperSuite.UUID, UserSerializationHelperSuite.GENDER);
+	private static final List<String> SELECT_FIELDS = UserSerializationHelperSuite.getList();
 
 	private UserDaoSuite() {
 		super();

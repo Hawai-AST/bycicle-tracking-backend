@@ -1,5 +1,8 @@
 package de.hawai.bicycle_tracking.server.astcore.customermanagement.crm.suite;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class UserSerializationHelperSuite {
 
 	public static final String NAME = "name";
@@ -16,6 +19,16 @@ public class UserSerializationHelperSuite {
 	public static final String AUTHORITY = "authority_c";
 	public static final String UUID = "id";
 	public static final String GENDER = "sex_c";
+	
+	public static List<String> getList() {
+		return Arrays.asList(
+				NAME, FIRSTNAME, EMAIL,
+				PASSWORD, BIRTHDAY, 
+				ADDRESS_STREET, ADDRESS_HOUSE_NUMBER,
+				ADDRESS_CITY, ADDRESS_STATE,
+				ADDRESS_POSTCODE, ADDRESS_COUNTRY,
+				AUTHORITY, UUID, GENDER);
+	}
 
 
 }
