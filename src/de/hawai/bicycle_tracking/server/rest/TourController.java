@@ -156,7 +156,7 @@ public class TourController {
             throw new NotFoundException("Could not find Tour " + id);
         }
 
-        Optional<IBike> bike = facade.getBikeById(tour.getBike());
+        Optional<IBike> bike = facade.getBikeById(inTour.bikeID);
         if (bike.isPresent()) {
             if (!bike.get().getOwner().getId().equals(user.getId())) {
                 throw new NotAuthorizedException("Not allowed to alter Routes of other Users");

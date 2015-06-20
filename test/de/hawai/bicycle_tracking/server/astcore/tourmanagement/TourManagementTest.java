@@ -132,7 +132,7 @@ public class TourManagementTest extends TestCase {
         );
         ITour tourGet = tourManagement.getTourById(tour.getId()).get();
         assertEquals(tour, tourGet);
-        assertEquals(tour.getBike(), bike1);
+        assertEquals(tour.getBike(), bike1.getId());
         assertEquals(tour.getName(), "TestTour");
     }
 
