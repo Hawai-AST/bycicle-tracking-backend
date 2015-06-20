@@ -55,7 +55,7 @@ public class BikeSerializerSuite extends JsonSerializer<Bike> {
 					bike.getType().getId().toString());
 		}
 
-		//		helper.addAttribute(jgen, BikeSerializationHelperSuite.MILEAGE_IN_KM, bike.get);
+		helper.addAttribute(jgen, BikeSerializationHelperSuite.MILEAGE_IN_KM, String.valueOf(bike.getMileageInKm()));
 
 		jgen.writeEndObject();
 	}

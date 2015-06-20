@@ -27,15 +27,20 @@ public class Bike extends AbstractEntity implements IBike {
 	private String name;
 
 	public Bike(final IBikeType inType, final FrameNumber inFrameNumber, final Date inPurchaseDate, final Date inNextMaintenance,
-			final ISellingLocation inSellingLocation, final IUser inOwner, final String inName) {
+			final ISellingLocation inSellingLocation, final IUser inOwner, final String inName, final double inMileageInKm) {
 		type = inType;
 		frameNumber = inFrameNumber;
 		purchaseDate = inPurchaseDate;
 		nextMaintenance = inNextMaintenance;
 		soldLocation = inSellingLocation;
 		owner = inOwner;
-		mileageInKm = 0.0;
 		name = inName;
+		mileageInKm = inMileageInKm;
+	}
+	
+	public Bike(final IBikeType inType, final FrameNumber inFrameNumber, final Date inPurchaseDate, final Date inNextMaintenance,
+			final ISellingLocation inSellingLocation, final IUser inOwner, final String inName) {
+		this(inType, inFrameNumber, inPurchaseDate, inNextMaintenance, inSellingLocation, inOwner, inName, 0.0);
 	}
 	
 	private Bike() {

@@ -19,6 +19,7 @@ public class BikeSerializationHelperSuite {
 		return Arrays.asList(
 				PURCHASE_DATE,
 				NEXT_MAINTENANCE_DATE,
+				MILEAGE_IN_KM,
 				FRAME_NUMBER,
 				NAME,
 				UUID,
