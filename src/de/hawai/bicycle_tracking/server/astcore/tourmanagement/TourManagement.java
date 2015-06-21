@@ -57,6 +57,7 @@ public class TourManagement implements ITourManagement{
     public void updateTour(ITour inTour, String name, IBike bike, Date startAt, Date finishedAt, List<GPS> waypoints, double lengthInKm)
             throws UpdateTourFailedException {
         try {
+            IBike oldBike = bikeManagement.getBikeById(inTour.getBike()).get();
             Tour tour = (Tour) inTour;
             tour.setName(name);
             tour.setBike(bike.getId());
@@ -66,6 +67,9 @@ public class TourManagement implements ITourManagement{
             tour.setUpdatedAt(new Date());
             tourDao.save(tour);
             updateMileageOfBike(bike);
+            if(!oldBike.equals(bike)){
+                updateMileageOfBike(oldBike);
+            }
         } catch (RuntimeException e){
             throw new UpdateTourFailedException(e.getMessage());
         }
