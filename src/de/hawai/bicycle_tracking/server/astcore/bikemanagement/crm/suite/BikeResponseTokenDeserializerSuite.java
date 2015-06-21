@@ -46,9 +46,9 @@ public class BikeResponseTokenDeserializerSuite {
 			double mileage_in_km = 0;
 			try {
 				mileage_in_km = Double.valueOf(helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.MILEAGE_IN_KM));
-				System.out.println(name + " MileAge: " + helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.MILEAGE_IN_KM));
+				//System.out.println(name + " MileAge: " + helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.MILEAGE_IN_KM));
 			}catch(NumberFormatException e) {
-				System.out.println(name + " MileAge error: " + helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.MILEAGE_IN_KM));
+				//System.out.println(name + " MileAge error: " + helper.extractValueOf(nameValueList, BikeSerializationHelperSuite.MILEAGE_IN_KM));
 			}
 			User owner = getOwnerId(responseToken, helper, i);
 			Bike bike = new Bike(null, frameNumber, purchaseDate, nextMaintenance, null, owner, name, mileage_in_km);
