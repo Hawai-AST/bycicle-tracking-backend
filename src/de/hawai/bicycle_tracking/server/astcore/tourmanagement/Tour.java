@@ -52,6 +52,7 @@ public class Tour extends AbstractEntity implements ITour {
         this.name = name;
     }
 
+    @Column(name = "bike" , nullable = false)
     @Override
     public UUID getBike() {
         return bike;
