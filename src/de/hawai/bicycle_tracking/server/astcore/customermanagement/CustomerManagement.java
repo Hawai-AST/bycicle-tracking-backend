@@ -37,7 +37,7 @@ public class CustomerManagement implements ICustomerManagement {
 	@Override
 	public void updatePassword(IUser user, String password) {
 		User actualUser = (User) user;
-		actualUser.setPassword(password);
+		actualUser.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
 		userDao.save(actualUser);
 	}
 

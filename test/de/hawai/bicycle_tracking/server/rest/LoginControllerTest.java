@@ -1,10 +1,13 @@
 package de.hawai.bicycle_tracking.server.rest;
 
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -14,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
@@ -30,6 +34,7 @@ import de.hawai.bicycle_tracking.server.AppConfig;
 import de.hawai.bicycle_tracking.server.DBConfig;
 import de.hawai.bicycle_tracking.server.DBFixuresConfig;
 import de.hawai.bicycle_tracking.server.Main;
+import de.hawai.bicycle_tracking.server.astcore.customermanagement.IUser;
 import de.hawai.bicycle_tracking.server.dto.LoginDTO;
 import de.hawai.bicycle_tracking.server.facade.Facade;
 import de.hawai.bicycle_tracking.server.security.HawaiAuthority;
@@ -72,6 +77,7 @@ public class LoginControllerTest {
 	private MockMvc restViewerMockMvc;
 
 	private LoginDTO login;
+	private IUser registeredUser;
 
 	@PostConstruct
 	public void setup() throws ParseException {
@@ -81,7 +87,7 @@ public class LoginControllerTest {
 	@Before
 	public void initTest() {
 		Address address = new Address(STREET, HOUSENR, CITY, STATE, POSTCODE, COUNTRY);
-		facade.registerUser(LASTNAME, NAME, new EMail(EMAIL), address, BIRTHDATE, PASSWORD, HawaiAuthority.USER);
+		registeredUser = facade.registerUser(LASTNAME, NAME, new EMail(EMAIL), address, BIRTHDATE, PASSWORD, HawaiAuthority.USER);
 
 		this.login = new LoginDTO();
 		this.login.setEmail(EMAIL);
@@ -111,5 +117,15 @@ public class LoginControllerTest {
 		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(this.login))
 				.header("Client-ID", "DEV-101")).andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void login_ChangedPassword_UserCanLoginWithNewPassword() throws Exception {
+		String newPassword = "myNewPw";
+		facade.updatePassword(registeredUser, newPassword);
+		this.login.setCode(newPassword);
+		this.restViewerMockMvc.perform(post("/api/v1/login").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(this.login))
+				.header("Client-ID", "DEV-101")).andExpect(status().isOk());
 	}
 }
